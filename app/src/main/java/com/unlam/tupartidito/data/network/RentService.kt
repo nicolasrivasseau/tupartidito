@@ -1,6 +1,6 @@
 package com.unlam.tupartidito.data.network
 
-import com.unlam.tupartidito.data.model.Rent
+import com.unlam.tupartidito.data.model.rent.Rent
 
 /*
     En esta clase trabajariamos la logica que nos devuelve un tercero, ya se api , webservice o saas.

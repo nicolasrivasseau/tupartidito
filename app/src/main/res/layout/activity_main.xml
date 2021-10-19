@@ -6,6 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".ui.view.MainActivity">
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/launchScanner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
+        android:clickable="true"
+        android:contentDescription="escanear QR"
+        android:focusable="true"
+        app:backgroundTint="#9C82CC"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/qrcode_scan" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
