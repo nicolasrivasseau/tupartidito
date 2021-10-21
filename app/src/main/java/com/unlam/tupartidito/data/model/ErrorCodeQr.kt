@@ -1,9 +1,9 @@
 package com.unlam.tupartidito.data.model
 
 
-data class ErrorCodeQr(@kotlin.jvm.JvmField var id: Int? = 0) {
+data class ErrorCodeQr( var id: Int? = 0 , var description: String? = "") {
 
-    var description = ""
+
 
 }
 

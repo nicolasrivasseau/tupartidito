@@ -10,13 +10,17 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
+import com.google.android.material.snackbar.Snackbar
 import com.unlam.tupartidito.core.observe
 import com.unlam.tupartidito.databinding.ActivityMainBinding
 import com.unlam.tupartidito.ui.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding
+
     private  val viewModel: MainViewModel by viewModels()
+
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
 
@@ -30,7 +34,8 @@ class MainActivity : AppCompatActivity() {
         createPermissionsLauncher()
 
         if(intent.extras?.getBoolean(ERROR_QR) == true){
-            Toast.makeText(this,intent.extras?.getString(ERROR_QR_DESCRIPTION), Toast.LENGTH_SHORT).show()
+            Snackbar.make(binding.root, intent.extras?.getString(ERROR_QR_DESCRIPTION).toString(), Snackbar.LENGTH_SHORT)
+                .show()
         }
 
         // vinculamos nuestro live data con el activity
@@ -39,7 +44,11 @@ class MainActivity : AppCompatActivity() {
                 //todo
             }
             observe(isLoading) { currentIsLoading ->
-                //todo
+                if(currentIsLoading){
+
+                }else{
+
+                }
             }
             getRents()
         }

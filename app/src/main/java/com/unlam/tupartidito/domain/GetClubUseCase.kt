@@ -3,31 +3,29 @@ package com.unlam.tupartidito.domain
 
 import com.unlam.tupartidito.data.ClubRepository
 import com.unlam.tupartidito.data.model.club.Club
-import javax.security.auth.callback.Callback
 
 
 class GetClubUseCase {
 
     private var repository = ClubRepository()
 
-    suspend operator fun invoke(qrCode : String,callback: (Club) -> Unit){
+    suspend operator fun invoke(qrCode: String) : Club {
 
-      repository.getListClub { listOfClub->
+        var listOfClub = repository.getListClub()
 
-          var club : Club
+            var club: Club
 
-          if(listOfClub.isEmpty()){
-              callback(Club())
-          }else{
-              club = Club()
-              listOfClub.forEach {
-                  if(it.id == qrCode) {
-                      club = it
-                  }
-              }
-              callback(club)
-          }}
-
+            if (listOfClub.isEmpty()) {
+                return Club()
+            } else {
+                club = Club()
+                listOfClub.forEach {
+                    if (it.id == qrCode) {
+                        club = it
+                    }
+                }
+                return club
+            }
 
     }
 

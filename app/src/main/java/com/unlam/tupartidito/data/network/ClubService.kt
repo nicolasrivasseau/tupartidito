@@ -3,43 +3,29 @@ package com.unlam.tupartidito.data.network
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.unlam.tupartidito.data.model.club.Club
-
+import kotlinx.coroutines.tasks.await
 
 
 class ClubService {
 
-    fun getListClub(callback: (List<Club>) -> Unit){
-
-
-        lateinit var listClub: List<Club>
-        listClub = emptyList()
-        //tendriamos que llamar a una clase donde se conecte con firebase y devuelva los datos.
+    suspend fun getListClubA(): List<Club>{
         val database = getReferenceToDatabase()
         val referenceClubs = database.child("Clubs")
-        referenceClubs.get().addOnSuccessListener {
-            var listClubSnapshot: MutableList<Club> = mutableListOf()
+        var listClub: List<Club>
+        val listClubSnapshot: MutableList<Club> = mutableListOf()
+        var dataSnapshot = referenceClubs.get().await().children
 
-            if (it.exists()) {
-                for (clubSnapshot in it.children) {
+        for(clubSnapshot in dataSnapshot) {
 
-
-                    val club = clubSnapshot.getValue(Club::class.java)
-                    if (club != null) {
-                        club.id = clubSnapshot.key
-                    }
-                    listClubSnapshot.add(club!!)
-                }
-
-                listClub = listClubSnapshot
-                callback(listClub)
+            val club = clubSnapshot.getValue(Club::class.java)
+            if (club != null) {
+                club.id = clubSnapshot.key
             }
-
-        }.addOnFailureListener {
-
-            listClub = emptyList()
-            callback(listClub)
-
+            listClubSnapshot.add(club!!)
         }
+        listClub = listClubSnapshot
+
+        return listClub
     }
 
     private fun getReferenceToDatabase(): DatabaseReference {

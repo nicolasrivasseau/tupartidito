@@ -1,6 +1,8 @@
 package com.unlam.tupartidito.data.model
 
- class User{
+import com.unlam.tupartidito.data.model.rent.Rent
+
+class User{
     var username: String = ""
     var name: String = ""
     var password: String = ""

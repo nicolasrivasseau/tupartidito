@@ -2,14 +2,13 @@ package com.unlam.tupartidito.ui.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 
-import com.google.gson.Gson
+
 import com.unlam.tupartidito.core.observe
 import com.unlam.tupartidito.data.model.ErrorCodeQr
-import com.unlam.tupartidito.data.model.QrCode.QrCodeJson
+
 import com.unlam.tupartidito.databinding.ActivityDetailBinding
 import com.unlam.tupartidito.ui.viewmodel.DetailViewModel
 

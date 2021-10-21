@@ -18,12 +18,10 @@ class DetailViewModel : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
     private val _readErrorQr = MutableLiveData<ErrorCodeQr>()
-    val readErrorQr : LiveData<ErrorCodeQr> get() = _readErrorQr
+    val readErrorQr: LiveData<ErrorCodeQr> get() = _readErrorQr
 
-    fun getClubData(qrCodeString : String?) {
+    fun getClubData(qrCodeString: String?) {
         viewModelScope.launch {
-            var qrCodeInt : Int = 0
-
 
             _isLoading.value = true
 
@@ -32,36 +30,24 @@ class DetailViewModel : ViewModel() {
 
                 val qrCode = gson.fromJson(qrCodeString, QrCodeJson::class.java)
 
+                var club = GetClubUseCase().invoke(qrCode.id)
+
+                    if (club.id !== null) {
+                        _listClubData.value = club
+                    } else {
+                        _readErrorQr.value = ErrorCodeQr(id = 2 , description = "Club Inexistente en la base de datos")
+                    }
 
 
-
-                 GetClubUseCase().invoke(qrCode.id){result ->
-
-                     if (result.id !== null) {
-                         _listClubData.value = result
-                     }else{
-                         _readErrorQr.value = ErrorCodeQr()
-                         _readErrorQr.value!!.id = 2
-                         _readErrorQr.value!!.description  = "Lista vacia"
-                     }
-                 }
-
-
-            }catch (e : Exception){
-                _readErrorQr.value = ErrorCodeQr()
-                _readErrorQr.value!!.id = 1
-                _readErrorQr.value!!.description  = "Codigo QR sin datos validos"
+            } catch (e: Exception) {
+                _readErrorQr.value = ErrorCodeQr(id = 1 , description = "Codigo QR con datos invalidos")
             }
 
-
-
-                _isLoading.value = false
+            _isLoading.value = false
 
 
         }
     }
-
-
 
 
 }

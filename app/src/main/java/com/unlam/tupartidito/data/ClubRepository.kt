@@ -5,8 +5,8 @@ import com.unlam.tupartidito.data.network.ClubService
 
 
 class ClubRepository {
-
-    fun getListClub(callback: (List<Club>) -> Unit){
-      ClubService().getListClub { callback(it) }
+    suspend fun getListClub(): List<Club> {
+        return ClubService().getListClubA()
     }
+
 }

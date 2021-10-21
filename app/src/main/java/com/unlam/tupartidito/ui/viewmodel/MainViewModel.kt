@@ -14,6 +14,7 @@ class MainViewModel : ViewModel() {
     Generamos nuestros parametros Live data que vamos a vincular con la capa de la view.
     se utiliza encapsulamiento (LiveData) ya que desde la view no se permite modificar parametros del ViewModel.
  */
+
     private val _listRents = MutableLiveData<List<Rent>>()
     val listRents: LiveData<List<Rent>> get() = _listRents
     private val _isLoading = MutableLiveData<Boolean>()
