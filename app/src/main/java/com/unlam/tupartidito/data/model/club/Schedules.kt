@@ -1,8 +1,8 @@
-package com.example.volveralfuturo.data
+package com.unlam.tupartidito.data.model.club
 
 import java.io.Serializable
 
 data class Schedules(
-    val Slot: String = "",
-    val Reserved: Boolean = false
+    var slot: String = "",
+    var reserved: Boolean = false
 ) :Serializable

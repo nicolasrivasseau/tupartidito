@@ -30,8 +30,8 @@ class DetailActivity : AppCompatActivity() {
         with(viewModel){
             observe(listClubData){currentList ->
 
-                binding.title.text = currentList.Services?.Buffet.toString()
-                binding.des1.text = currentList.Schedules[0].Slot
+                binding.title.text = currentList.services?.buffet.toString()
+                binding.des1.text = currentList.schedules[0].slot
             }
             observe(isLoading) { currentIsLoading ->
                 //todo

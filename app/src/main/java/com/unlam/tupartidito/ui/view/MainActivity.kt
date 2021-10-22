@@ -10,7 +10,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
 import com.unlam.tupartidito.core.observe
 import com.unlam.tupartidito.databinding.ActivityMainBinding
@@ -54,6 +53,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.launchScanner.setOnClickListener { launchCameraClicked() }
+        binding.btnMap.setOnClickListener{
+            val intent = Intent(binding.root.context, MapActivity::class.java)
+            startActivity(intent)
+        }
 
     }
 
