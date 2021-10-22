@@ -1,35 +1,39 @@
 package com.unlam.tupartidito.ui.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.database.FirebaseDatabase
-import com.unlam.tupartidito.domain.GetUserFirebaseUseCase
+import com.unlam.tupartidito.data.model.user.UserLiveData
+import com.unlam.tupartidito.domain.user.CredentialsNotEmptyUseCase
+import com.unlam.tupartidito.domain.user.GetUserFirebaseUseCase
+import com.unlam.tupartidito.domain.user.ValidCredentialsUseCase
+import com.unlam.tupartidito.domain.user.ValidUserUseCase
 import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
 
-    private val _isValidSession = MutableLiveData<Boolean>()
-    val isValidSession: LiveData<Boolean> get() = _isValidSession
+    private val _userData = MutableLiveData<UserLiveData>()
+    val userData: LiveData<UserLiveData> get() = _userData
 
-    private val _messageError = MutableLiveData<String>()
-    val messageError: LiveData<String> get() = _messageError
-
-    fun startSession(username: String, password: String) {
-        //todo agregarlo todo en una variable los paths
-        if(username.isNotEmpty() && password.isNotEmpty()){
-        GetUserFirebaseUseCase().invoke(username,
-            onFailure = { messageError ->
-            _messageError.value = messageError
-            _isValidSession.value = false
-        }, onSuccess = {
-            _isValidSession.value = true
-        })
-        }else{
-            _messageError.value = "Campos vacios."
-            _isValidSession.value = false
+    fun loginSession(username: String, password: String) {
+        viewModelScope.launch {
+            if (CredentialsNotEmptyUseCase().invoke(username, password)) {
+                val user = GetUserFirebaseUseCase().invoke(username)
+                if (ValidUserUseCase().invoke(user)) {
+                    if (ValidCredentialsUseCase().invoke(user, password)) {
+                        _userData.value = UserLiveData(true)
+                    } else {
+                        _userData.value = UserLiveData(false, "Credenciales invalidas.")
+                    }
+                } else {
+                    _userData.value = UserLiveData(false, "El usuario no existe.")
+                }
+            } else {
+                _userData.value = UserLiveData(false, "Credenciales vacias.")
+            }
         }
     }
+
+
 }

@@ -1,4 +1,4 @@
-package com.example.volveralfuturo.data
+package com.unlam.tupartidito.data.model.club
 
 import java.io.Serializable
 

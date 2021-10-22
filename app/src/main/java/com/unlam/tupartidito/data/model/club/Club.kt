@@ -2,7 +2,6 @@ package com.unlam.tupartidito.data.model.club
 
 
 import com.example.volveralfuturo.data.Schedules
-import com.example.volveralfuturo.data.Services
 import java.io.Serializable
 
 

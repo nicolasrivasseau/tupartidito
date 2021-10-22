@@ -3,6 +3,7 @@ package com.unlam.tupartidito.ui.view
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.ContactsContract
 import androidx.activity.viewModels
 import com.google.android.material.snackbar.Snackbar
 import com.unlam.tupartidito.core.observe
@@ -20,26 +21,31 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setObservers()
-
-        binding.btnIngresar.setOnClickListener {
-            val email : String = binding.txtEmail.text.toString()
-            val password : String = binding.txtPassword.text.toString()
-            viewModel.startSession(email,password)
-        }
+        setEvents()
     }
 
     private fun setObservers(){
         with(viewModel){
-            observe(isValidSession){ isValid ->
-                if(isValid) {
+            observe(userData){ response ->
+                if(response.isValidSession == true) {
                     val intent = Intent(binding.root.context, MainActivity::class.java)
                     startActivity(intent)
                 } else {
-                    //todo agregar strings harcode en constantes
-                    Snackbar.make(binding.root, "Credenciales invalidas!", Snackbar.LENGTH_SHORT)
+                    Snackbar.make(binding.root, response.messageError.toString(), Snackbar.LENGTH_SHORT)
                         .show()
                 }
             }
         }
     }
+
+    private fun setEvents(){
+        with(viewModel){
+            binding.btnIngresar.setOnClickListener {
+                val email : String = binding.txtEmail.text.toString()
+                val password : String = binding.txtPassword.text.toString()
+                loginSession(email,password)
+            }
+        }
+    }
+
 }
