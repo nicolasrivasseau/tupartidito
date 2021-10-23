@@ -60,10 +60,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
-
-
-
     private fun createPermissionsLauncher() {
         permissionLauncher =
 

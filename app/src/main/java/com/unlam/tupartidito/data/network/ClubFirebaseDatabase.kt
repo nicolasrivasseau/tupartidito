@@ -3,6 +3,7 @@ package com.unlam.tupartidito.data.network
 import com.unlam.tupartidito.data.model.club.Schedules
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.FirebaseDatabase
+import com.unlam.tupartidito.core.exist
 import com.unlam.tupartidito.data.model.club.Club
 import com.unlam.tupartidito.data.model.club.Services
 import kotlinx.coroutines.tasks.await
@@ -23,16 +24,17 @@ class ClubFirebaseDatabase @Inject constructor() {
 
     private fun generateClub(dataSnapshot: DataSnapshot, club: Club) {
         club.id = dataSnapshot.key
-        club.latitude = dataSnapshot.child("latitude").value as Double
-        club.longitude = dataSnapshot.child("longitude").value as Double
+        dataSnapshot.exist("latitude"){club.latitude= it as Double}
+        dataSnapshot.exist("longitude"){club.latitude= it as Double}
+
         club.services = Services()
-        club.services!!.buffet = dataSnapshot.child("services").child("buffet").value as Boolean
-        club.services!!.charning_room = dataSnapshot.child("services").child("charning_room").value as Boolean
+        dataSnapshot.child("services").exist("buffet"){club.services!!.buffet = it as Boolean}
+        dataSnapshot.child("services").exist("charning_room"){club.services!!.charning_room = it as Boolean}
 
         for (dsSchedule in dataSnapshot.child("schedules").children) {
             val schedule = Schedules()
-            schedule.reserved = dsSchedule.child("reserved").value as Boolean
-            schedule.slot = dsSchedule.child("slot").value as String
+            dsSchedule.exist("reserved"){schedule.reserved = it as Boolean}
+            dsSchedule.exist("slot"){schedule.slot = it as String}
             club.schedules.add(schedule)
         }
     }
