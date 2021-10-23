@@ -6,8 +6,9 @@ import com.google.firebase.database.FirebaseDatabase
 import com.unlam.tupartidito.data.model.club.Club
 import com.unlam.tupartidito.data.model.club.Services
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-class ClubFirebaseDatabase {
+class ClubFirebaseDatabase @Inject constructor() {
     suspend fun getClubs(): List<Club> {
         val listClub: ArrayList<Club> = ArrayList()
         val usersRef = FirebaseDatabase.getInstance().getReference("clubs")
