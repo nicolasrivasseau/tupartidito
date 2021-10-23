@@ -64,6 +64,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun createPermissionsLauncher() {
         permissionLauncher =
+
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
                 if (permissions[Manifest.permission.CAMERA] == true) {
                     launchCamera()
@@ -92,7 +93,7 @@ class MainActivity : AppCompatActivity() {
         if (arePermissionsGranted()) {
             launchCamera()
         } else {
-            askForPermissions()
+            askForPermissions("camera")
         }
     }
 
@@ -100,7 +101,7 @@ class MainActivity : AppCompatActivity() {
         if (arePermissionsGranted()) {
             launchMaps()
         } else {
-            askForPermissions()
+            askForPermissions("maps")
         }
     }
 
@@ -110,8 +111,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun askForPermissions() {
-        permissionLauncher.launch(REQUIRED_PERMISSIONS)
+    private fun askForPermissions(activity: String) {
+        if(activity == "camera"){
+            permissionLauncher.launch(arrayOf(Manifest.permission.CAMERA))
+        }else if(activity == "maps"){
+            permissionLauncher.launch(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION))
+        }
+
+
     }
 
     private fun launchCamera() {
