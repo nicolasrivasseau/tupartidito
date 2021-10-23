@@ -8,7 +8,7 @@ import com.google.gson.Gson
 import com.unlam.tupartidito.data.model.ErrorCodeQr
 import com.unlam.tupartidito.data.model.QrCode.QrCodeJson
 import com.unlam.tupartidito.data.model.club.Club
-import com.unlam.tupartidito.domain.GetClubUseCase
+import com.unlam.tupartidito.domain.club.GetClubUseCase
 import kotlinx.coroutines.launch
 
 class DetailViewModel : ViewModel() {

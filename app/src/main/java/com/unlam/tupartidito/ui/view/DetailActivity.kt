@@ -1,6 +1,7 @@
 package com.unlam.tupartidito.ui.view
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -24,11 +25,14 @@ class DetailActivity : AppCompatActivity() {
 
 
         val qrCodeString = intent.extras!!.getString(BARCODE_JSON)
-
+         var clubLocationLat : Double? = null
+         var clubLocationLon : Double? = null
 
 
         with(viewModel){
             observe(listClubData){currentList ->
+                clubLocationLat = currentList.latitude
+                clubLocationLon = currentList.longitude
 
                 binding.title.text = currentList.services?.buffet.toString()
                 binding.des1.text = currentList.schedules[0].slot
@@ -43,7 +47,7 @@ class DetailActivity : AppCompatActivity() {
         }
 
 
-
+            binding.goToMaps.setOnClickListener { goToMaps(clubLocationLat,clubLocationLon) }
         }
 
 
@@ -58,13 +62,22 @@ class DetailActivity : AppCompatActivity() {
     }
 
    private fun goToMain(errorCodeQr : ErrorCodeQr){
-       intent = Intent(getApplicationContext(), MainActivity::class.java)
+       Intent(getApplicationContext(), MainActivity::class.java)
        intent.putExtra(MainActivity.ERROR_QR,true)
        intent.putExtra(MainActivity.ERROR_QR_DESCRIPTION,errorCodeQr.description)
        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
        startActivity(intent)
        finish()
    }
+
+    private fun goToMaps(lat: Double? , lon: Double?){
+
+        val intentUriNavigation = Uri.parse("google.navigation:q=${lat},${lon}")
+        Intent(Intent.ACTION_VIEW, intentUriNavigation).apply {
+            setPackage("com.google.android.apps.maps")
+            startActivity(this)
+        }
+    }
 
     companion object {
         val BARCODE_JSON = "BARCODE_JSON"

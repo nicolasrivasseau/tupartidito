@@ -1,4 +1,4 @@
-package com.unlam.tupartidito.domain
+package com.unlam.tupartidito.domain.club
 
 
 import com.unlam.tupartidito.data.ClubRepository
@@ -11,7 +11,7 @@ class GetClubUseCase {
 
     suspend operator fun invoke(qrCode: String) : Club {
 
-        var listOfClub = repository.getListClub()
+        var listOfClub = repository.getClubs()
 
             var club: Club
 
