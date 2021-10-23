@@ -11,7 +11,7 @@ class GetClubUseCase {
 
     suspend operator fun invoke(qrCode: String) : Club {
 
-        var listOfClub = repository.getListClub()
+        var listOfClub = repository.getClubs()
 
             var club: Club
 

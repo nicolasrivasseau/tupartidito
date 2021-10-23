@@ -10,7 +10,7 @@ class ClubService {
 
     suspend fun getListClubA(): List<Club>{
         val database = getReferenceToDatabase()
-        val referenceClubs = database.child("Clubs")
+        val referenceClubs = database.child("clubs")
         var listClub: List<Club>
         val listClubSnapshot: MutableList<Club> = mutableListOf()
         var dataSnapshot = referenceClubs.get().await().children

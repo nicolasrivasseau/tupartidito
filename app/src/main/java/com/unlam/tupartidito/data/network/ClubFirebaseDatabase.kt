@@ -22,8 +22,8 @@ class ClubFirebaseDatabase {
 
     private fun generateClub(ds: DataSnapshot, club: Club) {
         club.id = ds.key
-        club.latitude = ds.child("latitude").value as String
-        club.longitude = ds.child("longitude").value as String
+        club.latitude = ds.child("latitude").value as Double
+        club.longitude = ds.child("longitude").value as Double
         club.services = Services()
         club.services!!.buffet = ds.child("services").child("buffet").value as Boolean
         club.services!!.charning_room = ds.child("services").child("charning_room").value as Boolean

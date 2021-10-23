@@ -5,8 +5,8 @@ import java.io.Serializable
 
 
 data class Club(var id: String? = null) : Serializable{
-    var latitude:String? = null
-    var longitude:String? = null
+    var latitude:Double? = null
+    var longitude:Double? = null
     var services: Services? = null
     var schedules: ArrayList<Schedules> = ArrayList()
 
