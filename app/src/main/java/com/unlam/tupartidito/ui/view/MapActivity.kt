@@ -33,16 +33,13 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var map: GoogleMap
     private val viewModel: MapViewModel by viewModels()
 
-    private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
-    private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        createPermissionsLauncher()
-        validatePermissions()
+
+        createFragment()
         setObserver()
 
         viewModel.getClubs()
@@ -88,37 +85,5 @@ override fun onMapReady(googleMap: GoogleMap?) {
     }
 }
 
-private fun validatePermissions() {
-    if (arePermissionsGranted()) {
-        createFragment()
-    } else {
-        askForPermissions()
-    }
-}
-
-private fun createPermissionsLauncher() {
-    permissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            if (permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
-                createFragment()
-            } else {
-                Toast.makeText(
-                    this,
-                    "Checkear permisos ubicacion.",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-}
-
-private fun arePermissionsGranted(): Boolean {
-    return REQUIRED_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
-    }
-}
-
-private fun askForPermissions() {
-    permissionLauncher.launch(REQUIRED_PERMISSIONS)
-}
 }
 

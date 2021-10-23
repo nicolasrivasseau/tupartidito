@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
 
         createPermissionsLauncher()
 
+
         if(intent.extras?.getBoolean(ERROR_QR) == true){
             Snackbar.make(binding.root, intent.extras?.getString(ERROR_QR_DESCRIPTION).toString(), Snackbar.LENGTH_SHORT)
                 .show()
@@ -53,10 +54,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.launchScanner.setOnClickListener { launchCameraClicked() }
-        binding.btnMap.setOnClickListener{
-            val intent = Intent(binding.root.context, MapActivity::class.java)
-            startActivity(intent)
-        }
+        binding.btnMap.setOnClickListener{ launchMapsClicked() }
 
     }
 
@@ -69,19 +67,38 @@ class MainActivity : AppCompatActivity() {
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
                 if (permissions[Manifest.permission.CAMERA] == true) {
                     launchCamera()
-                } else {
+                } else if(permissions[Manifest.permission.CAMERA] == false) {
                     Toast.makeText(
                         this,
                         "Se necesitan los permisos para lanzar la cámara",
                         Toast.LENGTH_SHORT
                     ).show()
+                }else if (permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
+                    launchMaps()
+                } else if(permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == false) {
+                    Toast.makeText(
+                        this,
+                        "Se necesitan los permisos para abrir el mapa.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
+
             }
     }
+
+
 
     private fun launchCameraClicked() {
         if (arePermissionsGranted()) {
             launchCamera()
+        } else {
+            askForPermissions()
+        }
+    }
+
+    private fun launchMapsClicked() {
+        if (arePermissionsGranted()) {
+            launchMaps()
         } else {
             askForPermissions()
         }
@@ -99,6 +116,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun launchCamera() {
         startActivity(Intent(this, ScannerActivity::class.java))
+    }
+
+    private fun launchMaps() {
+        val intent = Intent(binding.root.context, MapActivity::class.java)
+        startActivity(intent)
     }
 
     companion object {
