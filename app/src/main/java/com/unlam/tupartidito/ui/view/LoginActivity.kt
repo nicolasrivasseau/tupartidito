@@ -9,7 +9,6 @@ import com.unlam.tupartidito.core.toast
 import com.unlam.tupartidito.databinding.ActivityLoginBinding
 import com.unlam.tupartidito.ui.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
