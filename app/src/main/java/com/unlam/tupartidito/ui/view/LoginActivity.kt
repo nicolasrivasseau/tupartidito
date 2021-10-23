@@ -7,6 +7,7 @@ import android.provider.ContactsContract
 import androidx.activity.viewModels
 import com.google.android.material.snackbar.Snackbar
 import com.unlam.tupartidito.core.observe
+import com.unlam.tupartidito.core.toast
 import com.unlam.tupartidito.databinding.ActivityLoginBinding
 import com.unlam.tupartidito.ui.viewmodel.LoginViewModel
 import com.unlam.tupartidito.ui.viewmodel.MainViewModel
@@ -31,8 +32,7 @@ class LoginActivity : AppCompatActivity() {
                     val intent = Intent(binding.root.context, MainActivity::class.java)
                     startActivity(intent)
                 } else {
-                    Snackbar.make(binding.root, response.messageError.toString(), Snackbar.LENGTH_SHORT)
-                        .show()
+                    toast(response.messageError.toString())
                 }
             }
         }
