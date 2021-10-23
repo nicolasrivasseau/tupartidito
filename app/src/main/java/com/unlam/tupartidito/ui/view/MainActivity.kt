@@ -14,7 +14,9 @@ import com.google.android.material.snackbar.Snackbar
 import com.unlam.tupartidito.core.observe
 import com.unlam.tupartidito.databinding.ActivityMainBinding
 import com.unlam.tupartidito.ui.viewmodel.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding
 
