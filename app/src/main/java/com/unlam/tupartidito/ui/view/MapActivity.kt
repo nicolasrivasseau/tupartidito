@@ -6,10 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.unlam.tupartidito.R
@@ -17,7 +14,9 @@ import com.unlam.tupartidito.core.observe
 import com.unlam.tupartidito.data.model.club.Club
 import com.unlam.tupartidito.databinding.ActivityMapBinding
 import com.unlam.tupartidito.ui.viewmodel.MapViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityMapBinding
     private lateinit var map: GoogleMap
@@ -67,6 +66,7 @@ private fun createFragment() {
 
 override fun onMapReady(googleMap: GoogleMap?) {
     map = googleMap!!
+    configureMap(map.uiSettings)
     map.setOnMarkerClickListener{currentMaker ->
         val intent = Intent(binding.root.context,DetailActivity::class.java)
         intent.putExtra(DetailActivity.BARCODE_JSON, "{id:${currentMaker.title}}")
@@ -74,6 +74,12 @@ override fun onMapReady(googleMap: GoogleMap?) {
         return@setOnMarkerClickListener false
     }
 }
+
+    private fun configureMap(uiSettings: UiSettings?) {
+        uiSettings!!.isZoomControlsEnabled = true
+        uiSettings.isZoomGesturesEnabled = true
+        uiSettings.isCompassEnabled = true
+    }
 
 }
 

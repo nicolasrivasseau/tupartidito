@@ -14,8 +14,9 @@ import java.util.concurrent.Executors
 import androidx.appcompat.app.AppCompatActivity
 import com.unlam.tupartidito.databinding.ActivityScannerBinding
 import com.unlam.tupartidito.domain.QrCodeAnalyzerUseCase
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class ScannerActivity : AppCompatActivity() {
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     private lateinit var cameraExecutor: ExecutorService
@@ -26,12 +27,8 @@ class ScannerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityScannerBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         cameraExecutor = Executors.newSingleThreadExecutor()
-
         startCamera()
-
-
     }
 
     private fun startCamera() {
@@ -75,12 +72,8 @@ class ScannerActivity : AppCompatActivity() {
             } catch (exc: Exception) {
                 Log.e(TAG, "Falló al enlazar la camara", exc)
             }
-
         }, ContextCompat.getMainExecutor(this))
-
-
     }
-
 
     override fun onDestroy() {
         super.onDestroy()

@@ -9,19 +9,27 @@ import com.unlam.tupartidito.domain.user.CredentialsNotEmptyUseCase
 import com.unlam.tupartidito.domain.user.GetUserFirebaseUseCase
 import com.unlam.tupartidito.domain.user.ValidCredentialsUseCase
 import com.unlam.tupartidito.domain.user.ValidUserUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LoginViewModel : ViewModel() {
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val getUserFirebaseUseCase : GetUserFirebaseUseCase,
+    private val credentialsNotEmptyUseCase:CredentialsNotEmptyUseCase,
+    private val validUserUseCase:ValidUserUseCase,
+    private val validCredentialsUseCase:ValidCredentialsUseCase
+) : ViewModel() {
 
     private val _userData = MutableLiveData<UserLiveData>()
     val userData: LiveData<UserLiveData> get() = _userData
 
     fun loginSession(username: String, password: String) {
         viewModelScope.launch {
-            if (CredentialsNotEmptyUseCase().invoke(username, password)) {
-                val user = GetUserFirebaseUseCase().invoke(username)
-                if (ValidUserUseCase().invoke(user)) {
-                    if (ValidCredentialsUseCase().invoke(user, password)) {
+            if (credentialsNotEmptyUseCase(username, password)) {
+                val user = getUserFirebaseUseCase(username)
+                if (validUserUseCase(user)) {
+                    if (validCredentialsUseCase(user, password)) {
                         _userData.value = UserLiveData(true)
                     } else {
                         _userData.value = UserLiveData(false, "Credenciales invalidas.")
