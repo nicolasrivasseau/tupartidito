@@ -20,15 +20,15 @@ class ClubFirebaseDatabase {
         return listClub
     }
 
-    private fun generateClub(ds: DataSnapshot, club: Club) {
-        club.id = ds.key
-        club.latitude = ds.child("latitude").value as Double
-        club.longitude = ds.child("longitude").value as Double
+    private fun generateClub(dataSnapshot: DataSnapshot, club: Club) {
+        club.id = dataSnapshot.key
+        club.latitude = dataSnapshot.child("latitude").value as Double
+        club.longitude = dataSnapshot.child("longitude").value as Double
         club.services = Services()
-        club.services!!.buffet = ds.child("services").child("buffet").value as Boolean
-        club.services!!.charning_room = ds.child("services").child("charning_room").value as Boolean
+        club.services!!.buffet = dataSnapshot.child("services").child("buffet").value as Boolean
+        club.services!!.charning_room = dataSnapshot.child("services").child("charning_room").value as Boolean
 
-        for (dsSchedule in ds.child("schedules").children) {
+        for (dsSchedule in dataSnapshot.child("schedules").children) {
             val schedule = Schedules()
             schedule.reserved = dsSchedule.child("reserved").value as Boolean
             schedule.slot = dsSchedule.child("slot").value as String

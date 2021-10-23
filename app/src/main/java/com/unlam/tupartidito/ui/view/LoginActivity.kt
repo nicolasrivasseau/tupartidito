@@ -3,15 +3,15 @@ package com.unlam.tupartidito.ui.view
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.ContactsContract
 import androidx.activity.viewModels
-import com.google.android.material.snackbar.Snackbar
 import com.unlam.tupartidito.core.observe
 import com.unlam.tupartidito.core.toast
 import com.unlam.tupartidito.databinding.ActivityLoginBinding
 import com.unlam.tupartidito.ui.viewmodel.LoginViewModel
-import com.unlam.tupartidito.ui.viewmodel.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding : ActivityLoginBinding
     private val viewModel : LoginViewModel by viewModels()

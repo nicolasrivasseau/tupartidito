@@ -30,7 +30,7 @@ class DetailViewModel : ViewModel() {
 
                 val qrCode = gson.fromJson(qrCodeString, QrCodeJson::class.java)
 
-                var club = GetClubUseCase().invoke(qrCode.id)
+                val club = GetClubUseCase().invoke(qrCode.id)
 
                     if (club.id !== null) {
                         _listClubData.value = club

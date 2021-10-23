@@ -7,8 +7,9 @@ import com.unlam.tupartidito.data.model.user.Rent
 import com.unlam.tupartidito.data.model.user.User
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
+import javax.inject.Inject
 
-class UserFirebaseDatabase {
+class UserFirebaseDatabase @Inject constructor() {
 
     suspend fun getUser(username: String): User? {
         val usersRef = FirebaseDatabase.getInstance().getReference("users")
