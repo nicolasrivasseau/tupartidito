@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     private  val viewModel: MainViewModel by viewModels()
 
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
-    private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
+    private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
