@@ -25,7 +25,7 @@ class ClubFirebaseDatabase @Inject constructor() {
     private fun generateClub(dataSnapshot: DataSnapshot, club: Club) {
         club.id = dataSnapshot.key
         dataSnapshot.exist("latitude"){club.latitude= it as Double}
-        dataSnapshot.exist("longitude"){club.latitude= it as Double}
+        dataSnapshot.exist("longitude"){club.longitude= it as Double}
 
         club.services = Services()
         dataSnapshot.child("services").exist("buffet"){club.services!!.buffet = it as Boolean}
