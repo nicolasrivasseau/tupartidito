@@ -10,7 +10,10 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import com.unlam.tupartidito.adapter.SportAdapter
 import com.unlam.tupartidito.core.observe
 import com.unlam.tupartidito.core.toast
 import com.unlam.tupartidito.databinding.ActivityMainBinding
@@ -26,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.CAMERA)
 
+    private lateinit var adapter: SportAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +59,7 @@ class MainActivity : AppCompatActivity() {
             getRents()
         }
 
+        setObservers()
         binding.launchScanner.setOnClickListener { launchCameraClicked() }
         binding.btnMap.setOnClickListener{ launchMapsClicked() }
 
@@ -118,6 +123,19 @@ class MainActivity : AppCompatActivity() {
     private fun launchMaps() {
         val intent = Intent(binding.root.context, MapActivity::class.java)
         startActivity(intent)
+    }
+
+    private fun setObservers(){
+        with(viewModel){
+            observe(sports){ currentList ->
+                adapter = SportAdapter()
+                binding.recyclerViewClubs.layoutManager = LinearLayoutManager(binding.root.context,RecyclerView.HORIZONTAL,false)
+                binding.recyclerViewClubs.adapter = adapter
+                adapter.setDataList(currentList)
+                adapter.notifyDataSetChanged()
+            }
+            getSports()
+        }
     }
 
     companion object {

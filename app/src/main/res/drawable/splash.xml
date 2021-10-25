@@ -3,11 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:drawable="@color/white" />
-        <item
-
-            >
-            <bitmap android:src="@drawable/wall">
-
+        <item>
+            <bitmap android:src="@drawable/wallpaper">
             </bitmap>
         </item>
 </layer-list>
