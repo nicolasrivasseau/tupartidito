@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.unlam.tupartidito.adapter.SportAdapter
 import com.unlam.tupartidito.core.observe
+import com.unlam.tupartidito.core.toast
 import com.unlam.tupartidito.databinding.ActivityMainBinding
 import com.unlam.tupartidito.ui.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,8 +41,7 @@ class MainActivity : AppCompatActivity() {
 
 
         if(intent.extras?.getBoolean(ERROR_QR) == true){
-            Snackbar.make(binding.root, intent.extras?.getString(ERROR_QR_DESCRIPTION).toString(), Snackbar.LENGTH_SHORT)
-                .show()
+            toast( intent.extras?.getString(ERROR_QR_DESCRIPTION).toString())
         }
 
         // vinculamos nuestro live data con el activity
@@ -72,19 +72,11 @@ class MainActivity : AppCompatActivity() {
                 if (permissions[Manifest.permission.CAMERA] == true) {
                     launchCamera()
                 } else if(permissions[Manifest.permission.CAMERA] == false) {
-                    Toast.makeText(
-                        this,
-                        "Se necesitan los permisos para lanzar la cámara",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    toast("Se necesitan los permisos para lanzar la cámara")
                 }else if (permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
                     launchMaps()
                 } else if(permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == false) {
-                    Toast.makeText(
-                        this,
-                        "Se necesitan los permisos para abrir el mapa.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    toast("Se necesitan los permisos de ubicacion para abrir el mapa.")
                 }
 
             }

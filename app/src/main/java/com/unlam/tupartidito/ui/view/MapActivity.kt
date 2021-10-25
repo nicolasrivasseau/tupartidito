@@ -54,11 +54,12 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
 private fun createMarker(clubs: List<Club>) {
     for (club in clubs) {
-        val coordinate = LatLng(club.latitude!!, club.longitude!!)
-        map.addMarker(MarkerOptions().position(coordinate).title(club.id))
+        if(club.latitude != null && club.longitude != null){
+            val coordinate = LatLng(club.latitude!!, club.longitude!!)
+            map.addMarker(MarkerOptions().position(coordinate).title(club.id))
+        }
     }
 }
-
 private fun createFragment() {
     val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
     mapFragment.getMapAsync(this)
