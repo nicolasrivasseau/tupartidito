@@ -11,9 +11,11 @@ import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.unlam.tupartidito.adapter.RentsAdapter
 import com.unlam.tupartidito.adapter.SportAdapter
-import com.unlam.tupartidito.core.observe
-import com.unlam.tupartidito.core.toast
+import com.unlam.tupartidito.common.Constants
+import com.unlam.tupartidito.common.observe
+import com.unlam.tupartidito.common.toast
 import com.unlam.tupartidito.databinding.ActivityMainBinding
 import com.unlam.tupartidito.ui.map.MapActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,7 +29,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.CAMERA)
 
-    private lateinit var adapter: SportAdapter
+    private lateinit var adapter: RentsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,33 +38,38 @@ class MainActivity : AppCompatActivity() {
 
 
         createPermissionsLauncher()
-
-
-        if(intent.extras?.getBoolean(ERROR_QR) == true){
-            toast( intent.extras?.getString(ERROR_QR_DESCRIPTION).toString())
-        }
-
         setObservers()
+
+        validateIntents()
         setEvents()
-        binding.launchScanner.setOnClickListener { launchCameraClicked() }
-        binding.btnMap.setOnClickListener{ launchMapsClicked() }
+
 
     }
 
+    private fun validateIntents() {
+        if(intent.extras?.getBoolean(Constants.ERROR_QR) == true){
+            toast( intent.extras?.getString(Constants.ERROR_QR_DESCRIPTION).toString())
+        }
+        if(intent.extras!!.containsKey(Constants.MAIN_PARAM)){
+            val idUser = intent.extras!!.getString(Constants.MAIN_PARAM)
+            viewModel.getRents(idUser.toString())
+        }
+    }
+
     private fun setEvents() {
-        viewModel.getRents()
+        binding.launchScanner.setOnClickListener { launchCameraClicked() }
+        binding.btnMap.setOnClickListener{ launchMapsClicked() }
     }
 
     private fun setObservers(){
         with(viewModel){
-            observe(sports){ currentList ->
-                adapter = SportAdapter()
+            observe(rentsData){ response ->
+                adapter = RentsAdapter()
                 binding.recyclerViewClubs.layoutManager = LinearLayoutManager(binding.root.context,RecyclerView.HORIZONTAL,false)
                 binding.recyclerViewClubs.adapter = adapter
-                adapter.setDataList(currentList)
+                adapter.setRents(response.rents!!)
                 adapter.notifyDataSetChanged()
             }
-            getSports()
         }
     }
 
@@ -125,8 +132,4 @@ class MainActivity : AppCompatActivity() {
     }
     //endregion
 
-    companion object {
-        val ERROR_QR_DESCRIPTION = "ERROR_QR_DESCRIPTION"
-        val ERROR_QR = "ERROR_QR"
-    }
 }

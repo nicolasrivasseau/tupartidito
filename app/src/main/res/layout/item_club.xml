@@ -92,11 +92,13 @@
                         android:id="@+id/txtPrice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="#4A4A4A"
                         android:text="precio"/>
                     <TextView
-                        android:id="@+id/duration"
+                        android:id="@+id/txtDuration"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="#4A4A4A"
                         android:text="duracion"/>
                 </LinearLayout>
             </LinearLayout>

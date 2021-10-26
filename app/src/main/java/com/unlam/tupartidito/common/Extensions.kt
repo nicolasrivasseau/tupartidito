@@ -1,4 +1,4 @@
-package com.unlam.tupartidito.core
+package com.unlam.tupartidito.common
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData

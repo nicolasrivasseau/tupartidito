@@ -10,7 +10,7 @@ import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.unlam.tupartidito.R
-import com.unlam.tupartidito.core.observe
+import com.unlam.tupartidito.common.observe
 import com.unlam.tupartidito.data.model.club.Club
 import com.unlam.tupartidito.databinding.ActivityMapBinding
 import com.unlam.tupartidito.ui.detail_club.DetailActivity

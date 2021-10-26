@@ -1,9 +1,8 @@
 package com.unlam.tupartidito.data.network
 
-import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.FirebaseDatabase
-import com.unlam.tupartidito.core.exist
+import com.unlam.tupartidito.common.exist
 import com.unlam.tupartidito.data.model.user.Rent
 import com.unlam.tupartidito.data.model.user.User
 import kotlinx.coroutines.tasks.await
@@ -27,6 +26,7 @@ class UserFirebaseDatabase @Inject constructor() {
     }
 
     private fun generateUser(dataSnapshot: DataSnapshot, user: User) {
+        user.id = dataSnapshot.key
         dataSnapshot.exist("name") { user.name = it as String }
         dataSnapshot.exist("password") { user.password = it as String }
 
@@ -34,6 +34,9 @@ class UserFirebaseDatabase @Inject constructor() {
             val rent = Rent()
             rent.id_rent = dsRent.key
             dsRent.exist("id_club") { rent.id_club = it as String }
+            dsRent.exist("location") { rent.location = it as String }
+            dsRent.exist("price") { rent.price = it as String }
+            dsRent.exist("slot") { rent.slot = it as String }
             user.rents.add(rent)
         }
     }

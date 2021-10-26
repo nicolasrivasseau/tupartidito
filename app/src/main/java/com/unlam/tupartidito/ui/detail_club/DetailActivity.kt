@@ -5,7 +5,8 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.unlam.tupartidito.core.observe
+import com.unlam.tupartidito.common.Constants
+import com.unlam.tupartidito.common.observe
 import com.unlam.tupartidito.data.model.ErrorCodeQr
 import com.unlam.tupartidito.databinding.ActivityDetailBinding
 import com.unlam.tupartidito.ui.main.MainActivity
@@ -61,8 +62,8 @@ class DetailActivity : AppCompatActivity() {
 
    private fun goToMain(errorCodeQr : ErrorCodeQr){
       val intent = Intent(getApplicationContext(), MainActivity::class.java)
-       intent.putExtra(MainActivity.ERROR_QR,true)
-       intent.putExtra(MainActivity.ERROR_QR_DESCRIPTION,errorCodeQr.description)
+       intent.putExtra(Constants.ERROR_QR,true)
+       intent.putExtra(Constants.ERROR_QR_DESCRIPTION,errorCodeQr.description)
        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
        startActivity(intent)
        finish()

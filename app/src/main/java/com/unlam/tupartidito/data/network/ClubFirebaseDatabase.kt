@@ -3,7 +3,7 @@ package com.unlam.tupartidito.data.network
 import com.unlam.tupartidito.data.model.club.Schedules
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.FirebaseDatabase
-import com.unlam.tupartidito.core.exist
+import com.unlam.tupartidito.common.exist
 import com.unlam.tupartidito.data.model.club.Club
 import com.unlam.tupartidito.data.model.club.Services
 import kotlinx.coroutines.tasks.await

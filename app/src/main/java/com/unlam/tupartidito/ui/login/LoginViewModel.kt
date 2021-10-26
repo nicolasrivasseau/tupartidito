@@ -30,7 +30,7 @@ class LoginViewModel @Inject constructor(
                 val user = getUserFirebaseUseCase(username)
                 if (validUserUseCase(user)) {
                     if (validCredentialsUseCase(user, password)) {
-                        _userData.value = UserLiveData(true)
+                        _userData.value = UserLiveData(true,null,user)
                     } else {
                         _userData.value = UserLiveData(false, "Credenciales invalidas.")
                     }
