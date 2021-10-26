@@ -22,6 +22,8 @@ class LoginActivity : AppCompatActivity() {
 
         setObservers()
         setEvents()
+        binding.txtEmail.setText("root")
+        binding.txtPassword.setText("toor")
     }
 
     private fun setObservers(){

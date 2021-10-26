@@ -9,5 +9,4 @@ data class Club(var id: String? = null) : Serializable{
     var longitude:Double? = null
     var services: Services? = null
     var schedules: ArrayList<Schedules> = ArrayList()
-
 }

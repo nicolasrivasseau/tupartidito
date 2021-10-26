@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.unlam.tupartidito.R
 import com.unlam.tupartidito.data.model.sport.Sport
+import kotlinx.android.synthetic.main.activity_login.view.*
 import kotlinx.android.synthetic.main.item_club.view.*
 
 class SportAdapter : RecyclerView.Adapter<SportAdapter.ViewHolder>() {
@@ -26,8 +27,15 @@ class SportAdapter : RecyclerView.Adapter<SportAdapter.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        var club = dataList[position]
-        holder.itemView.itemClub.text = club.url
+        val club = dataList[position]
+
+        with(holder.itemView){
+            txtClubName.text = "test"
+            txtDay.text = "test"
+            txtLocation.text = "test"
+            txtPrice.text = "test"
+        }
+//        holder.itemView.nameSport.text = club.url
     }
 
     override fun getItemCount(): Int {
