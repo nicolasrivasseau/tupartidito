@@ -12,7 +12,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.unlam.tupartidito.adapter.RentsAdapter
-import com.unlam.tupartidito.adapter.SportAdapter
 import com.unlam.tupartidito.common.Constants
 import com.unlam.tupartidito.common.observe
 import com.unlam.tupartidito.common.toast
@@ -21,7 +20,7 @@ import com.unlam.tupartidito.ui.map.MapActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity()  {
     private lateinit var binding : ActivityMainBinding
 
     private  val viewModel: MainViewModel by viewModels()
@@ -36,14 +35,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         createPermissionsLauncher()
         setObservers()
-
         validateIntents()
         setEvents()
-
-
     }
 
     private fun validateIntents() {
@@ -69,6 +64,7 @@ class MainActivity : AppCompatActivity() {
                 binding.recyclerViewClubs.adapter = adapter
                 adapter.setRents(response.rents!!)
                 adapter.notifyDataSetChanged()
+                binding.txtCount.text = adapter.itemCount.toString()
             }
         }
     }
