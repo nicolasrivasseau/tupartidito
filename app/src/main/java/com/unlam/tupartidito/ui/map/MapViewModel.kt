@@ -1,4 +1,4 @@
-package com.unlam.tupartidito.ui.viewmodel
+package com.unlam.tupartidito.ui.map
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

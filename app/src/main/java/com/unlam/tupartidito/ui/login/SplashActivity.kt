@@ -1,4 +1,4 @@
-package com.unlam.tupartidito.ui.view
+package com.unlam.tupartidito.ui.login
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

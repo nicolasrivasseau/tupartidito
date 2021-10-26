@@ -1,4 +1,4 @@
-package com.unlam.tupartidito.ui.view
+package com.unlam.tupartidito.ui.login
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,7 +7,7 @@ import androidx.activity.viewModels
 import com.unlam.tupartidito.core.observe
 import com.unlam.tupartidito.core.toast
 import com.unlam.tupartidito.databinding.ActivityLoginBinding
-import com.unlam.tupartidito.ui.viewmodel.LoginViewModel
+import com.unlam.tupartidito.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

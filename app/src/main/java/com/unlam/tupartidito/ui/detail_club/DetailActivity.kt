@@ -1,4 +1,4 @@
-package com.unlam.tupartidito.ui.view
+package com.unlam.tupartidito.ui.detail_club
 
 import android.content.Intent
 import android.net.Uri
@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.unlam.tupartidito.core.observe
 import com.unlam.tupartidito.data.model.ErrorCodeQr
 import com.unlam.tupartidito.databinding.ActivityDetailBinding
-import com.unlam.tupartidito.ui.viewmodel.DetailViewModel
+import com.unlam.tupartidito.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 

@@ -1,4 +1,4 @@
-package com.unlam.tupartidito.ui.view
+package com.unlam.tupartidito.ui.main
 
 import android.content.ContentValues.TAG
 import android.content.Intent
@@ -14,6 +14,7 @@ import java.util.concurrent.Executors
 import androidx.appcompat.app.AppCompatActivity
 import com.unlam.tupartidito.databinding.ActivityScannerBinding
 import com.unlam.tupartidito.domain.QrCodeAnalyzerUseCase
+import com.unlam.tupartidito.ui.detail_club.DetailActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

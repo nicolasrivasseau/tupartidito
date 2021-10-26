@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TuPartidito">
         <activity
-            android:name=".ui.view.SplashActivity"
+            android:name=".ui.login.SplashActivity"
             android:exported="true"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -31,21 +31,21 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".ui.view.MapActivity"
+            android:name=".ui.map.MapActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.DetailActivity"
+            android:name=".ui.detail_club.DetailActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.ScannerActivity"
+            android:name=".ui.main.ScannerActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.LoginActivity"
+            android:name=".ui.login.LoginActivity"
             android:exported="true"
             android:label="@string/title_activity_login" />
 
         <activity
-            android:name=".ui.view.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:exported="false" />
     </application>
 
