@@ -10,4 +10,5 @@ data class Club(var id: String? = null) : Serializable{
     var location:String? = null
     var services: Service? = null
     var schedules: ArrayList<Schedule> = ArrayList()
+    var url_image:String? =null
 }

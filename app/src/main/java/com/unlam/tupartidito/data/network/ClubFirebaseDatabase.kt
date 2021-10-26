@@ -27,6 +27,7 @@ class ClubFirebaseDatabase @Inject constructor() {
         dataSnapshot.exist("latitude"){club.latitude= it as Double}
         dataSnapshot.exist("longitude"){club.longitude= it as Double}
         dataSnapshot.exist("location"){club.location= it as String}
+        dataSnapshot.exist("url_image"){club.url_image= it as String}
 
         club.services = Service()
         dataSnapshot.child("services").exist("buffet"){club.services!!.buffet = it as Boolean}

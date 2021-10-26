@@ -35,7 +35,7 @@ class RentsAdapter : RecyclerView.Adapter<RentsAdapter.ViewHolder>() {
             txtDay.text = rent.slot
             txtLocation.text = rent.location
             txtPrice.text = rent.price
-            txtDuration.text = " (60min.)"
+            txtDuration.text = "(60min.)"
         }
     }
 }

@@ -28,7 +28,7 @@
                 android:id="@+id/imageClub"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:src="@drawable/wallpaper" />
+                android:src="@drawable/ic_futbol" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -88,13 +88,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_price"/>
                     <TextView
                         android:id="@+id/txtPrice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:paddingLeft="3dp"
                         android:textColor="#4A4A4A"
                         android:text="precio"/>
                     <TextView
+                        android:paddingLeft="3dp"
                         android:id="@+id/txtDuration"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
