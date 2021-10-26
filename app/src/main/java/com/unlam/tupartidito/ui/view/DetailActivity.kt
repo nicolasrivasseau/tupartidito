@@ -61,7 +61,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
    private fun goToMain(errorCodeQr : ErrorCodeQr){
-       Intent(getApplicationContext(), MainActivity::class.java)
+       intent = Intent(getApplicationContext(), MainActivity::class.java)
        intent.putExtra(MainActivity.ERROR_QR,true)
        intent.putExtra(MainActivity.ERROR_QR_DESCRIPTION,errorCodeQr.description)
        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
