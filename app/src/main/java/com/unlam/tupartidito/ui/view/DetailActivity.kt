@@ -54,14 +54,13 @@ class DetailActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-
-        intent = Intent(getApplicationContext(), MainActivity::class.java)
+        val intent = Intent(getApplicationContext(), MainActivity::class.java)
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)
     }
 
    private fun goToMain(errorCodeQr : ErrorCodeQr){
-       intent = Intent(getApplicationContext(), MainActivity::class.java)
+      val intent = Intent(getApplicationContext(), MainActivity::class.java)
        intent.putExtra(MainActivity.ERROR_QR,true)
        intent.putExtra(MainActivity.ERROR_QR_DESCRIPTION,errorCodeQr.description)
        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
