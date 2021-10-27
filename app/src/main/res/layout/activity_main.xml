@@ -39,7 +39,7 @@
             android:textStyle="bold"/>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewClubs"
+            android:id="@+id/recyclerViewRents"
             android:layout_width="match_parent"
             android:layout_height="175dp"
             android:orientation="horizontal"
@@ -49,6 +49,35 @@
             tools:ignore="MissingConstraints">
 
         </androidx.recyclerview.widget.RecyclerView>
+
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/recyclerViewClubs"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="175dp"-->
+<!--            android:orientation="horizontal"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/recyclerViewRents"-->
+<!--            tools:ignore="MissingConstraints">-->
+
+<!--        </androidx.recyclerview.widget.RecyclerView>-->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerViewRents">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/linearClubs"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/recyclerViewRents">
+
+            </LinearLayout>
+        </HorizontalScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

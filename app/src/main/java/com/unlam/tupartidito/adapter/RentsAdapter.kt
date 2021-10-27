@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.unlam.tupartidito.R
 import com.unlam.tupartidito.data.model.user.Rent
-import kotlinx.android.synthetic.main.item_club.view.*
+import kotlinx.android.synthetic.main.item_rent.view.*
 
 class RentsAdapter : RecyclerView.Adapter<RentsAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
@@ -20,7 +20,7 @@ class RentsAdapter : RecyclerView.Adapter<RentsAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater
             .from(parent.context)
-            .inflate(R.layout.item_club, parent, false)
+            .inflate(R.layout.item_rent, parent, false)
         return ViewHolder(view)
     }
 

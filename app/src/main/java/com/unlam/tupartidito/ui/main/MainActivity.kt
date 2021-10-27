@@ -11,6 +11,7 @@ import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.unlam.tupartidito.R
 import com.unlam.tupartidito.adapter.RentsAdapter
 import com.unlam.tupartidito.common.Constants
 import com.unlam.tupartidito.common.observe
@@ -18,6 +19,7 @@ import com.unlam.tupartidito.common.toast
 import com.unlam.tupartidito.databinding.ActivityMainBinding
 import com.unlam.tupartidito.ui.map.MapActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.item_club.view.*
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity()  {
@@ -28,7 +30,7 @@ class MainActivity : AppCompatActivity()  {
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.CAMERA)
 
-    private lateinit var adapter: RentsAdapter
+    private lateinit var adapterRents: RentsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +50,7 @@ class MainActivity : AppCompatActivity()  {
         if(intent.extras!!.containsKey(Constants.MAIN_PARAM)){
             val idUser = intent.extras!!.getString(Constants.MAIN_PARAM)
             viewModel.getRents(idUser.toString())
+            viewModel.getClubs()
         }
     }
 
@@ -59,12 +62,23 @@ class MainActivity : AppCompatActivity()  {
     private fun setObservers(){
         with(viewModel){
             observe(rentsData){ response ->
-                adapter = RentsAdapter()
-                binding.recyclerViewClubs.layoutManager = LinearLayoutManager(binding.root.context,RecyclerView.HORIZONTAL,false)
-                binding.recyclerViewClubs.adapter = adapter
-                adapter.setRents(response.rents!!)
-                adapter.notifyDataSetChanged()
-                binding.txtCount.text = adapter.itemCount.toString()
+                adapterRents = RentsAdapter()
+                binding.recyclerViewRents.layoutManager = LinearLayoutManager(binding.root.context,RecyclerView.HORIZONTAL,false)
+                binding.recyclerViewRents.adapter = adapterRents
+                adapterRents.setRents(response.rents!!)
+                adapterRents.notifyDataSetChanged()
+                binding.txtCount.text = adapterRents.itemCount.toString()
+            }
+            observe(clubsData){clubs ->
+                for(club in clubs){
+                    val child = layoutInflater.inflate(R.layout.item_club,null)
+                    child.txtClubLocation.text = club.location
+                    child.txtClubName.text = club.id.toString().uppercase()
+                    child.setOnClickListener {
+                        toast("test${child.txtClubName.text.toString()}")
+                    }
+                    binding.linearClubs.addView(child)
+                }
             }
         }
     }
