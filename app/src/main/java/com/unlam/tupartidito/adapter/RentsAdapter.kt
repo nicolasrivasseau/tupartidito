@@ -1,5 +1,8 @@
 package com.unlam.tupartidito.adapter
 
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,6 +39,20 @@ class RentsAdapter : RecyclerView.Adapter<RentsAdapter.ViewHolder>() {
             txtLocation.text = rent.location
             txtPrice.text = rent.price
             txtDuration.text = "(60min.)"
+            txtClubName.setOnClickListener{compartir(rent, context)}
+        }
+    }
+
+    private fun compartir(rent: Rent, context: Context){
+        try {
+            Intent(Intent.ACTION_SEND).apply {
+                putExtra( Intent.EXTRA_TEXT, "Esta es una invitacion a jugar un partidito en el club ${rent.id_club} a las ${rent.slot}. Direccion: ${rent.location}")
+                setType("text/plain")
+                setPackage("com.whatsapp")
+                context.startActivity(this)
+            }
+        } catch (ignored: ActivityNotFoundException){
+            //Toast.makeText(this,"no encontre app",Toast.LENGTH_LONG).show()
         }
     }
 }

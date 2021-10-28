@@ -2,13 +2,11 @@ package com.unlam.tupartidito.ui.main
 
 import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.unlam.tupartidito.R
@@ -96,12 +94,13 @@ class MainActivity : AppCompatActivity() {
                     startActivity(Intent(this, ScannerActivity::class.java))
                 }
 
-            permissionLocation = checkAndLaunch(
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                R.string.permission_miss_location
-            ) {
-               startActivity(Intent(binding.root.context,MapActivity::class.java))
-            }
+            permissionLocation =
+                checkAndLaunch(
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    R.string.permission_miss_location
+                ) {
+                    startActivity(Intent(binding.root.context, MapActivity::class.java))
+                }
         }
     }
     //endregion
