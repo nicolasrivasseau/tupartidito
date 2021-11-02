@@ -20,6 +20,7 @@ import com.unlam.tupartidito.common.checkAndLaunch
 import com.unlam.tupartidito.common.observe
 import com.unlam.tupartidito.common.toast
 import com.unlam.tupartidito.databinding.ActivityMainBinding
+import com.unlam.tupartidito.ui.login.LoginActivity
 import com.unlam.tupartidito.ui.map.MapActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.item_club.view.*
@@ -34,9 +35,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapterRents: RentsAdapter
     private lateinit var permissionCamera: ActivityResultLauncher<String>
     private lateinit var permissionLocation: ActivityResultLauncher<String>
-
+    private lateinit var myPreferences : SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        myPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setPermissions()
@@ -57,11 +59,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setEvents() {
+
         binding.launchScanner.setOnClickListener {
             permissionCamera.launch(Manifest.permission.CAMERA)
         }
         binding.btnMap.setOnClickListener {
             permissionLocation.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
+        }
+        binding.logout.setOnClickListener {
+            myPreferences.edit().clear().apply()
+            startActivity(Intent(this,LoginActivity::class.java))
+            finish()
         }
     }
 
