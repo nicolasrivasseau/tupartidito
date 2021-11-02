@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.unlam.tupartidito.data.model.ErrorCodeQr
-import com.unlam.tupartidito.data.model.QrCode.QrCodeJson
+import com.unlam.tupartidito.data.model.qr.QrCodeJson
 import com.unlam.tupartidito.data.model.club.Club
 import com.unlam.tupartidito.domain.club.GetClubUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
