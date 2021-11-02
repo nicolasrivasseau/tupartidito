@@ -10,23 +10,23 @@ import androidx.appcompat.app.AppCompatActivity
 import com.unlam.tupartidito.common.Constants
 import com.unlam.tupartidito.common.observe
 import com.unlam.tupartidito.data.model.ErrorCodeQr
-import com.unlam.tupartidito.databinding.ActivityDetailBinding
+import com.unlam.tupartidito.databinding.ActivityDetailClubBinding
 import com.unlam.tupartidito.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
 class DetailClubActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityDetailBinding
+    private lateinit var binding: ActivityDetailClubBinding
     private  val viewModel: DetailViewModel by viewModels()
-    var clubLocationLat: Double? = null
-    var clubLocationLon: Double? = null
-    lateinit var qrCodeString: String
+    private var clubLocationLat: Double? = null
+    private var clubLocationLon: Double? = null
+    private lateinit var qrCodeString: String
     private lateinit var myPreferences : SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityDetailBinding.inflate(layoutInflater)
+        binding = ActivityDetailClubBinding.inflate(layoutInflater)
         setContentView(binding.root)
         qrCodeString = intent.extras!!.getString(Constants.BARCODE_JSON).toString()
         myPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
@@ -68,7 +68,7 @@ class DetailClubActivity : AppCompatActivity() {
        intent.putExtra(Constants.ERROR_QR,true)
        intent.putExtra(Constants.ERROR_QR_DESCRIPTION,errorCodeQr.description)
        intent.putExtra(Constants.MAIN_PARAM,myPreferences.getString("user",""))
-       intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
        startActivity(intent)
        finish()
    }
