@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import androidx.appcompat.app.AppCompatActivity
+import com.unlam.tupartidito.common.Constants
 import com.unlam.tupartidito.databinding.ActivityScannerBinding
 import com.unlam.tupartidito.domain.QrCodeAnalyzerUseCase
 import com.unlam.tupartidito.ui.detail_club.DetailActivity
@@ -53,8 +54,9 @@ class ScannerActivity : AppCompatActivity() {
                 .also { imageAnalysis ->
                     imageAnalysis.setAnalyzer(cameraExecutor, QrCodeAnalyzerUseCase {
 
+
                         val intent = Intent(this, DetailActivity::class.java)
-                        intent.putExtra(DetailActivity.BARCODE_JSON, it)
+                        intent.putExtra(Constants.BARCODE_JSON, it)
                         startActivity(intent)
                         finish()
 

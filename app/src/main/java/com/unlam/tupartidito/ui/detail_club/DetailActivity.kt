@@ -1,6 +1,8 @@
 package com.unlam.tupartidito.ui.detail_club
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -17,19 +19,28 @@ import dagger.hilt.android.AndroidEntryPoint
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
     private  val viewModel: DetailViewModel by viewModels()
+    var clubLocationLat: Double? = null
+    var clubLocationLon: Double? = null
+    lateinit var qrCodeString: String
+    private lateinit var myPreferences : SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        qrCodeString = intent.extras!!.getString(Constants.BARCODE_JSON).toString()
+        myPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
+        setObservers()
+        setEvent()
+    }
 
 
-        val qrCodeString = intent.extras!!.getString(BARCODE_JSON)
-         var clubLocationLat : Double? = null
-         var clubLocationLon : Double? = null
 
+
+    private fun setObservers() {
 
         with(viewModel){
+
             observe(listClubData){currentList ->
                 clubLocationLat = currentList.latitude
                 clubLocationLon = currentList.longitude
@@ -46,24 +57,17 @@ class DetailActivity : AppCompatActivity() {
             getClubData(qrCodeString)
         }
 
-
-            binding.goToMaps.setOnClickListener { goToMaps(clubLocationLat,clubLocationLon) }
-        }
-
-
-
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        val intent = Intent(getApplicationContext(), MainActivity::class.java)
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        startActivity(intent)
     }
 
-   private fun goToMain(errorCodeQr : ErrorCodeQr){
-      val intent = Intent(getApplicationContext(), MainActivity::class.java)
+    private fun setEvent() {
+        binding.goToMaps.setOnClickListener { goToMaps(clubLocationLat,clubLocationLon) }
+    }
+
+    private fun goToMain(errorCodeQr : ErrorCodeQr){
+      val intent = Intent(this, MainActivity::class.java)
        intent.putExtra(Constants.ERROR_QR,true)
        intent.putExtra(Constants.ERROR_QR_DESCRIPTION,errorCodeQr.description)
+       intent.putExtra(Constants.MAIN_PARAM,myPreferences.getString("user",""))
        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
        startActivity(intent)
        finish()
@@ -78,7 +82,5 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    companion object {
-        val BARCODE_JSON = "BARCODE_JSON"
-    }
+
 }

@@ -10,6 +10,7 @@ import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.unlam.tupartidito.R
+import com.unlam.tupartidito.common.Constants
 import com.unlam.tupartidito.common.observe
 import com.unlam.tupartidito.data.model.club.Club
 import com.unlam.tupartidito.databinding.ActivityMapBinding
@@ -71,7 +72,7 @@ override fun onMapReady(googleMap: GoogleMap?) {
     configureMap(map.uiSettings)
     map.setOnMarkerClickListener{currentMaker ->
         val intent = Intent(binding.root.context, DetailActivity::class.java)
-        intent.putExtra(DetailActivity.BARCODE_JSON, "{id:${currentMaker.title}}")
+        intent.putExtra(Constants.BARCODE_JSON, "{id:${currentMaker.title}}")
         startActivity(intent)
         return@setOnMarkerClickListener false
     }

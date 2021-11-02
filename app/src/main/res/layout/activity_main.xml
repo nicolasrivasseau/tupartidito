@@ -38,6 +38,7 @@
             app:layout_constraintTop_toTopOf="@+id/textView"
             android:textStyle="bold"/>
 
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewRents"
             android:layout_width="match_parent"

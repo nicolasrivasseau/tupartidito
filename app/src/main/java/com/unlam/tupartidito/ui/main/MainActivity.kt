@@ -1,14 +1,18 @@
 package com.unlam.tupartidito.ui.main
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SnapHelper
 import com.unlam.tupartidito.R
 import com.unlam.tupartidito.adapter.RentsAdapter
 import com.unlam.tupartidito.common.Constants
@@ -19,6 +23,7 @@ import com.unlam.tupartidito.databinding.ActivityMainBinding
 import com.unlam.tupartidito.ui.map.MapActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.item_club.view.*
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -34,7 +39,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         setPermissions()
         setObservers()
         validateIntents()
@@ -67,6 +71,8 @@ class MainActivity : AppCompatActivity() {
                 adapterRents = RentsAdapter()
                 binding.recyclerViewRents.layoutManager =
                     LinearLayoutManager(binding.root.context, RecyclerView.HORIZONTAL, false)
+                val snapHelper: SnapHelper = PagerSnapHelper()
+                snapHelper.attachToRecyclerView(binding.recyclerViewRents)
                 binding.recyclerViewRents.adapter = adapterRents
                 adapterRents.setRents(response.rents!!)
                 adapterRents.notifyDataSetChanged()
@@ -103,6 +109,7 @@ class MainActivity : AppCompatActivity() {
                 }
         }
     }
+
     //endregion
 
 }
