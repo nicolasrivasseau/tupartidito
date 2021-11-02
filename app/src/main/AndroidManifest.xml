@@ -34,7 +34,7 @@
             android:name=".ui.map.MapActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.detail_club.DetailActivity"
+            android:name=".ui.detail_club.DetailClubActivity"
             android:exported="false" />
         <activity
             android:name=".ui.main.ScannerActivity"

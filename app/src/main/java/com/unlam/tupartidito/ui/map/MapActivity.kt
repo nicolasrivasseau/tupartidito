@@ -2,9 +2,9 @@ package com.unlam.tupartidito.ui.map
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
@@ -14,7 +14,7 @@ import com.unlam.tupartidito.common.Constants
 import com.unlam.tupartidito.common.observe
 import com.unlam.tupartidito.data.model.club.Club
 import com.unlam.tupartidito.databinding.ActivityMapBinding
-import com.unlam.tupartidito.ui.detail_club.DetailActivity
+import com.unlam.tupartidito.ui.detail_club.DetailClubActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -71,7 +71,7 @@ override fun onMapReady(googleMap: GoogleMap?) {
     map = googleMap!!
     configureMap(map.uiSettings)
     map.setOnMarkerClickListener{currentMaker ->
-        val intent = Intent(binding.root.context, DetailActivity::class.java)
+        val intent = Intent(binding.root.context, DetailClubActivity::class.java)
         intent.putExtra(Constants.BARCODE_JSON, "{id:${currentMaker.title}}")
         startActivity(intent)
         return@setOnMarkerClickListener false

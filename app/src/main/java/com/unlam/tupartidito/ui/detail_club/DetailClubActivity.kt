@@ -16,7 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class DetailActivity : AppCompatActivity() {
+class DetailClubActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
     private  val viewModel: DetailViewModel by viewModels()
     var clubLocationLat: Double? = null
