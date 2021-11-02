@@ -6,15 +6,19 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
+import com.unlam.tupartidito.adapter.TabClubAdapter
 import com.unlam.tupartidito.common.Constants
 import com.unlam.tupartidito.common.observe
 import com.unlam.tupartidito.data.model.ErrorCodeQr
+import com.unlam.tupartidito.data.model.club.Club
 import com.unlam.tupartidito.data.model.qr.QrCodeJson
 import com.unlam.tupartidito.databinding.ActivityDetailClubBinding
 import com.unlam.tupartidito.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_detail_club.*
 
 
 @AndroidEntryPoint
@@ -29,8 +33,37 @@ class DetailClubActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailClubBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        myPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
 
+        setContentView(binding.root)
+        validateIntents()
+        setObservers()
+        //setEvent()
+    }
+
+    private fun setTab(club : Club) {
+        with(binding){
+            tabLayout.addTab(tabLayout.newTab().setText("HORARIOS"))
+            tabLayout.addTab(tabLayout.newTab().setText("COMPLEJO"))
+            tabLayout.tabGravity = TabLayout.GRAVITY_FILL
+            val adapter = TabClubAdapter(binding.root.context,supportFragmentManager,tabLayout.tabCount)
+            adapter.setDataClub(club)
+            viewPager.adapter = adapter
+            viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
+            tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
+                override fun onTabSelected(tab: TabLayout.Tab?) {
+                    viewPager.currentItem = tab!!.position
+                }
+
+                override fun onTabUnselected(tab: TabLayout.Tab?) {}
+
+                override fun onTabReselected(tab: TabLayout.Tab?) {}
+
+            })
+        }
+    }
+
+    private fun validateIntents() {
         if(intent.extras!!.containsKey(Constants.BARCODE_JSON)){
             val qr = intent.extras!!.getString(Constants.BARCODE_JSON).toString()
             val gson = Gson()
@@ -40,10 +73,6 @@ class DetailClubActivity : AppCompatActivity() {
         if(intent.extras!!.containsKey(Constants.ID_CLUB)){
             idClub = intent.extras!!.getString(Constants.ID_CLUB).toString()
         }
-
-        myPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
-        setObservers()
-        //setEvent()
     }
 
 
@@ -55,6 +84,7 @@ class DetailClubActivity : AppCompatActivity() {
                     .get()
                     .load(club.url_image)
                     .into(binding.ivClub)
+                setTab(club)
             }
 
 //            observe(listClubData) { currentList ->
