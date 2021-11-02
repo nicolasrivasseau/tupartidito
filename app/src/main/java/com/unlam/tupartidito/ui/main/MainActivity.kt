@@ -19,7 +19,9 @@ import com.unlam.tupartidito.common.Constants
 import com.unlam.tupartidito.common.checkAndLaunch
 import com.unlam.tupartidito.common.observe
 import com.unlam.tupartidito.common.toast
+import com.unlam.tupartidito.databinding.ActivityDetailClubBinding
 import com.unlam.tupartidito.databinding.ActivityMainBinding
+import com.unlam.tupartidito.ui.detail_club.DetailClubActivity
 import com.unlam.tupartidito.ui.login.LoginActivity
 import com.unlam.tupartidito.ui.map.MapActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,7 +37,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapterRents: RentsAdapter
     private lateinit var permissionCamera: ActivityResultLauncher<String>
     private lateinit var permissionLocation: ActivityResultLauncher<String>
-    private lateinit var myPreferences : SharedPreferences
+    private lateinit var myPreferences: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         myPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
@@ -68,7 +70,7 @@ class MainActivity : AppCompatActivity() {
         }
         binding.logout.setOnClickListener {
             myPreferences.edit().clear().apply()
-            startActivity(Intent(this,LoginActivity::class.java))
+            startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
     }
@@ -92,7 +94,10 @@ class MainActivity : AppCompatActivity() {
                     child.txtClubLocation.text = club.location
                     child.txtClubName.text = club.id.toString().uppercase()
                     child.setOnClickListener {
-                        toast("test${child.txtClubName.text.toString()}")
+                        val intent =
+                            Intent(binding.root.context, DetailClubActivity::class.java)
+                        intent.putExtra(Constants.ID_CLUB, club.id)
+                        startActivity(intent)
                     }
                     binding.linearClubs.addView(child)
                 }
