@@ -82,7 +82,8 @@ class MainActivity : AppCompatActivity() {
                 binding.recyclerViewRents.layoutManager =
                     LinearLayoutManager(binding.root.context, RecyclerView.HORIZONTAL, false)
                 val snapHelper: SnapHelper = PagerSnapHelper()
-                snapHelper.attachToRecyclerView(binding.recyclerViewRents)
+                if(binding.recyclerViewRents.onFlingListener == null){
+                    snapHelper.attachToRecyclerView(binding.recyclerViewRents)}
                 binding.recyclerViewRents.adapter = adapterRents
                 adapterRents.setRents(response.rents!!)
                 adapterRents.notifyDataSetChanged()
