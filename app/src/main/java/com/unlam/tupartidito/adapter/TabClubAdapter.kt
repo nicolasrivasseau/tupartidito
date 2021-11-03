@@ -24,7 +24,7 @@ class TabClubAdapter(
     override fun getItem(position: Int): Fragment {
         return when (position) {
             0 -> ScheduleClubFragment(club)
-            1 -> DetailClubFragment()
+            1 -> DetailClubFragment(club)
             else -> getItem(position)
         }
     }
