@@ -44,7 +44,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setPermissions()
-        setObservers()
         validateIntents()
         setEvents()
     }
@@ -55,6 +54,7 @@ class MainActivity : AppCompatActivity() {
         }
         if (intent.extras!!.containsKey(Constants.MAIN_PARAM)) {
             val idUser = intent.extras!!.getString(Constants.MAIN_PARAM)
+            setObservers()
             viewModel.getRents(idUser.toString())
             viewModel.getClubs()
         }
@@ -90,6 +90,7 @@ class MainActivity : AppCompatActivity() {
                 binding.txtCount.text = adapterRents.itemCount.toString()
             }
             observe(clubsData) { clubs ->
+                binding.linearClubs.removeAllViews()
                 for (club in clubs) {
                     val child = layoutInflater.inflate(R.layout.item_club, null)
                     child.txtClubLocation.text = club.location
@@ -123,7 +124,6 @@ class MainActivity : AppCompatActivity() {
                 }
         }
     }
-
     //endregion
 
 }
