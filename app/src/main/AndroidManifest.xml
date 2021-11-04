@@ -16,6 +16,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TuPartidito">
         <activity
+            android:name=".ui.detail_rent.RentActivity"
+            android:exported="true"
+            android:label="@string/title_activity_rent"
+            android:theme="@style/Theme.TuPartidito.NoActionBar" />
+        <activity
             android:name=".ui.login.SplashActivity"
             android:exported="true"
             android:theme="@style/SplashTheme">
@@ -43,7 +48,6 @@
             android:name=".ui.login.LoginActivity"
             android:exported="true"
             android:label="@string/title_activity_login" />
-
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="false" />

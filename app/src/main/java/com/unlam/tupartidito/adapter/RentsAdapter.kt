@@ -1,5 +1,6 @@
 package com.unlam.tupartidito.adapter
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -9,9 +10,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.unlam.tupartidito.R
 import com.unlam.tupartidito.data.model.user.Rent
+import com.unlam.tupartidito.ui.detail_rent.RentActivity
 import kotlinx.android.synthetic.main.item_rent.view.*
 
-class RentsAdapter : RecyclerView.Adapter<RentsAdapter.ViewHolder>() {
+class RentsAdapter(var activity: Activity) : RecyclerView.Adapter<RentsAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
     private var _rents = listOf<Rent>()
@@ -40,6 +42,14 @@ class RentsAdapter : RecyclerView.Adapter<RentsAdapter.ViewHolder>() {
             txtPrice.text = rent.price
             txtDuration.text = "(60min.)"
             txtClubName.setOnClickListener{compartir(rent, context)}
+            this.setOnClickListener {
+                val intent = Intent(activity, RentActivity::class.java)
+                val data = arrayOf(rent.id_rent, rent.id_club, rent.location,  rent.price, rent.slot)
+                intent.putExtra("id_rent", rent.id_rent)
+                intent.putExtra("data", data)
+                activity.startActivity(intent)
+                //startActivity
+            }
         }
     }
 
@@ -55,4 +65,9 @@ class RentsAdapter : RecyclerView.Adapter<RentsAdapter.ViewHolder>() {
             //Toast.makeText(this,"no encontre app",Toast.LENGTH_LONG).show()
         }
     }
+
+    private fun openDetaildRent(){
+        val intent = Intent()
+    }
+
 }

@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
     private fun setObservers() {
         with(viewModel) {
             observe(rentsData) { response ->
-                adapterRents = RentsAdapter()
+                adapterRents = RentsAdapter(this@MainActivity)
                 binding.recyclerViewRents.layoutManager =
                     LinearLayoutManager(binding.root.context, RecyclerView.HORIZONTAL, false)
                 val snapHelper: SnapHelper = PagerSnapHelper()
