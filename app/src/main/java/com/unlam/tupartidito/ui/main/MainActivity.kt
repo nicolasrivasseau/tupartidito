@@ -19,7 +19,9 @@ import com.unlam.tupartidito.common.Constants
 import com.unlam.tupartidito.common.checkAndLaunch
 import com.unlam.tupartidito.common.observe
 import com.unlam.tupartidito.common.toast
+import com.unlam.tupartidito.databinding.ActivityDetailClubBinding
 import com.unlam.tupartidito.databinding.ActivityMainBinding
+import com.unlam.tupartidito.ui.detail_club.DetailClubActivity
 import com.unlam.tupartidito.ui.login.LoginActivity
 import com.unlam.tupartidito.ui.map.MapActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,14 +37,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapterRents: RentsAdapter
     private lateinit var permissionCamera: ActivityResultLauncher<String>
     private lateinit var permissionLocation: ActivityResultLauncher<String>
-    private lateinit var myPreferences : SharedPreferences
+    private lateinit var myPreferences: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         myPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setPermissions()
-        setObservers()
         validateIntents()
         setEvents()
     }
@@ -53,6 +54,7 @@ class MainActivity : AppCompatActivity() {
         }
         if (intent.extras!!.containsKey(Constants.MAIN_PARAM)) {
             val idUser = intent.extras!!.getString(Constants.MAIN_PARAM)
+            setObservers()
             viewModel.getRents(idUser.toString())
             viewModel.getClubs()
         }
@@ -68,7 +70,7 @@ class MainActivity : AppCompatActivity() {
         }
         binding.logout.setOnClickListener {
             myPreferences.edit().clear().apply()
-            startActivity(Intent(this,LoginActivity::class.java))
+            startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
     }
@@ -80,19 +82,24 @@ class MainActivity : AppCompatActivity() {
                 binding.recyclerViewRents.layoutManager =
                     LinearLayoutManager(binding.root.context, RecyclerView.HORIZONTAL, false)
                 val snapHelper: SnapHelper = PagerSnapHelper()
-                snapHelper.attachToRecyclerView(binding.recyclerViewRents)
+                if(binding.recyclerViewRents.onFlingListener == null){
+                    snapHelper.attachToRecyclerView(binding.recyclerViewRents)}
                 binding.recyclerViewRents.adapter = adapterRents
                 adapterRents.setRents(response.rents!!)
                 adapterRents.notifyDataSetChanged()
                 binding.txtCount.text = adapterRents.itemCount.toString()
             }
             observe(clubsData) { clubs ->
+                binding.linearClubs.removeAllViews()
                 for (club in clubs) {
                     val child = layoutInflater.inflate(R.layout.item_club, null)
                     child.txtClubLocation.text = club.location
                     child.txtClubName.text = club.id.toString().uppercase()
                     child.setOnClickListener {
-                        toast("test${child.txtClubName.text.toString()}")
+                        val intent =
+                            Intent(binding.root.context, DetailClubActivity::class.java)
+                        intent.putExtra(Constants.ID_CLUB, club.id)
+                        startActivity(intent)
                     }
                     binding.linearClubs.addView(child)
                 }
@@ -117,7 +124,6 @@ class MainActivity : AppCompatActivity() {
                 }
         }
     }
-
     //endregion
 
 }

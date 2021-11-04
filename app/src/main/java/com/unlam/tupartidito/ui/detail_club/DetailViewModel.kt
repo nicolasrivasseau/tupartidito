@@ -18,8 +18,8 @@ class DetailViewModel @Inject constructor(
     private val getClubUseCase: GetClubUseCase
 ) : ViewModel() {
 
-    private val _listClubData = MutableLiveData<Club>()
-    val listClubData: LiveData<Club> get() = _listClubData
+    private val _clubData = MutableLiveData<Club>()
+    val clubData: LiveData<Club> get() = _clubData
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
@@ -27,15 +27,13 @@ class DetailViewModel @Inject constructor(
     private val _readErrorQr = MutableLiveData<ErrorCodeQr>()
     val readErrorQr: LiveData<ErrorCodeQr> get() = _readErrorQr
 
-    fun getClubData(qrCodeString: String?) {
+    fun getClubData(idClub: String?) {
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val gson = Gson()
-                val qrCode = gson.fromJson(qrCodeString, QrCodeJson::class.java)
-                val club = getClubUseCase(qrCode.id)
+                val club = getClubUseCase(idClub.toString())
                 if (club.id !== null) {
-                    _listClubData.value = club
+                    _clubData.value = club
                 } else {
                     _readErrorQr.value =
                         ErrorCodeQr(id = 2, description = "Club Inexistente en la base de datos")
