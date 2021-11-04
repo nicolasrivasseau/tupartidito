@@ -54,11 +54,12 @@ class ScannerActivity : AppCompatActivity() {
                 .also { imageAnalysis ->
                     imageAnalysis.setAnalyzer(cameraExecutor, QrCodeAnalyzerUseCase {
 
-
+                        cameraProvider.unbindAll()
                         val intent = Intent(this, DetailClubActivity::class.java)
                         intent.putExtra(Constants.BARCODE_JSON, it)
                         startActivity(intent)
                         finish()
+
 
                     })
                 }

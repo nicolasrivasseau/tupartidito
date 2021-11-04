@@ -19,23 +19,24 @@ class QrCodeAnalyzerUseCase  (val callback: (String) -> Unit) : ImageAnalysis.An
         .build()
 
     @ExperimentalGetImage
-    override fun analyze(image: ImageProxy) {
-        val codeImage = image.image
+    override fun analyze(imageProxy: ImageProxy) {
 
-        if (codeImage != null) {
+        if (imageProxy != null) {
             val image =
-                InputImage.fromMediaImage(codeImage, image.imageInfo.rotationDegrees)
-            val scanner = BarcodeScanning.getClient()
+                InputImage.fromMediaImage(imageProxy.image, imageProxy.imageInfo.rotationDegrees)
+            val scanner = BarcodeScanning.getClient(options)
 
             scanner.process(image)
                 .addOnSuccessListener { barcodes ->
                     onQrCodeDetected(barcodes) { callback(it) }
-                    codeImage.close()
                 }
-                .addOnFailureListener { e ->
+                .addOnFailureListener {
+                    imageProxy.close()
+                }
+                .addOnCompleteListener{
+                    imageProxy.close()
+                }
 
-                    codeImage.close()
-                }
 
         }
     }

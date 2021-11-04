@@ -19,7 +19,7 @@ import com.unlam.tupartidito.data.model.qr.QrCodeJson
 import com.unlam.tupartidito.databinding.ActivityDetailClubBinding
 import com.unlam.tupartidito.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_detail_club.*
+
 
 
 @AndroidEntryPoint
