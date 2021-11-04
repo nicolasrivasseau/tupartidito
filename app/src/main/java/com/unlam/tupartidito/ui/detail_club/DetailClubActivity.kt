@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import com.unlam.tupartidito.adapter.TabClubAdapter
@@ -29,38 +30,17 @@ class DetailClubActivity : AppCompatActivity() {
     private var longitude: Double? = null
     private lateinit var idClub: String
     private lateinit var myPreferences: SharedPreferences
+    private val adapter by lazy { TabClubAdapter(this) }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailClubBinding.inflate(layoutInflater)
         myPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
-
         setContentView(binding.root)
+
         validateIntents()
         setObservers()
-        //setEvent()
-    }
-
-    private fun setTab(club : Club) {
-        with(binding){
-            tabLayout.addTab(tabLayout.newTab().setText("HORARIOS"))
-            tabLayout.addTab(tabLayout.newTab().setText("COMPLEJO"))
-            tabLayout.tabGravity = TabLayout.GRAVITY_FILL
-            val adapter = TabClubAdapter(binding.root.context,supportFragmentManager,tabLayout.tabCount)
-            adapter.setDataClub(club)
-            viewPager.adapter = adapter
-            viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
-            tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
-                override fun onTabSelected(tab: TabLayout.Tab?) {
-                    viewPager.currentItem = tab!!.position
-                }
-
-                override fun onTabUnselected(tab: TabLayout.Tab?) {}
-
-                override fun onTabReselected(tab: TabLayout.Tab?) {}
-
-            })
-        }
     }
 
     private fun validateIntents() {
@@ -68,23 +48,22 @@ class DetailClubActivity : AppCompatActivity() {
             val qr = intent.extras!!.getString(Constants.BARCODE_JSON).toString()
             val gson = Gson()
             idClub = gson.fromJson(qr, QrCodeJson::class.java).id
+            setTab(idClub)
         }
 
         if(intent.extras!!.containsKey(Constants.ID_CLUB)){
             idClub = intent.extras!!.getString(Constants.ID_CLUB).toString()
+            setTab(idClub)
         }
     }
-
 
     private fun setObservers() {
 
         with(viewModel) {
             observe(clubData){ club ->
-                Picasso
-                    .get()
+                Picasso.get()
                     .load(club.url_image)
                     .into(binding.ivClub)
-                setTab(club)
             }
 
 //            observe(listClubData) { currentList ->
@@ -97,12 +76,24 @@ class DetailClubActivity : AppCompatActivity() {
 //            observe(isLoading) { currentIsLoading ->
 //                //todo
 //            }
-//            observe(readErrorQr) {
-//                goToMain(it)
-//            }
+            
+            observe(readErrorQr) {
+                goToMain(it)
+            }
             getClubData(idClub)
         }
 
+    }
+
+    private fun setTab(idClub : String) {
+        with(binding){
+            tabLayout.tabGravity = TabLayout.GRAVITY_FILL
+            adapter.setDataClub(idClub)
+            viewPager.adapter = adapter
+            TabLayoutMediator(tabLayout,viewPager){ tab,position ->
+                tab.text = listOf("HORARIOS","COMPLEJO")[position]
+            }.attach()
+        }
     }
 
 //    private fun setEvent() {

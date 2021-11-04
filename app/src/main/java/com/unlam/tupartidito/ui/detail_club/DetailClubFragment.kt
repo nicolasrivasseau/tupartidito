@@ -8,9 +8,8 @@ import androidx.fragment.app.Fragment
 import com.unlam.tupartidito.R
 import com.unlam.tupartidito.data.model.club.Club
 
-class DetailClubFragment(clubData: Club?) : Fragment() {
+class DetailClubFragment() : Fragment() {
 
-    private val club: Club? = clubData
 
     override fun onCreateView(
         inflater: LayoutInflater,
