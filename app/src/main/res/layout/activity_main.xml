@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:text="Reservas:"
+            android:text="Tus reservas:"
             android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -42,7 +42,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewRents"
             android:layout_width="match_parent"
-            android:layout_height="175dp"
+            android:layout_height="205dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -39,35 +39,19 @@ class RentsAdapter(var activity: Activity) : RecyclerView.Adapter<RentsAdapter.V
             txtClubName.text = rent.id_club
             txtDay.text = rent.slot
             txtLocation.text = rent.location
-            txtPrice.text = rent.price
-            txtDuration.text = "(60min.)"
-            txtClubName.setOnClickListener{compartir(rent, context)}
+            txtPrice.text = "$${rent.price}"
+            txtDuration.text = "(60min)"
+            //txtClubName.setOnClickListener{compartir(rent, context)}
             this.setOnClickListener {
-                val intent = Intent(activity, RentActivity::class.java)
                 val data = arrayOf(rent.id_rent, rent.id_club, rent.location,  rent.price, rent.slot)
-                intent.putExtra("id_rent", rent.id_rent)
-                intent.putExtra("data", data)
-                activity.startActivity(intent)
-                //startActivity
+                clickCard(data)
             }
         }
     }
-
-    private fun compartir(rent: Rent, context: Context){
-        try {
-            Intent(Intent.ACTION_SEND).apply {
-                putExtra( Intent.EXTRA_TEXT, "Esta es una invitacion a jugar un partidito en el club ${rent.id_club} a las ${rent.slot}. Direccion: ${rent.location}")
-                setType("text/plain")
-                setPackage("com.whatsapp")
-                context.startActivity(this)
-            }
-        } catch (ignored: ActivityNotFoundException){
-            //Toast.makeText(this,"no encontre app",Toast.LENGTH_LONG).show()
-        }
-    }
-
-    private fun openDetaildRent(){
-        val intent = Intent()
+    private fun clickCard(data: Array<String?>) {
+        val intent = Intent(activity, RentActivity::class.java)
+        intent.putExtra("data", data)
+        activity.startActivity(intent)
     }
 
 }
