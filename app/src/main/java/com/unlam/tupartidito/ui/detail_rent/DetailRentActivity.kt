@@ -11,28 +11,20 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
-import com.unlam.tupartidito.R
 import com.unlam.tupartidito.ui.detail_rent.ui.theme.TuPartiditoTheme
-import com.unlam.tupartidito.ui.detail_rent.ui.theme.VerdeCompartir
-import com.unlam.tupartidito.ui.detail_rent.ui.theme.VerdeFondo
 
 class RentActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +34,8 @@ class RentActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
                     val data = intent.getStringArrayExtra("data")!!
-                    Datos(data)
+                    val isVisible = intent.getStringExtra("isVisible" )
+                    Datos(data, isVisible)
 
                 }
             }
@@ -60,18 +53,17 @@ fun Greeting(name: String) {
     }
 }
 @Composable
-fun Datos(datos: Array<String>) {
+fun Datos(datos: Array<String>, isVisible: String?) {
     Column() {
-
-
-
     Column(
         //modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.verdeFondo),
         modifier = Modifier
             .size(520.dp, 500.dp)
-            .background(MaterialTheme.colors.onSecondary),
+            .background(MaterialTheme.colors.onSecondary)
+            .border(0.5.dp, Color.Black),
         verticalArrangement = Arrangement.spacedBy(3.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+
     ){
         Image(
             painter = rememberImagePainter("https://1.bp.blogspot.com/_Jb7HkNAV7oI/TTC5rXiJ67I/AAAAAAAAACA/EtCvfJQED40/s1600/cancha.jpg"),
@@ -86,19 +78,22 @@ fun Datos(datos: Array<String>) {
         Text(text = "Horario: ${datos.get(4)}", modifier = Modifier.padding(2.dp), style = MaterialTheme.typography.subtitle1)
     }
     Column(){
-        MyButton(datos)
+        val isVisible = isVisible.toBoolean()
+        MyButton(datos, isVisible)
         }
     }
 }
 @Composable
-fun MyButton(datos: Array<String>) {
+fun MyButton(datos: Array<String>, isVisible: Boolean) {
+    if(isVisible){
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(),
-        verticalArrangement = Arrangement.SpaceEvenly,
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+
         Row() {
         val context = LocalContext.current
         Button(
@@ -120,20 +115,32 @@ fun MyButton(datos: Array<String>) {
             },
             modifier = Modifier.padding(all = Dp(10F)),
             enabled = true,
-            border = BorderStroke(width = 0.5.dp, brush = SolidColor(Color.Black)),
             shape = MaterialTheme.shapes.medium,
         )
         {
             Text(text = "Compartir", color = Color.White)
         }
+
+            Button(
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onSecondary),
+                onClick = {
+                    //logica cancelar reserva
+                },
+                modifier = Modifier.padding(all = Dp(10F)),
+                enabled = true,
+                shape = MaterialTheme.shapes.medium,
+            )
+            {
+                Text(text = "Como llegar", color = Color.White)
+            }
+    }
         Button(
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.error),
             onClick = {
-                      //logica cancelar reserva
+                //logica cancelar reserva
             },
             modifier = Modifier.padding(all = Dp(10F)),
             enabled = true,
-            border = BorderStroke(width = 0.5.dp, brush = SolidColor(Color.Black)),
             shape = MaterialTheme.shapes.medium,
         )
         {

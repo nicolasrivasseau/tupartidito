@@ -45,12 +45,15 @@ class RentsAdapter(var activity: Activity) : RecyclerView.Adapter<RentsAdapter.V
             this.setOnClickListener {
                 val data = arrayOf(rent.id_rent, rent.id_club, rent.location,  rent.price, rent.slot)
                 clickCard(data)
+                //buscar en firebase con el id del club su imagen
+                //agregar funcion que con el id de la reserva se borre tanto del usuario como que en la cancha este disponible
             }
         }
     }
     private fun clickCard(data: Array<String?>) {
         val intent = Intent(activity, RentActivity::class.java)
         intent.putExtra("data", data)
+        intent.putExtra("isVisible", "true")
         activity.startActivity(intent)
     }
 
