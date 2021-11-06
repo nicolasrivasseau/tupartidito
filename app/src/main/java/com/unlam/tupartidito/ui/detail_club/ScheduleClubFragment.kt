@@ -28,7 +28,7 @@ class ScheduleClubFragment : Fragment() {
 
         with(viewModel) {
             observe(clubData) { club ->
-                adapterSchedule = SchedulesAdapter()
+                adapterSchedule = SchedulesAdapter(this@ScheduleClubFragment, club)
                 adapterSchedule.setDataSchedules(club?.schedules!!)
                 requireView().rv_schedules.setHasFixedSize(true)
                 requireView().rv_schedules.layoutManager = LinearLayoutManager(requireView().context)

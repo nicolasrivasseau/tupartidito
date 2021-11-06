@@ -11,4 +11,7 @@ class ClubRepository @Inject constructor(
     suspend fun getClubs() : List<Club>{
         return clubFirebaseDatabase.getClubs()
     }
+    suspend fun getClubsByRate() : List<Club>{
+        return clubFirebaseDatabase.getClubsByRate()
+    }
 }

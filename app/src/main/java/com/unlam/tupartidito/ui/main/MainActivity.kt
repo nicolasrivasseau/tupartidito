@@ -95,6 +95,7 @@ class MainActivity : AppCompatActivity() {
                 for (club in clubs) {
                     val child = layoutInflater.inflate(R.layout.item_club, null)
                     child.txtClubLocation.text = club.location
+                    child.txtClubRating.text = club.puntuacion.toString()
                     child.txtClubName.text = club.id.toString().uppercase()
                     child.setOnClickListener {
                         val intent =

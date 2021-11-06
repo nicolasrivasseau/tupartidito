@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.unlam.tupartidito.ui.detail_rent.ui.theme.TuPartiditoTheme
 
-class RentActivity : ComponentActivity() {
+class DetailRentActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

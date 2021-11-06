@@ -1,8 +1,6 @@
 package com.unlam.tupartidito.adapter
 
 import android.app.Activity
-import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.unlam.tupartidito.R
 import com.unlam.tupartidito.data.model.user.Rent
-import com.unlam.tupartidito.ui.detail_rent.RentActivity
+import com.unlam.tupartidito.ui.detail_rent.DetailRentActivity
 import kotlinx.android.synthetic.main.item_rent.view.*
 
 class RentsAdapter(var activity: Activity) : RecyclerView.Adapter<RentsAdapter.ViewHolder>() {
@@ -51,7 +49,7 @@ class RentsAdapter(var activity: Activity) : RecyclerView.Adapter<RentsAdapter.V
         }
     }
     private fun clickCard(data: Array<String?>) {
-        val intent = Intent(activity, RentActivity::class.java)
+        val intent = Intent(activity, DetailRentActivity::class.java)
         intent.putExtra("data", data)
         intent.putExtra("isVisible", "true")
         activity.startActivity(intent)

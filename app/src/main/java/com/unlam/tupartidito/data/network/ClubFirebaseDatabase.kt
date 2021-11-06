@@ -21,6 +21,20 @@ class ClubFirebaseDatabase @Inject constructor() {
         }
         return listClub
     }
+    suspend fun getClubsByRate(): List<Club> {
+        val listClub: ArrayList<Club> = ArrayList()
+        val usersRef = FirebaseDatabase.getInstance().getReference("clubs")
+        val dsClubs = usersRef.get().await().children
+        //dsClubs.orde
+        for (dsClub in dsClubs) {
+            val club = Club()
+            generateClub(dsClub, club)
+            listClub.add(club)
+        }
+
+
+        return listClub.sortedWith(compareBy({it.puntuacion}))
+    }
 
     private fun generateClub(dataSnapshot: DataSnapshot, club: Club) {
         club.id = dataSnapshot.key
@@ -29,6 +43,8 @@ class ClubFirebaseDatabase @Inject constructor() {
         dataSnapshot.exist("location") { club.location = it as String }
         dataSnapshot.exist("url_image") { club.url_image = it as String }
         dataSnapshot.exist("description") { club.description = it as String }
+        dataSnapshot.exist("puntuacion") { club.puntuacion = it as Long }
+
 
         club.services = Service()
         dataSnapshot.child("services").exist("buffet") { club.services!!.buffet = it as Boolean }

@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TuPartidito">
         <activity
-            android:name=".ui.detail_rent.RentActivity"
+            android:name=".ui.detail_rent.DetailRentActivity"
             android:exported="true"
             android:label="@string/title_activity_rent"
             android:theme="@style/Theme.TuPartidito.NoActionBar" />
