@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.unlam.tupartidito.data.model.user.UserLiveData
 import com.unlam.tupartidito.domain.user.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,7 +24,7 @@ class LoginViewModel @Inject constructor(
     private val _userData = MutableLiveData<UserLiveData>()
     val userData: LiveData<UserLiveData> get() = _userData
 
-    fun loginSession(username: String, password: String , myPreferences : SharedPreferences) {
+    fun loginSession(username: String, password: String, myPreferences: SharedPreferences) {
         viewModelScope.launch {
             if (credentialsNotEmptyUseCase(username, password)) {
                 val user = getUserFirebaseUseCase(username)

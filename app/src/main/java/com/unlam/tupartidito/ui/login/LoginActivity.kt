@@ -12,8 +12,6 @@ import com.unlam.tupartidito.databinding.ActivityLoginBinding
 import com.unlam.tupartidito.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import android.content.SharedPreferences
-import androidx.constraintlayout.motion.widget.MotionLayout
-import androidx.core.view.get
 
 
 @AndroidEntryPoint
