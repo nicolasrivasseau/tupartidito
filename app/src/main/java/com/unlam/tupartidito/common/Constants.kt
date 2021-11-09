@@ -7,5 +7,6 @@ class Constants {
         const val ERROR_QR = "ERROR_QR"
         const val BARCODE_JSON = "BARCODE_JSON"
         const val ID_CLUB = "ID_CLUB"
+        const val RENTS = "RENTS_PARAMS"
     }
 }

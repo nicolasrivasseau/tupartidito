@@ -3,6 +3,7 @@ package com.unlam.tupartidito.ui.detail_rent
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -36,7 +37,6 @@ class DetailRentActivity : ComponentActivity() {
                     val data = intent.getStringArrayExtra("data")!!
                     val isVisible = intent.getStringExtra("isVisible" )
                     Datos(data, isVisible)
-
                 }
             }
         }
@@ -44,14 +44,6 @@ class DetailRentActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Greeting(name: String) {
-    Column(){
-        Text(text = "Hello $name!")
-        Text(text = "Hello $name!")
-        Text(text = "Hello $name!")
-    }
-}
 @Composable
 fun Datos(datos: Array<String>, isVisible: String?) {
     Column() {
@@ -85,7 +77,6 @@ fun Datos(datos: Array<String>, isVisible: String?) {
 }
 @Composable
 fun MyButton(datos: Array<String>, isVisible: Boolean) {
-    if(isVisible){
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -134,25 +125,34 @@ fun MyButton(datos: Array<String>, isVisible: Boolean) {
                 Text(text = "Como llegar", color = Color.White)
             }
     }
-        Button(
-            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.error),
-            onClick = {
-                //logica cancelar reserva
-            },
-            modifier = Modifier.padding(all = Dp(10F)),
-            enabled = true,
-            shape = MaterialTheme.shapes.medium,
-        )
-        {
-            Text(text = "Cancelar reserva", color = Color.White)
+        if(isVisible){
+            Button(
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.error),
+                onClick = {
+                    //logica cancelar reserva
+                },
+                modifier = Modifier.padding(all = Dp(10F)),
+                enabled = true,
+                shape = MaterialTheme.shapes.medium,
+            )
+            {
+                Text(text = "Cancelar reserva", color = Color.White)
+            }
+        } else{
+            Button(
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onSecondary),
+                onClick = {
+                    //logica cancelar reserva
+                },
+                modifier = Modifier.padding(all = Dp(10F)),
+                enabled = true,
+                shape = MaterialTheme.shapes.medium,
+            )
+            {
+                Text(text = "Realizar reserva", color = Color.White)
+            }
         }
+
     }
-    }
-}
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    TuPartiditoTheme {
-        Greeting("Android")
-    }
+
 }
