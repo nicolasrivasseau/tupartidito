@@ -2,11 +2,12 @@ package com.unlam.tupartidito.ui.detail_rent
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.BorderStroke
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -15,31 +16,45 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
+import com.unlam.tupartidito.common.observe
 import com.unlam.tupartidito.ui.detail_rent.ui.theme.TuPartiditoTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+
+@AndroidEntryPoint
 class DetailRentActivity : ComponentActivity() {
+    private val viewModel: DetailRentActivityViewModel by viewModels()
+    private var locationLatLong: ArrayList<Double?>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            TuPartiditoTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-                    val data = intent.getStringArrayExtra("data")!!
-                    val isVisible = intent.getStringExtra("isVisible" )
-                    Datos(data, isVisible)
+        with(viewModel){
+            observe(clubData){ club ->
+               locationLatLong?.add(club.latitude)
+               locationLatLong?.add(club.longitude)
+                setContent {
+                    TuPartiditoTheme {
+                        // A surface container using the 'background' color from the theme
+                        Surface(color = MaterialTheme.colors.background) {
+                            val data = intent.getStringArrayExtra("data")!!
+                            val isVisible = intent.getStringExtra("isVisible" )
+                            Datos(data, isVisible, locationLatLong)
 
+                        }
+                    }
                 }
             }
+            getClubData(intent.getStringArrayExtra("data")!!.get(1))
+
         }
+
+
+
 
     }
 }
@@ -53,7 +68,7 @@ fun Greeting(name: String) {
     }
 }
 @Composable
-fun Datos(datos: Array<String>, isVisible: String?) {
+fun Datos(datos: Array<String>, isVisible: String?,locationLatLong: ArrayList<Double?>?) {
     Column() {
     Column(
         //modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.verdeFondo),
@@ -73,18 +88,20 @@ fun Datos(datos: Array<String>, isVisible: String?) {
         )
         Text(text = "Datos de la reserva #${datos.get(0)}", modifier = Modifier.padding(2.dp), style = MaterialTheme.typography.h6)
         Text(text = "Cancha: ${datos.get(1)}", modifier = Modifier.padding(2.dp) , style = MaterialTheme.typography.subtitle1)
-        Text(text = "Ubicacion: ${datos.get(2)}", modifier = Modifier.padding(2.dp).width(320.dp) , style = MaterialTheme.typography.subtitle1)
+        Text(text = "Ubicacion: ${datos.get(2)}", modifier = Modifier
+            .padding(2.dp)
+            .width(320.dp) , style = MaterialTheme.typography.subtitle1)
         Text(text = "Precio: $${datos.get(3)}", modifier = Modifier.padding(2.dp), style = MaterialTheme.typography.subtitle1)
         Text(text = "Horario: ${datos.get(4)}", modifier = Modifier.padding(2.dp), style = MaterialTheme.typography.subtitle1)
     }
     Column(){
         val isVisible = isVisible.toBoolean()
-        MyButton(datos, isVisible)
+        MyButton(datos, isVisible, locationLatLong)
         }
     }
 }
 @Composable
-fun MyButton(datos: Array<String>, isVisible: Boolean) {
+fun MyButton(datos: Array<String>, isVisible: Boolean, locationLatLong: ArrayList<Double?>?) {
     if(isVisible){
     Column(
         modifier = Modifier
@@ -124,7 +141,12 @@ fun MyButton(datos: Array<String>, isVisible: Boolean) {
             Button(
                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onSecondary),
                 onClick = {
-                    //logica cancelar reserva
+                    //MAAAAAAAAAAAAAAAAAAAPS!
+                    val intentUriNavigation = Uri.parse("google.navigation:q=${locationLatLong?.get(0)},${locationLatLong?.get(1)}")
+                    Intent(Intent.ACTION_VIEW, intentUriNavigation).apply {
+                        setPackage("com.google.android.apps.maps")
+                        context.startActivity(this)
+                    }
                 },
                 modifier = Modifier.padding(all = Dp(10F)),
                 enabled = true,

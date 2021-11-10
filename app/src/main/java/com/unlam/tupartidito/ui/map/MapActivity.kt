@@ -3,8 +3,12 @@ package com.unlam.tupartidito.ui.map
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.os.Looper
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
@@ -46,43 +50,77 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     @SuppressLint("MissingPermission")
     private fun zoomLocation() {
-        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(binding.root.context)
-        fusedLocationClient.lastLocation.addOnSuccessListener {
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(it.latitude,it.longitude),14f))
-            map.isMyLocationEnabled = true
+
+
+        val locationRequest = LocationRequest.create().apply {
+            interval = 1000
+            fastestInterval = 500
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
+
+        val locationManager = LocationServices.getFusedLocationProviderClient(binding.root.context)
+
+        locationManager.requestLocationUpdates(
+            locationRequest,
+            object : LocationCallback() {
+                override fun onLocationResult(locationResult: LocationResult) {
+                    var location = locationResult.lastLocation
+                    map.animateCamera(
+                        CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude,location.longitude),14f)
+                    )
+                    map.isMyLocationEnabled = true
+                }
+            }, Looper.getMainLooper()
+        )
+
+
+//        val fusedLocationClient =
+//            LocationServices.getFusedLocationProviderClient(binding.root.context)
+//
+//        fusedLocationClient.lastLocation.addOnSuccessListener {
+//            map.animateCamera(
+//                CameraUpdateFactory.newLatLngZoom(
+//                    LatLng(it.latitude, it.longitude),
+//                    14f
+//                )
+//            )
+//            map.isMyLocationEnabled = true
+//        }
+    }
+
+
+    private fun createMarker(clubs: List<Club>) {
+        for (club in clubs) {
+            if (club.latitude != null && club.longitude != null) {
+                val coordinate = LatLng(club.latitude!!, club.longitude!!)
+                map.addMarker(MarkerOptions().position(coordinate).title(club.id))
+            }
         }
     }
 
+    private fun createFragment() {
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+    }
 
-private fun createMarker(clubs: List<Club>) {
-    for (club in clubs) {
-        if(club.latitude != null && club.longitude != null){
-            val coordinate = LatLng(club.latitude!!, club.longitude!!)
-            map.addMarker(MarkerOptions().position(coordinate).title(club.id))
+    override fun onMapReady(googleMap: GoogleMap?) {
+        map = googleMap!!
+        configureMap(map.uiSettings)
+        map.setOnMarkerClickListener { currentMaker ->
+            val intent = Intent(binding.root.context, DetailClubActivity::class.java)
+            intent.putExtra(Constants.BARCODE_JSON, "{id:${currentMaker.title}}")
+            startActivity(intent)
+            return@setOnMarkerClickListener false
         }
     }
-}
-private fun createFragment() {
-    val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-    mapFragment.getMapAsync(this)
-}
-
-override fun onMapReady(googleMap: GoogleMap?) {
-    map = googleMap!!
-    configureMap(map.uiSettings)
-    map.setOnMarkerClickListener{currentMaker ->
-        val intent = Intent(binding.root.context, DetailClubActivity::class.java)
-        intent.putExtra(Constants.BARCODE_JSON, "{id:${currentMaker.title}}")
-        startActivity(intent)
-        return@setOnMarkerClickListener false
-    }
-}
 
     private fun configureMap(uiSettings: UiSettings?) {
         uiSettings!!.isZoomControlsEnabled = true
         uiSettings.isZoomGesturesEnabled = true
         uiSettings.isCompassEnabled = true
     }
+
+
 
 }
 

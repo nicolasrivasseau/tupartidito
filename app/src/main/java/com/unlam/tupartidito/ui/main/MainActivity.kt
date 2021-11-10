@@ -19,7 +19,6 @@ import com.unlam.tupartidito.common.Constants
 import com.unlam.tupartidito.common.checkAndLaunch
 import com.unlam.tupartidito.common.observe
 import com.unlam.tupartidito.common.toast
-import com.unlam.tupartidito.databinding.ActivityDetailClubBinding
 import com.unlam.tupartidito.databinding.ActivityMainBinding
 import com.unlam.tupartidito.ui.detail_club.DetailClubActivity
 import com.unlam.tupartidito.ui.login.LoginActivity
@@ -111,6 +110,7 @@ class MainActivity : AppCompatActivity() {
 
     //region permission
     private fun setPermissions() {
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             permissionCamera =
                 checkAndLaunch(Manifest.permission.CAMERA, R.string.permission_miss_camera) {

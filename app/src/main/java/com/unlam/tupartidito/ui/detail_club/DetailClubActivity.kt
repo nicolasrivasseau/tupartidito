@@ -14,7 +14,6 @@ import com.unlam.tupartidito.adapter.TabClubAdapter
 import com.unlam.tupartidito.common.Constants
 import com.unlam.tupartidito.common.observe
 import com.unlam.tupartidito.data.model.ErrorCodeQr
-import com.unlam.tupartidito.data.model.club.Club
 import com.unlam.tupartidito.data.model.qr.QrCodeJson
 import com.unlam.tupartidito.databinding.ActivityDetailClubBinding
 import com.unlam.tupartidito.ui.main.MainActivity

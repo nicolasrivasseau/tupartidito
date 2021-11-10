@@ -24,7 +24,7 @@ class LoginActivity : AppCompatActivity() {
         myPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        checkIfTheUserIsRemembered()
+//        checkIfTheUserIsRemembered()
         setObservers()
         setEvents()
         binding.txtEmail.setText("root")
@@ -32,16 +32,16 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    private fun checkIfTheUserIsRemembered() {
-        with(viewModel) {
-            if (myPreferences.getBoolean("active", false)) {
-                val email: String = myPreferences.getString("user", "")!!
-                val password: String = myPreferences.getString("password", "")!!
-
-                loginSession(email, password, myPreferences)
-            }
-        }
-    }
+//    private fun checkIfTheUserIsRemembered() {
+//        with(viewModel) {
+//            if (myPreferences.getBoolean("active", false)) {
+//                val email: String = myPreferences.getString("user", "")!!
+//                val password: String = myPreferences.getString("password", "")!!
+//
+//                loginSession(email, password, myPreferences)
+//            }
+//        }
+//    }
 
     private fun setObservers() {
         with(viewModel) {
