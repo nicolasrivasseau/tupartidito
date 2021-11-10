@@ -40,7 +40,7 @@ class GetUserFirebaseUseCaseTest  {
      fun `test que prueba que trae el usuario correcto`() = runBlockingTest{
 
        val userExpected = User("nico", "Nicolas","1234", ArrayList())
-        coEvery { repository.getUser("nico") }returns User("nico", "Nicolas","1234",ArrayList())
+        coEvery { repository.getUser("nico") } returns userExpected
 
         assertThat(instanceUseCase("nico") == userExpected).isTrue
         coVerify(exactly = 1) { repository.getUser("nico") }
@@ -51,7 +51,7 @@ class GetUserFirebaseUseCaseTest  {
     fun `test que prueba que trae null cuando el usuario no existe`() = runBlockingTest{
 
         val userExpected = null
-        coEvery { repository.getUser("pedro") }returns null
+        coEvery { repository.getUser("pedro") }returns userExpected
 
         assertThat(instanceUseCase("pedro") == userExpected).isTrue
         coVerify(exactly = 1) { repository.getUser("pedro") }

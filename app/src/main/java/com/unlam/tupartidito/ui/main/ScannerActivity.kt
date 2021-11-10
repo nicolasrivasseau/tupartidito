@@ -17,6 +17,7 @@ import com.unlam.tupartidito.databinding.ActivityScannerBinding
 import com.unlam.tupartidito.domain.QrCodeAnalyzerUseCase
 import com.unlam.tupartidito.ui.detail_club.DetailClubActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.internal.synchronized
 
 @AndroidEntryPoint
 class ScannerActivity : AppCompatActivity() {
@@ -55,15 +56,9 @@ class ScannerActivity : AppCompatActivity() {
                     imageAnalysis.setAnalyzer(cameraExecutor, QrCodeAnalyzerUseCase {
 
                         cameraProvider.unbindAll()
-                        val intent = Intent(this, DetailClubActivity::class.java)
-                        intent.putExtra(Constants.BARCODE_JSON, it)
-                        startActivity(intent)
-                        finish()
-
-
+                        handleQrCode(it)
                     })
                 }
-
 
             try {
                 // Si existia algun provider enlazado al ciclo de vida lo desenlazamos
@@ -82,5 +77,13 @@ class ScannerActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         cameraExecutor.shutdown()
+    }
+
+    @Synchronized
+    fun handleQrCode(it:String){
+        val intent = Intent(this, DetailClubActivity::class.java)
+        intent.putExtra(Constants.BARCODE_JSON, it)
+        startActivity(intent)
+        finish()
     }
 }
