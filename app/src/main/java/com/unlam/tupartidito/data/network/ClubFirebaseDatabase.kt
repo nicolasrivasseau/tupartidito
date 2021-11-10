@@ -23,9 +23,8 @@ class ClubFirebaseDatabase @Inject constructor() {
     }
     suspend fun getClubsByRate(): List<Club> {
         val listClub: ArrayList<Club> = ArrayList()
-        val usersRef = FirebaseDatabase.getInstance().getReference("clubs")
+        val usersRef = FirebaseDatabase.getInstance().getReference("clubs").orderByChild("puntuacion")
         val dsClubs = usersRef.get().await().children
-        //dsClubs.orde
         for (dsClub in dsClubs) {
             val club = Club()
             generateClub(dsClub, club)
@@ -33,7 +32,7 @@ class ClubFirebaseDatabase @Inject constructor() {
         }
 
 
-        return listClub.sortedWith(compareBy({it.puntuacion}))
+        return listClub
     }
 
     private fun generateClub(dataSnapshot: DataSnapshot, club: Club) {

@@ -18,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
@@ -54,19 +53,9 @@ class DetailRentActivity : ComponentActivity() {
         }
 
 
-
-
     }
 }
 
-@Composable
-fun Greeting(name: String) {
-    Column(){
-        Text(text = "Hello $name!")
-        Text(text = "Hello $name!")
-        Text(text = "Hello $name!")
-    }
-}
 @Composable
 fun Datos(datos: Array<String>, isVisible: String?,locationLatLong: ArrayList<Double?>?) {
     Column() {
@@ -88,9 +77,7 @@ fun Datos(datos: Array<String>, isVisible: String?,locationLatLong: ArrayList<Do
         )
         Text(text = "Datos de la reserva #${datos.get(0)}", modifier = Modifier.padding(2.dp), style = MaterialTheme.typography.h6)
         Text(text = "Cancha: ${datos.get(1)}", modifier = Modifier.padding(2.dp) , style = MaterialTheme.typography.subtitle1)
-        Text(text = "Ubicacion: ${datos.get(2)}", modifier = Modifier
-            .padding(2.dp)
-            .width(320.dp) , style = MaterialTheme.typography.subtitle1)
+        Text(text = "Ubicacion: ${datos.get(2)}", modifier = Modifier.padding(2.dp).width(320.dp) , style = MaterialTheme.typography.subtitle1)
         Text(text = "Precio: $${datos.get(3)}", modifier = Modifier.padding(2.dp), style = MaterialTheme.typography.subtitle1)
         Text(text = "Horario: ${datos.get(4)}", modifier = Modifier.padding(2.dp), style = MaterialTheme.typography.subtitle1)
     }
@@ -102,7 +89,6 @@ fun Datos(datos: Array<String>, isVisible: String?,locationLatLong: ArrayList<Do
 }
 @Composable
 fun MyButton(datos: Array<String>, isVisible: Boolean, locationLatLong: ArrayList<Double?>?) {
-    if(isVisible){
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -141,7 +127,6 @@ fun MyButton(datos: Array<String>, isVisible: Boolean, locationLatLong: ArrayLis
             Button(
                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onSecondary),
                 onClick = {
-                    //MAAAAAAAAAAAAAAAAAAAPS!
                     val intentUriNavigation = Uri.parse("google.navigation:q=${locationLatLong?.get(0)},${locationLatLong?.get(1)}")
                     Intent(Intent.ACTION_VIEW, intentUriNavigation).apply {
                         setPackage("com.google.android.apps.maps")
@@ -156,25 +141,34 @@ fun MyButton(datos: Array<String>, isVisible: Boolean, locationLatLong: ArrayLis
                 Text(text = "Como llegar", color = Color.White)
             }
     }
-        Button(
-            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.error),
-            onClick = {
-                //logica cancelar reserva
-            },
-            modifier = Modifier.padding(all = Dp(10F)),
-            enabled = true,
-            shape = MaterialTheme.shapes.medium,
-        )
-        {
-            Text(text = "Cancelar reserva", color = Color.White)
+        if(isVisible){
+            Button(
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.error),
+                onClick = {
+                    //logica cancelar reserva
+                },
+                modifier = Modifier.padding(all = Dp(10F)),
+                enabled = true,
+                shape = MaterialTheme.shapes.medium,
+            )
+            {
+                Text(text = "Cancelar reserva", color = Color.White)
+            }
+        } else{
+            Button(
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onSecondary),
+                onClick = {
+                    //logica cancelar reserva
+                },
+                modifier = Modifier.padding(all = Dp(10F)),
+                enabled = true,
+                shape = MaterialTheme.shapes.medium,
+            )
+            {
+                Text(text = "Realizar reserva", color = Color.White)
+            }
         }
+
     }
-    }
-}
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    TuPartiditoTheme {
-        Greeting("Android")
-    }
+
 }

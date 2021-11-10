@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayout
@@ -29,6 +30,7 @@ class DetailClubActivity : AppCompatActivity() {
     private var longitude: Double? = null
     private lateinit var idClub: String
     private lateinit var myPreferences: SharedPreferences
+    private lateinit var rents: ArrayList<String>
     private val adapter by lazy { TabClubAdapter(this) }
 
 
@@ -37,12 +39,14 @@ class DetailClubActivity : AppCompatActivity() {
         binding = ActivityDetailClubBinding.inflate(layoutInflater)
         myPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
         setContentView(binding.root)
-
         validateIntents()
         setObservers()
     }
-
     private fun validateIntents() {
+        if(intent.extras!!.containsKey(Constants.RENTS)){
+            rents = intent.extras!!.getStringArrayList(Constants.RENTS)!!
+        } else rents = ArrayList()
+
         if(intent.extras!!.containsKey(Constants.BARCODE_JSON)){
             val qr = intent.extras!!.getString(Constants.BARCODE_JSON).toString()
             val gson = Gson()
@@ -54,6 +58,7 @@ class DetailClubActivity : AppCompatActivity() {
             idClub = intent.extras!!.getString(Constants.ID_CLUB).toString()
             setTab(idClub)
         }
+
     }
 
     private fun setObservers() {
@@ -87,7 +92,7 @@ class DetailClubActivity : AppCompatActivity() {
     private fun setTab(idClub : String) {
         with(binding){
             tabLayout.tabGravity = TabLayout.GRAVITY_FILL
-            adapter.setDataClub(idClub)
+            adapter.setDataClub(idClub, rents)
             viewPager.adapter = adapter
             TabLayoutMediator(tabLayout,viewPager){ tab,position ->
                 tab.text = listOf("HORARIOS","COMPLEJO")[position]

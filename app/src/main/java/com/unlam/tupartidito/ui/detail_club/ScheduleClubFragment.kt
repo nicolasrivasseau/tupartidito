@@ -13,23 +13,26 @@ import com.unlam.tupartidito.common.observe
 import kotlinx.android.synthetic.main.fragment_schedule_club.view.*
 
 private const val ID_CLUB = "idClub"
+private const val RENTS = "rentsList"
 
 class ScheduleClubFragment : Fragment() {
 
     private var idClub: String? = null
+    private var dataRents: ArrayList<String> = ArrayList()
     private lateinit var viewModel: DetailClubFragmentViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             idClub = it.getString(ID_CLUB)
+            dataRents = it.getStringArrayList(RENTS)!!
         }
         viewModel = ViewModelProvider(requireActivity()).get(DetailClubFragmentViewModel::class.java)
 
         with(viewModel) {
             observe(clubData) { club ->
                 adapterSchedule = SchedulesAdapter(this@ScheduleClubFragment, club)
-                adapterSchedule.setDataSchedules(club?.schedules!!)
+                adapterSchedule.setDataSchedules(club?.schedules!!, dataRents)
                 requireView().rv_schedules.setHasFixedSize(true)
                 requireView().rv_schedules.layoutManager = LinearLayoutManager(requireView().context)
                 requireView().rv_schedules.adapter = adapterSchedule
