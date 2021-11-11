@@ -19,11 +19,13 @@
             android:name=".ui.detail_rent.DetailRentActivity"
             android:exported="true"
             android:label="@string/title_activity_rent"
-            android:theme="@style/Theme.TuPartidito.NoActionBar" />
+            android:theme="@style/Theme.TuPartidito.NoActionBar"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.login.SplashActivity"
             android:exported="true"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,20 +39,25 @@
 
         <activity
             android:name=".ui.map.MapActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.detail_club.DetailClubActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.main.ScannerActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.login.LoginActivity"
             android:exported="true"
-            android:label="@string/title_activity_login" />
+            android:label="@string/title_activity_login"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.main.MainActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

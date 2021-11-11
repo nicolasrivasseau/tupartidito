@@ -2,6 +2,7 @@ package com.unlam.tupartidito.ui.detail_rent
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
@@ -17,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -42,8 +44,11 @@ class DetailRentActivity : ComponentActivity() {
                         Surface(color = MaterialTheme.colors.background) {
                             val data = intent.getStringArrayExtra("data")!!
                             val isVisible = intent.getStringExtra("isVisible" )
-                            Datos(data, isVisible, locationLatLong)
-
+                            //Datos(data, isVisible, locationLatLong)
+                            RotationPortrait(data, isVisible, locationLatLong)
+                            LocalConfiguration.current.orientation
+                        // orientation.
+                        // = Configuration.ORIENTATION_PORTRAIT
                         }
                     }
                 }
@@ -171,4 +176,16 @@ fun MyButton(datos: Array<String>, isVisible: Boolean, locationLatLong: ArrayLis
 
     }
 
+}
+@Composable
+fun RotationPortrait(datos: Array<String>, isVisible: String?,locationLatLong: ArrayList<Double?>?){
+    val configuration = LocalConfiguration.current
+    when (configuration.orientation) {
+        Configuration.ORIENTATION_LANDSCAPE -> {
+            Datos(datos, isVisible, locationLatLong)
+        }
+        else -> {
+            Datos(datos, isVisible, locationLatLong)
+        }
+    }
 }
