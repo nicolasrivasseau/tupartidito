@@ -84,13 +84,13 @@ fun Datos(datos: Array<String>, isVisible: String?,locationLatLong: ArrayList<Do
         Text(text = "Horario: ${datos.get(4)}", modifier = Modifier.padding(2.dp), style = MaterialTheme.typography.subtitle1)
     }
     Column(){
-        val isVisible = isVisible.toBoolean()
-        MyButton(datos, isVisible, locationLatLong)
+        //val isVisible = isVisible.toBoolean()
+        MyButton(datos, isVisible!!, locationLatLong)
         }
     }
 }
 @Composable
-fun MyButton(datos: Array<String>, isVisible: Boolean, locationLatLong: ArrayList<Double?>?) {
+fun MyButton(datos: Array<String>, isVisible: String, locationLatLong: ArrayList<Double?>?) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -143,7 +143,7 @@ fun MyButton(datos: Array<String>, isVisible: Boolean, locationLatLong: ArrayLis
                 Text(text = "Como llegar", color = Color.White)
             }
     }
-        if(isVisible){
+        if(isVisible == "EsMia"){
             Button(
                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.error),
                 onClick = {
@@ -156,7 +156,7 @@ fun MyButton(datos: Array<String>, isVisible: Boolean, locationLatLong: ArrayLis
             {
                 Text(text = "Cancelar reserva", color = Color.White)
             }
-        } else{
+        } else if(isVisible != "NoEsMia"){
             Button(
                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onSecondary),
                 onClick = {

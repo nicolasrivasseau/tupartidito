@@ -48,7 +48,7 @@ class RentsAdapter(var activity: Activity) : RecyclerView.Adapter<RentsAdapter.V
     private fun clickCard(data: Array<String?>) {
         val intent = Intent(activity, DetailRentActivity::class.java)
         intent.putExtra("data", data)
-        intent.putExtra("isVisible", "true")
+        intent.putExtra("isVisible", "EsMia")
         activity.startActivity(intent)
     }
 

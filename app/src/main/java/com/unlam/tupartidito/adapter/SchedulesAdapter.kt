@@ -34,18 +34,18 @@ class SchedulesAdapter(var fa: Fragment, var club: Club) : RecyclerView.Adapter<
     @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val schedule = dataList[position]
-        var not_mine = "false"
+        var not_mine = "NoReservada"
         with(holder.itemView) {
             tv_id_schedulde.text = schedule.id
             tv_slot.text = schedule.slot
             tv_duration.text = "(60 min)"
             tv_price.text = "$${schedule.price}"
             if (schedule.reserved) card_info.setCardBackgroundColor(Color.RED)
-            if(dataRents.contains(schedule.id)) not_mine = "true"
+            if(schedule.reserved) not_mine = "NoEsMia"
+            if (schedule.reserved && dataRents.contains(schedule.id)) not_mine = "EsMia"
             val data = arrayOf(schedule.id, club.id, club.location,  schedule.price, schedule.slot)
             card_info.setOnClickListener {
-                if (schedule.reserved) goToDetailtRent(data, not_mine)
-                else goToDetailtRent(data, not_mine)
+                goToDetailtRent(data, not_mine)
             }
         }
     }
