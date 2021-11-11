@@ -6,12 +6,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlam.tupartidito.data.model.club.Club
 import com.unlam.tupartidito.domain.club.GetClubUseCase
+import com.unlam.tupartidito.domain.club.SubmitRatingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DetailClubFragmentViewModel @Inject constructor(private val getClubUseCase: GetClubUseCase) :
+class DetailClubFragmentViewModel @Inject constructor(
+    private val getClubUseCase: GetClubUseCase) :
     ViewModel() {
     private val _clubData = MutableLiveData<Club>()
     val clubData: LiveData<Club> get() = _clubData
@@ -24,4 +26,5 @@ class DetailClubFragmentViewModel @Inject constructor(private val getClubUseCase
             }
         }
     }
+
 }

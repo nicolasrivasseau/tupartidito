@@ -12,21 +12,53 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" >
 
-        <ImageView
-            android:id="@+id/iv_club"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:scaleType="centerCrop"
-            android:layout_height="300dp" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_club"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:scaleType="centerCrop" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/iv_club"
+                android:orientation="horizontal">
+
+                <RatingBar
+                    android:id="@+id/rbClub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:numStars="5"
+                    android:progressTint="#FFFC00"
+                    android:rating="5" />
+
+                <Button
+                    android:id="@+id/guardarRating"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Calificar" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </com.google.android.material.tabs.TabLayout>
+
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
+
+        </androidx.viewpager2.widget.ViewPager2>
 
     </LinearLayout>
 

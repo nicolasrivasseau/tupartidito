@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayout
@@ -14,6 +15,7 @@ import com.squareup.picasso.Picasso
 import com.unlam.tupartidito.adapter.TabClubAdapter
 import com.unlam.tupartidito.common.Constants
 import com.unlam.tupartidito.common.observe
+import com.unlam.tupartidito.common.toast
 import com.unlam.tupartidito.data.model.ErrorCodeQr
 import com.unlam.tupartidito.data.model.qr.QrCodeJson
 import com.unlam.tupartidito.databinding.ActivityDetailClubBinding
@@ -38,6 +40,7 @@ class DetailClubActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailClubBinding.inflate(layoutInflater)
         myPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
+        binding.guardarRating.setOnClickListener{puntuarClub()}
         setContentView(binding.root)
         validateIntents()
         setObservers()
@@ -60,6 +63,13 @@ class DetailClubActivity : AppCompatActivity() {
         }
 
     }
+    private fun puntuarClub(){
+        val club = viewModel.clubData.value
+        val nuevo_promedio = (club?.puntuacion!!.toFloat() + binding.rbClub.rating)/ 2
+        viewModel.submitRating(nuevo_promedio.toLong())
+        //        val newRating = binding.rbClub.rating
+        //toast(newRating,Toast.LENGTH_SHORT)
+    }
 
     private fun setObservers() {
 
@@ -68,6 +78,7 @@ class DetailClubActivity : AppCompatActivity() {
                 Picasso.get()
                     .load(club.url_image)
                     .into(binding.ivClub)
+                binding.rbClub.rating = club.puntuacion!!.toFloat()!!
             }
 
 //            observe(listClubData) { currentList ->
@@ -83,6 +94,13 @@ class DetailClubActivity : AppCompatActivity() {
             
             observe(readErrorQr) {
                 goToMain(it)
+            }
+            observe(result){
+                if(it){
+                    toast("Calificación enviada", Toast.LENGTH_SHORT)
+                } else{
+                    toast("Operación fallida", Toast.LENGTH_SHORT)
+                }
             }
             getClubData(idClub)
         }

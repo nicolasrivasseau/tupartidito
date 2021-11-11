@@ -5,6 +5,8 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -23,6 +25,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
+import com.gowtham.ratingbar.RatingBar
+import com.gowtham.ratingbar.RatingBarStyle
 import com.unlam.tupartidito.common.observe
 import com.unlam.tupartidito.ui.detail_rent.ui.theme.TuPartiditoTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -170,7 +174,13 @@ fun MyButton(datos: Array<String>, isVisible: String, locationLatLong: ArrayList
                 Text(text = "Realizar reserva", color = Color.White)
             }
         }
-
+        //var rating: Float = 5.0f
+        //RatingBar(value = rating,
+        //    ratingBarStyle = RatingBarStyle.HighLighted, onValueChange = {
+        //        rating = it
+        //    }) {
+        //    Log.d("TAG", "onRatingChanged: $it")
+        //}
     }
 
 }
@@ -186,3 +196,10 @@ fun RotationPortrait(datos: Array<String>, isVisible: String?,locationLatLong: A
         }
     }
 }
+/*
+@Composable
+fun RatingBar(){
+    RatingBar(value = rating,
+        ratingBarStyle =
+        )
+}*/

@@ -9,15 +9,18 @@ import com.unlam.tupartidito.data.model.ErrorCodeQr
 import com.unlam.tupartidito.data.model.qr.QrCodeJson
 import com.unlam.tupartidito.data.model.club.Club
 import com.unlam.tupartidito.domain.club.GetClubUseCase
+import com.unlam.tupartidito.domain.club.SubmitRatingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val getClubUseCase: GetClubUseCase
+    private val getClubUseCase: GetClubUseCase,
+    private val ratingUseCase: SubmitRatingUseCase
 ) : ViewModel() {
 
+    val result=  MutableLiveData<Boolean>()
     private val _clubData = MutableLiveData<Club>()
     val clubData: LiveData<Club> get() = _clubData
 
@@ -45,6 +48,11 @@ class DetailViewModel @Inject constructor(
             _isLoading.value = false
         }
     }
-
+    fun submitRating(rate: Long){
+        viewModelScope.launch {
+            //val updateStatus = ratingUseCase(rate, _clubData.value?.id!!)
+            result.value = ratingUseCase(rate, _clubData.value?.id!!)!!
+        }
+    }
 
 }
