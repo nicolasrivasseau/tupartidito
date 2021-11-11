@@ -46,9 +46,6 @@ class DetailRentActivity : ComponentActivity() {
                             val isVisible = intent.getStringExtra("isVisible" )
                             //Datos(data, isVisible, locationLatLong)
                             RotationPortrait(data, isVisible, locationLatLong)
-                            LocalConfiguration.current.orientation
-                        // orientation.
-                        // = Configuration.ORIENTATION_PORTRAIT
                         }
                     }
                 }

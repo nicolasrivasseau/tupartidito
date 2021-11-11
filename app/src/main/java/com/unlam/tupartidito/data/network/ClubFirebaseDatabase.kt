@@ -1,5 +1,6 @@
 package com.unlam.tupartidito.data.network
 
+import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.FirebaseDatabase
 import com.unlam.tupartidito.common.exist
@@ -22,13 +23,26 @@ class ClubFirebaseDatabase @Inject constructor() {
         return listClub
     }
     suspend fun getClubsByRate(): List<Club> {
+
         val listClub: ArrayList<Club> = ArrayList()
-        val usersRef = FirebaseDatabase.getInstance().getReference("clubs").orderByChild("puntuacion")
+        val usersRef = FirebaseDatabase.getInstance().getReference("clubs")
         val dsClubs = usersRef.get().await().children
         for (dsClub in dsClubs) {
             val club = Club()
             generateClub(dsClub, club)
             listClub.add(club)
+        }
+        var tmp: Club
+        for(x in 0 until listClub.size){
+            for(y in 0 until listClub.size){
+                if(listClub[x].puntuacion!! > listClub[y].puntuacion!!){
+                    tmp = listClub[y]
+
+                    listClub[y] = listClub[x]
+                    listClub[x] = tmp
+
+                }
+            }
         }
 
 

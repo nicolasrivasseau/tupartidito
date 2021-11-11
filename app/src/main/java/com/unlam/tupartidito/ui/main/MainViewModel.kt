@@ -1,11 +1,13 @@
 package com.unlam.tupartidito.ui.main
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlam.tupartidito.data.model.club.Club
 import com.unlam.tupartidito.data.model.rent.RentsLiveData
+import com.unlam.tupartidito.domain.club.GetClubsByRateUseCase
 import com.unlam.tupartidito.domain.club.GetClubsUseCase
 import com.unlam.tupartidito.domain.rent.GetRentsUseCase
 import com.unlam.tupartidito.domain.rent.RentsIsNotNullUseCase
@@ -18,7 +20,8 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val getRentsUseCase: GetRentsUseCase,
     private val rentsIsNotNullUseCase: RentsIsNotNullUseCase,
-    private val getClubsUseCase: GetClubsUseCase
+    private val getClubsUseCase: GetClubsUseCase,
+    private val getClubsByRateUseCase: GetClubsByRateUseCase
 ) : ViewModel() {
     
     private val _rentsData = MutableLiveData<RentsLiveData>()
@@ -40,7 +43,8 @@ class MainViewModel @Inject constructor(
 
     fun getClubs(){
         viewModelScope.launch {
-            val clubs = getClubsUseCase()
+            //val clubs = getClubsUseCase()
+            val clubs = getClubsByRateUseCase()
             if (clubs != null){
                 _clubsData.value = clubs
             }

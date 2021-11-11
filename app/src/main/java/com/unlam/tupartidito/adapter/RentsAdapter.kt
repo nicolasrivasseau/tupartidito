@@ -39,12 +39,9 @@ class RentsAdapter(var activity: Activity) : RecyclerView.Adapter<RentsAdapter.V
             txtLocation.text = rent.location
             txtPrice.text = "$${rent.price}"
             txtDuration.text = "(60min)"
-            //txtClubName.setOnClickListener{compartir(rent, context)}
             this.setOnClickListener {
                 val data = arrayOf(rent.id_rent, rent.id_club, rent.location,  rent.price, rent.slot)
                 clickCard(data)
-                //buscar en firebase con el id del club su imagen
-                //agregar funcion que con el id de la reserva se borre tanto del usuario como que en la cancha este disponible
             }
         }
     }
