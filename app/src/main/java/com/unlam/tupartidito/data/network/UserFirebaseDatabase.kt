@@ -44,6 +44,7 @@ class UserFirebaseDatabase @Inject constructor() {
 
     suspend fun cancelRent(idRent: String, idUser: String): Boolean{
         Log.d("cancelar", "user firebase database call cancelrent")
+        Log.d("cancelar", "user firebase database call cancelrent $idRent y $idUser")
 
         //val cancelSchedule = FirebaseDatabase.getInstance().getReference("users")
           //  .child("root").child("rents").child("prueba").removeValue()

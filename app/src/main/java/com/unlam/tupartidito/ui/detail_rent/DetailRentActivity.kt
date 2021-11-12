@@ -56,7 +56,6 @@ class DetailRentActivity : ComponentActivity() {
                             val isVisible = intent.getStringExtra("isVisible" )
                             //Datos(data, isVisible, locationLatLong)
                             RotationPortrait(data, isVisible, locationLatLong, viewModel, myPreferences)
-
                         }
                     }
                 }
@@ -163,8 +162,8 @@ fun MyButton(datos: Array<String>, isVisible: String, locationLatLong: ArrayList
                 onClick = {
                     //logica cancelar reserva
 
-                    val user = myPreferences.getString("name","")
-                    Log.d("cancelar", "DetailRentActivity call cancelrent")
+                    val user = myPreferences.getString("user","")
+                    Log.d("cancelar", "DetailRentActivity call cancelrent $user")
                     val resultadoo = viewModel.cancelRent(datosR[0], datosR[1],user!!)
                 },
                 modifier = Modifier.padding(all = Dp(10F)),
