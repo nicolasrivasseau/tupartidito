@@ -1,7 +1,9 @@
 package com.unlam.tupartidito.ui.detail_rent
 
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
@@ -34,10 +36,14 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class DetailRentActivity : ComponentActivity() {
+    private lateinit var myPreferences : SharedPreferences
+
     private val viewModel: DetailRentActivityViewModel by viewModels()
     private var locationLatLong: ArrayList<Double?>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        myPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
+
         with(viewModel){
             observe(clubData){ club ->
                locationLatLong?.add(club.latitude)
@@ -49,7 +55,8 @@ class DetailRentActivity : ComponentActivity() {
                             val data = intent.getStringArrayExtra("data")!!
                             val isVisible = intent.getStringExtra("isVisible" )
                             //Datos(data, isVisible, locationLatLong)
-                            RotationPortrait(data, isVisible, locationLatLong)
+                            RotationPortrait(data, isVisible, locationLatLong, viewModel, myPreferences)
+
                         }
                     }
                 }
@@ -63,7 +70,8 @@ class DetailRentActivity : ComponentActivity() {
 }
 
 @Composable
-fun Datos(datos: Array<String>, isVisible: String?,locationLatLong: ArrayList<Double?>?) {
+fun Datos(datos: Array<String>, isVisible: String?,locationLatLong: ArrayList<Double?>?
+          ,viewModel: DetailRentActivityViewModel ,myPreferences : SharedPreferences) {
     Column() {
     Column(
         //modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.verdeFondo),
@@ -89,12 +97,14 @@ fun Datos(datos: Array<String>, isVisible: String?,locationLatLong: ArrayList<Do
     }
     Column(){
         //val isVisible = isVisible.toBoolean()
-        MyButton(datos, isVisible!!, locationLatLong)
+        MyButton(datos, isVisible!!, locationLatLong, viewModel, myPreferences, datos)
         }
     }
 }
 @Composable
-fun MyButton(datos: Array<String>, isVisible: String, locationLatLong: ArrayList<Double?>?) {
+fun MyButton(datos: Array<String>, isVisible: String, locationLatLong: ArrayList<Double?>?
+             ,viewModel: DetailRentActivityViewModel ,myPreferences : SharedPreferences,datosR: Array<String>
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -152,6 +162,10 @@ fun MyButton(datos: Array<String>, isVisible: String, locationLatLong: ArrayList
                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.error),
                 onClick = {
                     //logica cancelar reserva
+
+                    val user = myPreferences.getString("name","")
+                    Log.d("cancelar", "DetailRentActivity call cancelrent")
+                    val resultadoo = viewModel.cancelRent(datosR[0], datosR[1],user!!)
                 },
                 modifier = Modifier.padding(all = Dp(10F)),
                 enabled = true,
@@ -164,7 +178,6 @@ fun MyButton(datos: Array<String>, isVisible: String, locationLatLong: ArrayList
             Button(
                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onSecondary),
                 onClick = {
-                    //logica cancelar reserva
                 },
                 modifier = Modifier.padding(all = Dp(10F)),
                 enabled = true,
@@ -184,15 +197,19 @@ fun MyButton(datos: Array<String>, isVisible: String, locationLatLong: ArrayList
     }
 
 }
+
+
 @Composable
-fun RotationPortrait(datos: Array<String>, isVisible: String?,locationLatLong: ArrayList<Double?>?){
+fun RotationPortrait(datos: Array<String>, isVisible: String?,locationLatLong: ArrayList<Double?>?
+    ,viewModel: DetailRentActivityViewModel ,myPreferences : SharedPreferences
+){
     val configuration = LocalConfiguration.current
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> {
-            Datos(datos, isVisible, locationLatLong)
+            Datos(datos, isVisible, locationLatLong, viewModel, myPreferences)
         }
         else -> {
-            Datos(datos, isVisible, locationLatLong)
+            Datos(datos, isVisible, locationLatLong, viewModel, myPreferences)
         }
     }
 }

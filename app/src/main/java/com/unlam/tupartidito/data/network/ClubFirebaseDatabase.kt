@@ -22,6 +22,17 @@ class ClubFirebaseDatabase @Inject constructor() {
         }
         return listClub
     }
+    suspend fun cancelSchedule(idRent: String, idCLub: String): Boolean{
+        val cancelSchedule = FirebaseDatabase.getInstance().getReference("clubs")
+            .child(idCLub).child("schedules").child(idRent).removeValue()
+        Log.d("cancelar", "club firebase database call cancelrent")
+
+        //val cancelSchedule = FirebaseDatabase.getInstance().getReference("clubs")
+          //  .child("Futbo10").child("schedules").child("prueba").removeValue()
+
+        return true
+    }
+
     suspend fun getClubsByRate(): List<Club> {
 
         val listClub: ArrayList<Club> = ArrayList()

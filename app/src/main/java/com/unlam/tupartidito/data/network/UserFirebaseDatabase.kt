@@ -1,5 +1,6 @@
 package com.unlam.tupartidito.data.network
 
+import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.FirebaseDatabase
 import com.unlam.tupartidito.common.exist
@@ -39,5 +40,16 @@ class UserFirebaseDatabase @Inject constructor() {
             dsRent.exist("slot") { rent.slot = it as String }
             user.rents.add(rent)
         }
+    }
+
+    suspend fun cancelRent(idRent: String, idUser: String): Boolean{
+        Log.d("cancelar", "user firebase database call cancelrent")
+
+        //val cancelSchedule = FirebaseDatabase.getInstance().getReference("users")
+          //  .child("root").child("rents").child("prueba").removeValue()
+        val cancelSchedule = FirebaseDatabase.getInstance().getReference("users")
+          .child(idUser).child("rents").child(idRent).removeValue()
+
+        return true
     }
 }
