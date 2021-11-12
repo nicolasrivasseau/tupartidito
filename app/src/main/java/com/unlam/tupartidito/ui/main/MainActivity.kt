@@ -48,6 +48,11 @@ class MainActivity : AppCompatActivity() {
         setEvents()
     }
 
+    override fun onResume() {
+        super.onResume()
+        validateIntents()
+    }
+
     private fun validateIntents() {
         if (intent.extras?.getBoolean(Constants.ERROR_QR) == true) {
             toast(intent.extras?.getString(Constants.ERROR_QR_DESCRIPTION).toString())
