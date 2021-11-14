@@ -8,7 +8,6 @@ import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -27,16 +26,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
-import com.gowtham.ratingbar.RatingBar
-import com.gowtham.ratingbar.RatingBarStyle
-import com.unlam.tupartidito.common.observe
+import androidx.compose.runtime.livedata.observeAsState
+import com.unlam.tupartidito.data.model.club.Club
 import com.unlam.tupartidito.ui.detail_rent.ui.theme.TuPartiditoTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
 class DetailRentActivity : ComponentActivity() {
-    private lateinit var myPreferences : SharedPreferences
+    private lateinit var myPreferences: SharedPreferences
 
     private val viewModel: DetailRentActivityViewModel by viewModels()
     private var locationLatLong: ArrayList<Double?>? = null
@@ -44,171 +42,247 @@ class DetailRentActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         myPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
 
-        with(viewModel){
-            observe(clubData){ club ->
-               locationLatLong?.add(club.latitude)
-               locationLatLong?.add(club.longitude)
-                setContent {
-                    TuPartiditoTheme {
-                        // A surface container using the 'background' color from the theme
-                        Surface(color = MaterialTheme.colors.background) {
-                            val data = intent.getStringArrayExtra("data")!!
-                            val isVisible = intent.getStringExtra("isVisible" )
-                            //Datos(data, isVisible, locationLatLong)
-                            RotationPortrait(data, isVisible, locationLatLong, viewModel, myPreferences)
-                        }
+
+        setContent {
+            TuPartiditoTheme {
+                // A surface container using the 'background' color from the theme
+                Surface(color = MaterialTheme.colors.background) {
+                    RentsScreenContent()
+                }
+
+            }
+        }
+
+    }
+
+
+    @Composable
+    fun LoadingScreen() {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+        ) {
+            CircularProgressIndicator(
+                Modifier
+                    .wrapContentHeight()
+                    .wrapContentWidth()
+            )
+        }
+    }
+
+    @Composable
+    fun RentsScreenContent() {
+
+        val viewModel = viewModels<DetailRentActivityViewModel>().value
+        val state = viewModel.state.observeAsState()
+
+        when (state.value) {
+            is DetailRentActivityViewModel.State.Loading -> LoadingScreen()
+            is DetailRentActivityViewModel.State.Success -> {
+                val data = intent.getStringArrayExtra("data")!!
+                val isVisible = intent.getStringExtra("isVisible")
+                val clubs = (state.value as DetailRentActivityViewModel.State.Success).clubs
+                var clubOk: Club? = null
+                for (club in clubs) {
+                    if (club.id == data.get(1)) {
+                        clubOk = club
                     }
                 }
+                locationLatLong?.add(clubOk?.latitude)
+                locationLatLong?.add(clubOk?.longitude)
+                RotationPortrait(
+                    datos = data,
+                    isVisible = isVisible,
+                    locationLatLong = locationLatLong,
+                    viewModel = viewModel,
+                    myPreferences = myPreferences
+                )
             }
-            getClubData(intent.getStringArrayExtra("data")!!.get(1))
-
-        }
-
-
-    }
-}
-
-@Composable
-fun Datos(datos: Array<String>, isVisible: String?,locationLatLong: ArrayList<Double?>?
-          ,viewModel: DetailRentActivityViewModel ,myPreferences : SharedPreferences) {
-    Column() {
-    Column(
-        //modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.verdeFondo),
-        modifier = Modifier
-            .size(520.dp, 500.dp)
-            .background(MaterialTheme.colors.onSecondary)
-            .border(0.5.dp, Color.Black),
-        verticalArrangement = Arrangement.spacedBy(3.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-
-    ){
-        Image(
-            painter = rememberImagePainter("https://1.bp.blogspot.com/_Jb7HkNAV7oI/TTC5rXiJ67I/AAAAAAAAACA/EtCvfJQED40/s1600/cancha.jpg"),
-            contentDescription = "Imagen de cancha",
-            modifier = Modifier.size(520.dp, 230.dp)
-
-        )
-        Text(text = "Datos de la reserva #${datos.get(0)}", modifier = Modifier.padding(2.dp), style = MaterialTheme.typography.h6)
-        Text(text = "Cancha: ${datos.get(1)}", modifier = Modifier.padding(2.dp) , style = MaterialTheme.typography.subtitle1)
-        Text(text = "Ubicacion: ${datos.get(2)}", modifier = Modifier.padding(2.dp).width(320.dp) , style = MaterialTheme.typography.subtitle1)
-        Text(text = "Precio: $${datos.get(3)}", modifier = Modifier.padding(2.dp), style = MaterialTheme.typography.subtitle1)
-        Text(text = "Horario: ${datos.get(4)}", modifier = Modifier.padding(2.dp), style = MaterialTheme.typography.subtitle1)
-    }
-    Column(){
-        //val isVisible = isVisible.toBoolean()
-        MyButton(datos, isVisible!!, locationLatLong, viewModel, myPreferences, datos)
         }
     }
-}
-@Composable
-fun MyButton(datos: Array<String>, isVisible: String, locationLatLong: ArrayList<Double?>?
-             ,viewModel: DetailRentActivityViewModel ,myPreferences : SharedPreferences,datosR: Array<String>
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
+
+    @Composable
+    fun Datos(
+        datos: Array<String>,
+        isVisible: String?,
+        locationLatLong: ArrayList<Double?>?,
+        viewModel: DetailRentActivityViewModel,
+        myPreferences: SharedPreferences
     ) {
+        Column() {
+            Column(
+                //modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.verdeFondo),
+                modifier = Modifier
+                    .size(520.dp, 500.dp)
+                    .background(MaterialTheme.colors.onSecondary)
+                    .border(0.5.dp, Color.Black),
+                verticalArrangement = Arrangement.spacedBy(3.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
 
-        Row() {
-        val context = LocalContext.current
-        Button(
-            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onPrimary),
-            onClick = {
-                try {
-                    Intent(Intent.ACTION_SEND).apply {
-                        putExtra(
-                            Intent.EXTRA_TEXT,
-                            "Esta es una invitacion a jugar un partidito en el club ${datos[0]} a las ${datos[4]}. Direccion: ${datos[2]}"
-                        )
-                        setType("text/plain")
-                        setPackage("com.whatsapp")
-                        context.startActivity(this)
-                    }
-                } catch (ignored: ActivityNotFoundException) {
-                    Toast.makeText(context, "No se encontro app", Toast.LENGTH_LONG).show()
+                ) {
+                Image(
+                    painter = rememberImagePainter("https://1.bp.blogspot.com/_Jb7HkNAV7oI/TTC5rXiJ67I/AAAAAAAAACA/EtCvfJQED40/s1600/cancha.jpg"),
+                    contentDescription = "Imagen de cancha",
+                    modifier = Modifier.size(520.dp, 230.dp)
+
+                )
+                Text(
+                    text = "Datos de la reserva #${datos.get(0)}",
+                    modifier = Modifier.padding(2.dp),
+                    style = MaterialTheme.typography.h6
+                )
+                Text(
+                    text = "Cancha: ${datos.get(1)}",
+                    modifier = Modifier.padding(2.dp),
+                    style = MaterialTheme.typography.subtitle1
+                )
+                Text(
+                    text = "Ubicacion: ${datos.get(2)}", modifier = Modifier
+                        .padding(2.dp)
+                        .width(320.dp), style = MaterialTheme.typography.subtitle1
+                )
+                Text(
+                    text = "Precio: $${datos.get(3)}",
+                    modifier = Modifier.padding(2.dp),
+                    style = MaterialTheme.typography.subtitle1
+                )
+                Text(
+                    text = "Horario: ${datos.get(4)}",
+                    modifier = Modifier.padding(2.dp),
+                    style = MaterialTheme.typography.subtitle1
+                )
+            }
+            Column() {
+                //val isVisible = isVisible.toBoolean()
+                MyButton(datos, isVisible!!, locationLatLong, viewModel, myPreferences, datos)
+            }
+        }
+    }
+
+    @Composable
+    fun MyButton(
+        datos: Array<String>,
+        isVisible: String,
+        locationLatLong: ArrayList<Double?>?,
+        viewModel: DetailRentActivityViewModel,
+        myPreferences: SharedPreferences,
+        datosR: Array<String>
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+
+            Row() {
+                val context = LocalContext.current
+                Button(
+                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onPrimary),
+                    onClick = {
+                        try {
+                            Intent(Intent.ACTION_SEND).apply {
+                                putExtra(
+                                    Intent.EXTRA_TEXT,
+                                    "Esta es una invitacion a jugar un partidito en el club ${datos[0]} a las ${datos[4]}. Direccion: ${datos[2]}"
+                                )
+                                setType("text/plain")
+                                setPackage("com.whatsapp")
+                                context.startActivity(this)
+                            }
+                        } catch (ignored: ActivityNotFoundException) {
+                            Toast.makeText(context, "No se encontro app", Toast.LENGTH_LONG).show()
+                        }
+                    },
+                    modifier = Modifier.padding(all = Dp(10F)),
+                    enabled = true,
+                    shape = MaterialTheme.shapes.medium,
+                )
+                {
+                    Text(text = "Compartir", color = Color.White)
                 }
-            },
-            modifier = Modifier.padding(all = Dp(10F)),
-            enabled = true,
-            shape = MaterialTheme.shapes.medium,
-        )
-        {
-            Text(text = "Compartir", color = Color.White)
+
+                Button(
+                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onSecondary),
+                    onClick = {
+                        val intentUriNavigation = Uri.parse(
+                            "google.navigation:q=${locationLatLong?.get(0)},${
+                                locationLatLong?.get(1)
+                            }"
+                        )
+                        Intent(Intent.ACTION_VIEW, intentUriNavigation).apply {
+                            setPackage("com.google.android.apps.maps")
+                            context.startActivity(this)
+                        }
+                    },
+                    modifier = Modifier.padding(all = Dp(10F)),
+                    enabled = true,
+                    shape = MaterialTheme.shapes.medium,
+                )
+                {
+                    Text(text = "Como llegar", color = Color.White)
+                }
+            }
+            if (isVisible == "EsMia") {
+                Button(
+                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.error),
+                    onClick = {
+                        //logica cancelar reserva
+
+                        val user = myPreferences.getString("user", "")
+                        Log.d("cancelar", "DetailRentActivity call cancelrent $user")
+                        val resultadoo = viewModel.cancelRent(datosR[0], datosR[1], user!!)
+                    },
+                    modifier = Modifier.padding(all = Dp(10F)),
+                    enabled = true,
+                    shape = MaterialTheme.shapes.medium,
+                )
+                {
+                    Text(text = "Cancelar reserva", color = Color.White)
+                }
+            } else if (isVisible != "NoEsMia") {
+                Button(
+                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onSecondary),
+                    onClick = {
+                    },
+                    modifier = Modifier.padding(all = Dp(10F)),
+                    enabled = true,
+                    shape = MaterialTheme.shapes.medium,
+                )
+                {
+                    Text(text = "Realizar reserva", color = Color.White)
+                }
+            }
+            //var rating: Float = 5.0f
+            //RatingBar(value = rating,
+            //    ratingBarStyle = RatingBarStyle.HighLighted, onValueChange = {
+            //        rating = it
+            //    }) {
+            //    Log.d("TAG", "onRatingChanged: $it")
+            //}
         }
 
-            Button(
-                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onSecondary),
-                onClick = {
-                    val intentUriNavigation = Uri.parse("google.navigation:q=${locationLatLong?.get(0)},${locationLatLong?.get(1)}")
-                    Intent(Intent.ACTION_VIEW, intentUriNavigation).apply {
-                        setPackage("com.google.android.apps.maps")
-                        context.startActivity(this)
-                    }
-                },
-                modifier = Modifier.padding(all = Dp(10F)),
-                enabled = true,
-                shape = MaterialTheme.shapes.medium,
-            )
-            {
-                Text(text = "Como llegar", color = Color.White)
-            }
-    }
-        if(isVisible == "EsMia"){
-            Button(
-                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.error),
-                onClick = {
-                    //logica cancelar reserva
-
-                    val user = myPreferences.getString("user","")
-                    Log.d("cancelar", "DetailRentActivity call cancelrent $user")
-                    val resultadoo = viewModel.cancelRent(datosR[0], datosR[1],user!!)
-                },
-                modifier = Modifier.padding(all = Dp(10F)),
-                enabled = true,
-                shape = MaterialTheme.shapes.medium,
-            )
-            {
-                Text(text = "Cancelar reserva", color = Color.White)
-            }
-        } else if(isVisible != "NoEsMia"){
-            Button(
-                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onSecondary),
-                onClick = {
-                },
-                modifier = Modifier.padding(all = Dp(10F)),
-                enabled = true,
-                shape = MaterialTheme.shapes.medium,
-            )
-            {
-                Text(text = "Realizar reserva", color = Color.White)
-            }
-        }
-        //var rating: Float = 5.0f
-        //RatingBar(value = rating,
-        //    ratingBarStyle = RatingBarStyle.HighLighted, onValueChange = {
-        //        rating = it
-        //    }) {
-        //    Log.d("TAG", "onRatingChanged: $it")
-        //}
     }
 
-}
 
-
-@Composable
-fun RotationPortrait(datos: Array<String>, isVisible: String?,locationLatLong: ArrayList<Double?>?
-    ,viewModel: DetailRentActivityViewModel ,myPreferences : SharedPreferences
-){
-    val configuration = LocalConfiguration.current
-    when (configuration.orientation) {
-        Configuration.ORIENTATION_LANDSCAPE -> {
-            Datos(datos, isVisible, locationLatLong, viewModel, myPreferences)
-        }
-        else -> {
-            Datos(datos, isVisible, locationLatLong, viewModel, myPreferences)
+    @Composable
+    fun RotationPortrait(
+        datos: Array<String>,
+        isVisible: String?,
+        locationLatLong: ArrayList<Double?>?,
+        viewModel: DetailRentActivityViewModel,
+        myPreferences: SharedPreferences
+    ) {
+        val configuration = LocalConfiguration.current
+        when (configuration.orientation) {
+            Configuration.ORIENTATION_LANDSCAPE -> {
+                Datos(datos, isVisible, locationLatLong, viewModel, myPreferences)
+            }
+            else -> {
+                Datos(datos, isVisible, locationLatLong, viewModel, myPreferences)
+            }
         }
     }
 }

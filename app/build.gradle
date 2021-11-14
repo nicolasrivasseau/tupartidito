@@ -122,4 +122,6 @@ dependencies {
     testImplementation "androidx.arch.core:core-testing:2.1.0"
 
     implementation 'io.github.a914-gowtham:compose-ratingbar:1.1.1'
+
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
 }
