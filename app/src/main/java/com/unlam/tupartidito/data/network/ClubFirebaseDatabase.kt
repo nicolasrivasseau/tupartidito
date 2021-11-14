@@ -24,7 +24,7 @@ class ClubFirebaseDatabase @Inject constructor() {
     }
     suspend fun cancelSchedule(idRent: String, idCLub: String): Boolean{
         val cancelSchedule = FirebaseDatabase.getInstance().getReference("clubs")
-            .child(idCLub).child("schedules").child(idRent).removeValue()
+            .child(idCLub).child("schedules").child(idRent).child("reserved").setValue(false)
         Log.d("cancelar", "club firebase database call cancelrent")
 
         //val cancelSchedule = FirebaseDatabase.getInstance().getReference("clubs")
