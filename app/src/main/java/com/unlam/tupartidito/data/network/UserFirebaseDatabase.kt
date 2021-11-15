@@ -54,6 +54,31 @@ class UserFirebaseDatabase @Inject constructor() {
         return true
     }
 
+    suspend fun createRent(
+        idRent: String,
+        idUser: String,
+        location: String?,
+        price: String?,
+        slot: String?,
+        idCLub: String
+    ): Boolean{
+        var clubSuccess = FirebaseDatabase.getInstance().getReference("users")
+            .child(idUser).child("rents").child(idRent).child("id_club").setValue(idCLub).isSuccessful
+
+        var locationSuccess = FirebaseDatabase.getInstance().getReference("users")
+            .child(idUser).child("rents").child(idRent).child("location").setValue(location).isSuccessful
+
+        var priceSuccess = FirebaseDatabase.getInstance().getReference("users")
+            .child(idUser).child("rents").child(idRent).child("price").setValue(price).isSuccessful
+
+        var slotSuccess = FirebaseDatabase.getInstance().getReference("users")
+            .child(idUser).child("rents").child(idRent).child("slot").setValue(slot).isSuccessful
+
+        if(clubSuccess && locationSuccess && priceSuccess && slotSuccess) return true
+
+        return false
+    }
+
     suspend fun createUser(username: String, password: String): User?{
         FirebaseDatabase.getInstance().getReference("users").child(username).child("name").setValue( username)
         FirebaseDatabase.getInstance().getReference("users").child(username).child("password").setValue( password)

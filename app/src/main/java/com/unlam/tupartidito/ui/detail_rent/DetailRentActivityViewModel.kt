@@ -1,6 +1,8 @@
 package com.unlam.tupartidito.ui.detail_rent
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.*
 import com.unlam.tupartidito.data.model.club.Club
 import com.unlam.tupartidito.data.model.user.Rent
@@ -9,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import com.unlam.tupartidito.domain.club.GetClubUseCase
+import com.unlam.tupartidito.domain.rent.CreateRentUseCase
 import com.unlam.tupartidito.domain.rent.GetRentUseCase
 
 
@@ -17,6 +20,7 @@ class DetailRentActivityViewModel @Inject constructor(
     private val getClubUseCase: GetClubUseCase,
     private val cancelRentUseCase: CancelRentUseCase,
     private val getRentUseCase: GetRentUseCase,
+    private val createRentUseCase: CreateRentUseCase
 ) :
     ViewModel() {
 
@@ -53,6 +57,24 @@ class DetailRentActivityViewModel @Inject constructor(
 
         }
     }
+    fun createRent(
+        idRent: String,
+        idCLub: String,
+        idUser: String,
+        location: String?,
+        price: String?,
+        slot: String?,
+        context: Context?
+    ){
+        viewModelScope.launch {
+            val resultado =  createRentUseCase(idRent, idCLub, idUser, location, price, slot)!!
 
+            if (resultado){
+                Toast.makeText(context, "Reservado exitosamente", Toast.LENGTH_LONG).show()
+            } else{
+                Toast.makeText(context, "Reserva fallida", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
 
 }

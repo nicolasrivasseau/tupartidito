@@ -88,4 +88,13 @@ class ClubFirebaseDatabase @Inject constructor() {
         FirebaseDatabase.getInstance().getReference("clubs")
             .child(idCLub).child("schedules").child(idRent).child("reserved").setValue(false)
     }
+
+    suspend fun reserveSchedule(idRent: String, idCLub: String): Boolean{
+        val reserveSchedule = FirebaseDatabase.getInstance().getReference("clubs")
+            .child(idCLub).child("schedules").child(idRent).child("reserved").setValue(true)
+        Log.d("reservar", "club firebase database call cancelrent")
+
+
+        return reserveSchedule.isSuccessful()
+    }
 }

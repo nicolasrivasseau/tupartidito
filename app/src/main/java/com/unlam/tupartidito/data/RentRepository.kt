@@ -16,4 +16,17 @@ class RentRepository @Inject constructor(
         rentService.cancelRent(idRent, idCLub,idUser)
         return true
     }
+
+    suspend fun createRent(
+        idRent: String,
+        idCLub: String,
+        idUser: String,
+        location: String?,
+        price: String?,
+        slot: String?
+    ): Boolean{
+        Log.d("cancelar", "rent repository call cancelrent")
+
+        return  rentService.createRent(idRent, idCLub,idUser, location, price, slot)
+    }
 }

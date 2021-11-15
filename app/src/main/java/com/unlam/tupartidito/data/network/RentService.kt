@@ -49,4 +49,19 @@ class RentService @Inject constructor() {
         userFirebaseDatabase.cancelRent(idRent, idUser)
 
     }
+
+    suspend fun createRent(
+        idRent: String,
+        idCLub: String,
+        idUser: String,
+        location: String?,
+        price: String?,
+        slot: String?
+    ): Boolean{
+        var reserved = clubFirebaseDatabase.reserveSchedule(idRent, idCLub)
+        var rentAdded =  userFirebaseDatabase.createRent(idRent, idUser, location, price, slot, idCLub)
+
+        if (reserved && rentAdded) return true
+        return false
+    }
 }
