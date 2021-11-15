@@ -40,12 +40,12 @@ class RentsAdapter(var activity: Activity) : RecyclerView.Adapter<RentsAdapter.V
             txtPrice.text = "$${rent.price}"
             txtDuration.text = "(60min)"
             this.setOnClickListener {
-                val data = arrayOf(rent.id_rent, rent.id_club, rent.location,  rent.price, rent.slot)
+                val data = rent.id_rent
                 clickCard(data)
             }
         }
     }
-    private fun clickCard(data: Array<String?>) {
+    private fun clickCard(data: String?) {
         val intent = Intent(activity, DetailRentActivity::class.java)
         intent.putExtra("data", data)
         intent.putExtra("isVisible", "EsMia")

@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import androidx.compose.runtime.livedata.observeAsState
 import com.unlam.tupartidito.data.model.club.Club
+import com.unlam.tupartidito.data.model.user.Rent
 import com.unlam.tupartidito.ui.detail_rent.ui.theme.TuPartiditoTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -76,23 +77,25 @@ class DetailRentActivity : ComponentActivity() {
 
         val viewModel = viewModels<DetailRentActivityViewModel>().value
         val state = viewModel.state.observeAsState()
+        val idRent = intent.getStringExtra("data")!!
+        val isVisible = intent.getStringExtra("isVisible")
+        val username = myPreferences.getString("user","")
+        viewModel.setUsernameAndIdRent(username!!,idRent)
 
         when (state.value) {
             is DetailRentActivityViewModel.State.Loading -> LoadingScreen()
             is DetailRentActivityViewModel.State.Success -> {
-                val data = intent.getStringArrayExtra("data")!!
-                val isVisible = intent.getStringExtra("isVisible")
-                val clubs = (state.value as DetailRentActivityViewModel.State.Success).clubs
-                var clubOk: Club? = null
-                for (club in clubs) {
-                    if (club.id == data.get(1)) {
-                        clubOk = club
-                    }
+
+                val rent = (state.value as DetailRentActivityViewModel.State.Success).rent
+                if (rent != null) {
+                    rent.id_club?.let { viewModel.setIdClub(it) }
                 }
-                locationLatLong?.add(clubOk?.latitude)
-                locationLatLong?.add(clubOk?.longitude)
+                val club = (state.value as DetailRentActivityViewModel.State.Success).club
+
+                locationLatLong?.add(club?.latitude)
+                locationLatLong?.add(club?.longitude)
                 RotationPortrait(
-                    datos = data,
+                    datos = rent!!,
                     isVisible = isVisible,
                     locationLatLong = locationLatLong,
                     viewModel = viewModel,
@@ -104,7 +107,7 @@ class DetailRentActivity : ComponentActivity() {
 
     @Composable
     fun Datos(
-        datos: Array<String>,
+        datos: Rent,
         isVisible: String?,
         locationLatLong: ArrayList<Double?>?,
         viewModel: DetailRentActivityViewModel,
@@ -128,27 +131,27 @@ class DetailRentActivity : ComponentActivity() {
 
                 )
                 Text(
-                    text = "Datos de la reserva #${datos.get(0)}",
+                    text = "Datos de la reserva #${datos?.id_rent}",
                     modifier = Modifier.padding(2.dp),
                     style = MaterialTheme.typography.h6
                 )
                 Text(
-                    text = "Cancha: ${datos.get(1)}",
+                    text = "Cancha: ${datos?.id_club}",
                     modifier = Modifier.padding(2.dp),
                     style = MaterialTheme.typography.subtitle1
                 )
                 Text(
-                    text = "Ubicacion: ${datos.get(2)}", modifier = Modifier
+                    text = "Ubicacion: ${datos?.location}", modifier = Modifier
                         .padding(2.dp)
                         .width(320.dp), style = MaterialTheme.typography.subtitle1
                 )
                 Text(
-                    text = "Precio: $${datos.get(3)}",
+                    text = "Precio: $${datos?.price}",
                     modifier = Modifier.padding(2.dp),
                     style = MaterialTheme.typography.subtitle1
                 )
                 Text(
-                    text = "Horario: ${datos.get(4)}",
+                    text = "Horario: ${datos?.slot}",
                     modifier = Modifier.padding(2.dp),
                     style = MaterialTheme.typography.subtitle1
                 )
@@ -162,12 +165,12 @@ class DetailRentActivity : ComponentActivity() {
 
     @Composable
     fun MyButton(
-        datos: Array<String>,
+        datos: Rent,
         isVisible: String,
         locationLatLong: ArrayList<Double?>?,
         viewModel: DetailRentActivityViewModel,
         myPreferences: SharedPreferences,
-        datosR: Array<String>
+        datosR: Rent
     ) {
         Column(
             modifier = Modifier
@@ -186,7 +189,7 @@ class DetailRentActivity : ComponentActivity() {
                             Intent(Intent.ACTION_SEND).apply {
                                 putExtra(
                                     Intent.EXTRA_TEXT,
-                                    "Esta es una invitacion a jugar un partidito en el club ${datos[0]} a las ${datos[4]}. Direccion: ${datos[2]}"
+                                    "Esta es una invitacion a jugar un partidito en el club ${datos.id_rent} a las ${datos.slot}. Direccion: ${datos.location}"
                                 )
                                 setType("text/plain")
                                 setPackage("com.whatsapp")
@@ -233,7 +236,7 @@ class DetailRentActivity : ComponentActivity() {
 
                         val user = myPreferences.getString("user", "")
                         Log.d("cancelar", "DetailRentActivity call cancelrent $user")
-                        val resultadoo = viewModel.cancelRent(datosR[0], datosR[1], user!!)
+                        val resultadoo = viewModel.cancelRent(datosR.id_rent!!, datosR.id_club!!, user!!)
                     },
                     modifier = Modifier.padding(all = Dp(10F)),
                     enabled = true,
@@ -269,7 +272,7 @@ class DetailRentActivity : ComponentActivity() {
 
     @Composable
     fun RotationPortrait(
-        datos: Array<String>,
+        datos: Rent,
         isVisible: String?,
         locationLatLong: ArrayList<Double?>?,
         viewModel: DetailRentActivityViewModel,

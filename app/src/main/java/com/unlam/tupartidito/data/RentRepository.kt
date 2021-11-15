@@ -8,8 +8,8 @@ import javax.inject.Inject
 class RentRepository @Inject constructor(
     private val rentService:RentService
 ){
-    fun getRents(): List<Rent> {
-        return rentService.getRents()
+    suspend fun getRent(username: String, rentId: String): Rent? {
+        return rentService.getRent(username,rentId)
     }
 
     suspend fun cancelRent(idRent: String, idCLub: String, idUser: String): Boolean{
