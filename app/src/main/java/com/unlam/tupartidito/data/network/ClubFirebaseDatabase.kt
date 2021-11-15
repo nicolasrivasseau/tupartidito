@@ -67,7 +67,7 @@ class ClubFirebaseDatabase @Inject constructor() {
         dataSnapshot.exist("location") { club.location = it as String }
         dataSnapshot.exist("url_image") { club.url_image = it as String }
         dataSnapshot.exist("description") { club.description = it as String }
-        dataSnapshot.exist("puntuacion") { club.puntuacion = it as Number }
+        dataSnapshot.exist("score") { club.puntuacion = it as Number }
 
 
         club.services = Service()
