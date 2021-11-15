@@ -59,6 +59,7 @@ class ClubFirebaseDatabase @Inject constructor() {
         dataSnapshot.exist("score") { club.score = it as Number }
 
 
+
         club.services = Service()
         dataSnapshot.child("services").exist("buffet") { club.services!!.buffet = it as Boolean }
         dataSnapshot.child("services")
