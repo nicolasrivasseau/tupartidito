@@ -66,6 +66,12 @@ class LoginActivity : AppCompatActivity() {
 
                 loginSession(email, password, myPreferences)
             }
+            binding.btnRegistro.setOnClickListener {
+                val email: String = binding.txtEmail.text.toString()
+                val password: String = binding.txtPassword.text.toString()
+
+                registerUser(email, password, myPreferences)
+            }
         }
     }
 

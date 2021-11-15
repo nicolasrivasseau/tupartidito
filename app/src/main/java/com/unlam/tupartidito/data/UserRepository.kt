@@ -11,4 +11,8 @@ class UserRepository @Inject constructor(
      suspend fun getUser(username:String) : User?{
         return userService.getUser(username)
     }
+
+    suspend fun createUser(username: String, password: String): User?{
+        return userService.createUser(username, password)
+    }
 }

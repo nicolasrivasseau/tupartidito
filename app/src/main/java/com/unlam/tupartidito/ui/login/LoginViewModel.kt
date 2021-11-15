@@ -1,6 +1,7 @@
 package com.unlam.tupartidito.ui.login
 
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,7 +19,8 @@ class LoginViewModel @Inject constructor(
     private val credentialsNotEmptyUseCase: CredentialsNotEmptyUseCase,
     private val validUserUseCase: ValidUserUseCase,
     private val validCredentialsUseCase: ValidCredentialsUseCase,
-    private val rememberUserUseCase: RememberUserUseCase
+    private val rememberUserUseCase: RememberUserUseCase,
+    private val createUserFirebaseUseCase: CreateUserFirebaseUseCase
 ) : ViewModel() {
 
     private val _userData = MutableLiveData<UserLiveData>()
@@ -43,6 +45,19 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
-
+    fun registerUser(username: String, password: String, myPreferences: SharedPreferences) {
+        viewModelScope.launch {
+            if (credentialsNotEmptyUseCase(username, password)) {
+                val user = getUserFirebaseUseCase(username)
+                if (user!!.name.isNullOrBlank()) {
+                    createUserFirebaseUseCase(username, password)
+                } else {
+                    _userData.value = UserLiveData(false, "El usuario existe.")
+                }
+            } else {
+                _userData.value = UserLiveData(false, "Credenciales vacias.")
+            }
+        }
+    }
 
 }

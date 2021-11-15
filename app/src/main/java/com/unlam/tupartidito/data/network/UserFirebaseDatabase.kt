@@ -53,4 +53,11 @@ class UserFirebaseDatabase @Inject constructor() {
 
         return true
     }
+
+    suspend fun createUser(username: String, password: String): User?{
+        FirebaseDatabase.getInstance().getReference("users").child(username).child("name").setValue( username)
+        FirebaseDatabase.getInstance().getReference("users").child(username).child("password").setValue( password)
+
+        return getUser(username)
+    }
 }
