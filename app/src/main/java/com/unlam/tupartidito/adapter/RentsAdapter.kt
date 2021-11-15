@@ -5,8 +5,10 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.unit.Constraints
 import androidx.recyclerview.widget.RecyclerView
 import com.unlam.tupartidito.R
+import com.unlam.tupartidito.common.Constants
 import com.unlam.tupartidito.data.model.user.Rent
 import com.unlam.tupartidito.ui.detail_rent.DetailRentActivity
 import kotlinx.android.synthetic.main.item_rent.view.*
@@ -47,8 +49,8 @@ class RentsAdapter(var activity: Activity) : RecyclerView.Adapter<RentsAdapter.V
     }
     private fun clickCard(data: String?) {
         val intent = Intent(activity, DetailRentActivity::class.java)
-        intent.putExtra("data", data)
-        intent.putExtra("isVisible", "EsMia")
+        intent.putExtra(Constants.RENT_DATA, data)
+        intent.putExtra(Constants.RENT_IS_RESERVED, true)
         activity.startActivity(intent)
     }
 

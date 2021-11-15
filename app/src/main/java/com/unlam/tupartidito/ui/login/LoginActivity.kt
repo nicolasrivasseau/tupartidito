@@ -2,46 +2,33 @@ package com.unlam.tupartidito.ui.login
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.unlam.tupartidito.common.Constants
 import com.unlam.tupartidito.common.observe
 import com.unlam.tupartidito.common.toast
 import com.unlam.tupartidito.databinding.ActivityLoginBinding
 import com.unlam.tupartidito.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
-import android.content.SharedPreferences
 
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private val viewModel: LoginViewModel by viewModels()
-    private lateinit var myPreferences : SharedPreferences
+    private lateinit var myPreferences: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        myPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
+        myPreferences = getSharedPreferences(Constants.MY_PREFERENCES, Context.MODE_PRIVATE)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-//        checkIfTheUserIsRemembered()
         setObservers()
         setEvents()
         binding.txtEmail.setText("root")
         binding.txtPassword.setText("toor")
-
     }
-
-//    private fun checkIfTheUserIsRemembered() {
-//        with(viewModel) {
-//            if (myPreferences.getBoolean("active", false)) {
-//                val email: String = myPreferences.getString("user", "")!!
-//                val password: String = myPreferences.getString("password", "")!!
-//
-//                loginSession(email, password, myPreferences)
-//            }
-//        }
-//    }
 
     private fun setObservers() {
         with(viewModel) {
@@ -52,7 +39,7 @@ class LoginActivity : AppCompatActivity() {
                     startActivity(intent)
                     finish()
                 } else {
-                    toast(response.messageError.toString())
+                    toast(binding.root.context.getString(response.messageError!!))
                 }
             }
         }
@@ -70,7 +57,7 @@ class LoginActivity : AppCompatActivity() {
                 val email: String = binding.txtEmail.text.toString()
                 val password: String = binding.txtPassword.text.toString()
 
-                registerUser(email, password, myPreferences)
+                registerUser(email, password)
             }
         }
     }

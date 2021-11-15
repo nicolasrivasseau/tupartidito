@@ -14,4 +14,10 @@
     <string name="permission_miss_camera">Se necesitan los permisos para lanzar la cámara</string>
     <string name="permission_miss_location">Se necesitan los permisos para lanzar el mapa.</string>
     <string name="title_activity_rent">RentActivity</string>
+    <string name="invalid_credentials">Credenciales invalidas.</string>
+    <string name="user_not_exist">El usuario no existe.</string>
+    <string name="empty_credentials">Credenciales vacias.</string>
+    <string name="rents_error">Error al obtener rentas</string>
+    <string name="success_score">Calificación enviada</string>
+    <string name="error_operation">Operación fallida</string>
 </resources>

@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -40,7 +39,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var myPreferences: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        myPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
+        myPreferences = getSharedPreferences(Constants.MY_PREFERENCES, Context.MODE_PRIVATE)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setPermissions()
@@ -100,7 +99,7 @@ class MainActivity : AppCompatActivity() {
                 for (club in clubs) {
                     val child = layoutInflater.inflate(R.layout.item_club, null)
                     child.txtClubLocation.text = club.location
-                    child.txtClubRating.text = club.puntuacion.toString()
+                    child.txtClubRating.text = club.score.toString()
                     val rents = ArrayList<String>()
                     for(r in viewModel.rentsData.value?.rents!!){rents.add(r.id_rent!!)}
                     child.txtClubName.text = club.id.toString().uppercase()

@@ -44,10 +44,6 @@ class RentService @Inject constructor() {
     }
 
     suspend fun cancelRent(idRent: String, idCLub: String, idUser: String){
-        //llamar funcion que elimine renta de cada uno
-        //clubFirebaseDatabase
-        Log.d("cancelar", "Rent service call cancelrent")
-
         clubFirebaseDatabase.cancelSchedule(idRent, idCLub)
         //userFirebaseDatabase
         userFirebaseDatabase.cancelRent(idRent, idUser)

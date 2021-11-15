@@ -16,7 +16,7 @@ import com.unlam.tupartidito.domain.rent.GetRentUseCase
 class DetailRentActivityViewModel @Inject constructor(
     private val getClubUseCase: GetClubUseCase,
     private val cancelRentUseCase: CancelRentUseCase,
-    private val getRentUseCase: GetRentUseCase
+    private val getRentUseCase: GetRentUseCase,
 ) :
     ViewModel() {
 
@@ -38,22 +38,21 @@ class DetailRentActivityViewModel @Inject constructor(
 
     sealed class State {
         object Loading : State()
-        class Success(val rent: Rent?,val club: Club?) : State(){
-
-        }
-
+        class Success(val rent: Rent?,val club: Club?) : State()
     }
 
 
     fun cancelRent(idRent: String, idCLub: String, idUser: String){
         viewModelScope.launch {
-            Log.d("cancelar", "DetailRentActivityViewModel call cancelrent")
-            //result.value =
-              val resultado =   cancelRentUseCase(idRent, idCLub, idUser)!!
-
+            cancelRentUseCase(idRent, idCLub, idUser)!!
         }
     }
 
+    fun reservedRent(username: String, idClub: String?, idRent: String?) {
+        viewModelScope.launch {
+
+        }
+    }
 
 
 }

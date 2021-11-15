@@ -95,12 +95,12 @@ fun Datos(
         }
         Column(){
             //val isVisible = isVisible.toBoolean()
-            MyButton(datos, isVisible!!, locationLatLong, viewModel, myPreferences, datos)
+            ButtonsContent(datos, isVisible!!, locationLatLong, viewModel, myPreferences, datos)
         }
     }
 }
 @Composable
-fun MyButton(
+fun ButtonsContent(
     datos: Array<String>, isVisible: String, locationLatLong: ArrayList<Double?>?
     , viewModel: DetailRentActivityViewModelBU, myPreferences: SharedPreferences, datosR: Array<String>
 ) {

@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.unlam.tupartidito.R
 import com.unlam.tupartidito.data.model.club.Club
 import com.unlam.tupartidito.data.model.rent.RentsLiveData
 import com.unlam.tupartidito.domain.club.GetClubsByRateUseCase
@@ -33,7 +34,7 @@ class MainViewModel @Inject constructor(
             if(rentsIsNotNullUseCase(rents)){
                 _rentsData.value = RentsLiveData(true,null,rents)
             }else{
-                _rentsData.value = RentsLiveData(false,"rents is null",null)
+                _rentsData.value = RentsLiveData(false,R.string.rents_error,null)
             }
         }
     }
@@ -43,7 +44,6 @@ class MainViewModel @Inject constructor(
 
     fun getClubs(){
         viewModelScope.launch {
-            //val clubs = getClubsUseCase()
             val clubs = getClubsByRateUseCase()
             if (clubs != null){
                 _clubsData.value = clubs
@@ -52,18 +52,3 @@ class MainViewModel @Inject constructor(
     }
 
 }
-
-
-
-//
-//    private val _sports = MutableLiveData<List<Sport>>()
-//    val sports: LiveData<List<Sport>> get() = _sports
-//
-//    fun getSports(){
-//        viewModelScope.launch {
-//            val sports = getSportsUseCase()
-//            if(sports.count() != 0){
-//                _sports.value = sports
-//            }
-//        }
-//    }

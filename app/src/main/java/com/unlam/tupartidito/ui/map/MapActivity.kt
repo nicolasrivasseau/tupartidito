@@ -72,20 +72,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
             }, Looper.getMainLooper()
         )
-
-
-//        val fusedLocationClient =
-//            LocationServices.getFusedLocationProviderClient(binding.root.context)
-//
-//        fusedLocationClient.lastLocation.addOnSuccessListener {
-//            map.animateCamera(
-//                CameraUpdateFactory.newLatLngZoom(
-//                    LatLng(it.latitude, it.longitude),
-//                    14f
-//                )
-//            )
-//            map.isMyLocationEnabled = true
-//        }
     }
 
 

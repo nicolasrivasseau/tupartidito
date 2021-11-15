@@ -22,16 +22,7 @@ class ClubFirebaseDatabase @Inject constructor() {
         }
         return listClub
     }
-    suspend fun cancelSchedule(idRent: String, idCLub: String): Boolean{
-        val cancelSchedule = FirebaseDatabase.getInstance().getReference("clubs")
-            .child(idCLub).child("schedules").child(idRent).child("reserved").setValue(false)
-        Log.d("cancelar", "club firebase database call cancelrent")
 
-        //val cancelSchedule = FirebaseDatabase.getInstance().getReference("clubs")
-          //  .child("Futbo10").child("schedules").child("prueba").removeValue()
-
-        return true
-    }
 
     suspend fun getClubsByRate(): List<Club> {
 
@@ -46,7 +37,7 @@ class ClubFirebaseDatabase @Inject constructor() {
         var tmp: Club
         for(x in 0 until listClub.size){
             for(y in 0 until listClub.size){
-                if(listClub[x].puntuacion!!.toFloat() > listClub[y].puntuacion!!.toFloat()){
+                if(listClub[x].score!!.toFloat() > listClub[y].score!!.toFloat()){
                     tmp = listClub[y]
 
                     listClub[y] = listClub[x]
@@ -55,8 +46,6 @@ class ClubFirebaseDatabase @Inject constructor() {
                 }
             }
         }
-
-
         return listClub
     }
 
@@ -67,7 +56,7 @@ class ClubFirebaseDatabase @Inject constructor() {
         dataSnapshot.exist("location") { club.location = it as String }
         dataSnapshot.exist("url_image") { club.url_image = it as String }
         dataSnapshot.exist("description") { club.description = it as String }
-        dataSnapshot.exist("puntuacion") { club.puntuacion = it as Number }
+        dataSnapshot.exist("score") { club.score = it as Number }
 
 
         club.services = Service()
@@ -89,11 +78,13 @@ class ClubFirebaseDatabase @Inject constructor() {
         }
     }
 
-    suspend fun updateRating(rate: Long, idClub: String): Boolean{
-        val ratingRef = FirebaseDatabase.getInstance().getReference("clubs")
-            .child(idClub).child("puntuacion").setValue(rate)
+     fun updateRating(rate: Long, idClub: String){
+         FirebaseDatabase.getInstance().getReference("clubs")
+             .child(idClub).child("score").setValue(rate)
+    }
 
-
-        return true
+    fun cancelSchedule(idRent: String, idCLub: String){
+        FirebaseDatabase.getInstance().getReference("clubs")
+            .child(idCLub).child("schedules").child(idRent).child("reserved").setValue(false)
     }
 }

@@ -4,9 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
 import com.unlam.tupartidito.data.model.ErrorCodeQr
-import com.unlam.tupartidito.data.model.qr.QrCodeJson
 import com.unlam.tupartidito.data.model.club.Club
 import com.unlam.tupartidito.domain.club.GetClubUseCase
 import com.unlam.tupartidito.domain.club.SubmitRatingUseCase
@@ -20,7 +18,7 @@ class DetailViewModel @Inject constructor(
     private val ratingUseCase: SubmitRatingUseCase
 ) : ViewModel() {
 
-    val result=  MutableLiveData<Boolean>()
+    val result = MutableLiveData<Boolean>()
     private val _clubData = MutableLiveData<Club>()
     val clubData: LiveData<Club> get() = _clubData
 
@@ -48,10 +46,11 @@ class DetailViewModel @Inject constructor(
             _isLoading.value = false
         }
     }
-    fun submitRating(rate: Long){
+
+    fun submitRating(rate: Long) {
         viewModelScope.launch {
-            //val updateStatus = ratingUseCase(rate, _clubData.value?.id!!)
-            result.value = ratingUseCase(rate, _clubData.value?.id!!)!!
+            ratingUseCase(rate, _clubData.value?.id!!)!!
+            result.value = true
         }
     }
 

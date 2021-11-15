@@ -13,8 +13,6 @@ class RentRepository @Inject constructor(
     }
 
     suspend fun cancelRent(idRent: String, idCLub: String, idUser: String): Boolean{
-        Log.d("cancelar", "rent repository call cancelrent")
-
         rentService.cancelRent(idRent, idCLub,idUser)
         return true
     }

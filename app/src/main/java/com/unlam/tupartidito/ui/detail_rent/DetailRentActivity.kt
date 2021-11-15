@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import androidx.compose.runtime.livedata.observeAsState
+import com.unlam.tupartidito.common.Constants
 import com.unlam.tupartidito.data.model.user.Rent
 import com.unlam.tupartidito.ui.detail_rent.ui.theme.TuPartiditoTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,12 +41,11 @@ class DetailRentActivity : ComponentActivity() {
     private var locationLatLong: HashMap<String,Double?>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        myPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
+        myPreferences = getSharedPreferences(Constants.MY_PREFERENCES, Context.MODE_PRIVATE)
 
 
         setContent {
             TuPartiditoTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
                     RentsScreenContent()
                 }
@@ -76,8 +76,8 @@ class DetailRentActivity : ComponentActivity() {
 
         val viewModel = viewModels<DetailRentActivityViewModel>().value
         val state = viewModel.state.observeAsState()
-        val idRent = intent.getStringExtra("data")!!
-        val isVisible = intent.getStringExtra("isVisible")
+        val idRent = intent.getStringExtra(Constants.RENT_DATA)!!
+        val isVisible = intent.getBooleanExtra(Constants.RENT_IS_RESERVED,false)
         val username = myPreferences.getString("user","")
         viewModel.setUsernameAndIdRent(username!!,idRent)
 
@@ -94,23 +94,25 @@ class DetailRentActivity : ComponentActivity() {
                 locationLatLong?.put("Latitude",club?.latitude)
                 locationLatLong?.put("Longitude",club?.longitude)
                 RotationPortrait(
-                    datos = rent!!,
-                    isVisible = isVisible,
+                    data = rent!!,
+                    isReserved = isVisible,
                     locationLatLong = locationLatLong,
                     viewModel = viewModel,
-                    myPreferences = myPreferences
+                    myPreferences = myPreferences,
+                    reservedRent = { viewModel.reservedRent(username,rent.id_club,rent.id_rent)}
                 )
             }
         }
     }
 
     @Composable
-    fun Datos(
-        datos: Rent,
-        isVisible: String?,
+    fun ClubContent(
+        data: Rent,
+        isReserved: Boolean,
         locationLatLong: HashMap<String, Double?>?,
         viewModel: DetailRentActivityViewModel,
-        myPreferences: SharedPreferences
+        myPreferences: SharedPreferences,
+        reservedRent: () -> Unit
     ) {
         Column() {
             Column(
@@ -130,46 +132,46 @@ class DetailRentActivity : ComponentActivity() {
 
                 )
                 Text(
-                    text = "Datos de la reserva #${datos?.id_rent}",
+                    text = "Datos de la reserva #${data?.id_rent}",
                     modifier = Modifier.padding(2.dp),
                     style = MaterialTheme.typography.h6
                 )
                 Text(
-                    text = "Cancha: ${datos?.id_club}",
+                    text = "Cancha: ${data?.id_club}",
                     modifier = Modifier.padding(2.dp),
                     style = MaterialTheme.typography.subtitle1
                 )
                 Text(
-                    text = "Ubicacion: ${datos?.location}", modifier = Modifier
+                    text = "Ubicacion: ${data?.location}", modifier = Modifier
                         .padding(2.dp)
                         .width(320.dp), style = MaterialTheme.typography.subtitle1
                 )
                 Text(
-                    text = "Precio: $${datos?.price}",
+                    text = "Precio: $${data?.price}",
                     modifier = Modifier.padding(2.dp),
                     style = MaterialTheme.typography.subtitle1
                 )
                 Text(
-                    text = "Horario: ${datos?.slot}",
+                    text = "Horario: ${data?.slot}",
                     modifier = Modifier.padding(2.dp),
                     style = MaterialTheme.typography.subtitle1
                 )
             }
             Column() {
                 //val isVisible = isVisible.toBoolean()
-                MyButton(datos, isVisible!!, locationLatLong, viewModel, myPreferences, datos)
+                ButtonsContent(data, isReserved!!, locationLatLong, viewModel, myPreferences,reservedRent)
             }
         }
     }
 
     @Composable
-    fun MyButton(
-        datos: Rent,
-        isVisible: String,
+    fun ButtonsContent(
+        data: Rent,
+        isReserved: Boolean,
         locationLatLong: HashMap<String, Double?>?,
         viewModel: DetailRentActivityViewModel,
         myPreferences: SharedPreferences,
-        datosR: Rent
+        reservedRent: () -> Unit
     ) {
         Column(
             modifier = Modifier
@@ -188,7 +190,7 @@ class DetailRentActivity : ComponentActivity() {
                             Intent(Intent.ACTION_SEND).apply {
                                 putExtra(
                                     Intent.EXTRA_TEXT,
-                                    "Esta es una invitacion a jugar un partidito en el club ${datos.id_club} a las ${datos.slot}. Direccion: ${datos.location}"
+                                    "Esta es una invitacion a jugar un partidito en el club ${data.id_club} a las ${data.slot}. Direccion: ${data.location}"
                                 )
                                 setType("text/plain")
                                 setPackage("com.whatsapp")
@@ -227,7 +229,7 @@ class DetailRentActivity : ComponentActivity() {
                     Text(text = "Como llegar", color = Color.White)
                 }
             }
-            if (isVisible == "EsMia") {
+            if (isReserved) {
                 Button(
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.error),
                     onClick = {
@@ -235,7 +237,7 @@ class DetailRentActivity : ComponentActivity() {
 
                         val user = myPreferences.getString("user", "")
                         Log.d("cancelar", "DetailRentActivity call cancelrent $user")
-                        val resultadoo = viewModel.cancelRent(datosR.id_rent!!, datosR.id_club!!, user!!)
+                        val resultadoo = viewModel.cancelRent(data.id_rent!!, data.id_club!!, user!!)
                     },
                     modifier = Modifier.padding(all = Dp(10F)),
                     enabled = true,
@@ -244,11 +246,10 @@ class DetailRentActivity : ComponentActivity() {
                 {
                     Text(text = "Cancelar reserva", color = Color.White)
                 }
-            } else if (isVisible != "NoEsMia") {
+            } else {
                 Button(
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onSecondary),
-                    onClick = {
-                    },
+                    onClick = { reservedRent() },
                     modifier = Modifier.padding(all = Dp(10F)),
                     enabled = true,
                     shape = MaterialTheme.shapes.medium,
@@ -257,13 +258,6 @@ class DetailRentActivity : ComponentActivity() {
                     Text(text = "Realizar reserva", color = Color.White)
                 }
             }
-            //var rating: Float = 5.0f
-            //RatingBar(value = rating,
-            //    ratingBarStyle = RatingBarStyle.HighLighted, onValueChange = {
-            //        rating = it
-            //    }) {
-            //    Log.d("TAG", "onRatingChanged: $it")
-            //}
         }
 
     }
@@ -271,27 +265,21 @@ class DetailRentActivity : ComponentActivity() {
 
     @Composable
     fun RotationPortrait(
-        datos: Rent,
-        isVisible: String?,
+        data: Rent,
+        isReserved: Boolean,
         locationLatLong: HashMap<String, Double?>?,
         viewModel: DetailRentActivityViewModel,
-        myPreferences: SharedPreferences
+        myPreferences: SharedPreferences,
+        reservedRent: () -> Unit
     ) {
         val configuration = LocalConfiguration.current
         when (configuration.orientation) {
             Configuration.ORIENTATION_LANDSCAPE -> {
-                Datos(datos, isVisible, locationLatLong, viewModel, myPreferences)
+                ClubContent(data, isReserved, locationLatLong, viewModel, myPreferences,reservedRent)
             }
             else -> {
-                Datos(datos, isVisible, locationLatLong, viewModel, myPreferences)
+                ClubContent(data, isReserved, locationLatLong, viewModel, myPreferences,reservedRent)
             }
         }
     }
 }
-/*
-@Composable
-fun RatingBar(){
-    RatingBar(value = rating,
-        ratingBarStyle =
-        )
-}*/

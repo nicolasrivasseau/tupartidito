@@ -9,11 +9,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.unlam.tupartidito.R
 import com.unlam.tupartidito.adapter.SchedulesAdapter
+import com.unlam.tupartidito.common.Constants
 import com.unlam.tupartidito.common.observe
 import kotlinx.android.synthetic.main.fragment_schedule_club.view.*
-
-private const val ID_CLUB = "idClub"
-private const val RENTS = "rentsList"
 
 class ScheduleClubFragment : Fragment() {
 
@@ -24,8 +22,8 @@ class ScheduleClubFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            idClub = it.getString(ID_CLUB)
-            dataRents = it.getStringArrayList(RENTS)!!
+            idClub = it.getString(Constants.KEY_ID_CLUB)
+            dataRents = it.getStringArrayList(Constants.RENTS_LIST)!!
         }
         viewModel = ViewModelProvider(requireActivity()).get(DetailClubFragmentViewModel::class.java)
 
@@ -57,7 +55,7 @@ class ScheduleClubFragment : Fragment() {
         fun newInstance(idClub: String) =
             ScheduleClubFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ID_CLUB, idClub)
+                    putString(Constants.KEY_ID_CLUB, idClub)
                 }
             }
     }

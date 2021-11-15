@@ -1,15 +1,14 @@
 package com.unlam.tupartidito.ui.login
 
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.unlam.tupartidito.R
 import com.unlam.tupartidito.data.model.user.UserLiveData
 import com.unlam.tupartidito.domain.user.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,27 +34,27 @@ class LoginViewModel @Inject constructor(
                         rememberUserUseCase(user?.id,password, myPreferences)
                         _userData.value = UserLiveData(true, null, user)
                     } else {
-                        _userData.value = UserLiveData(false, "Credenciales invalidas.")
+                        _userData.value = UserLiveData(false, R.string.invalid_credentials)
                     }
                 } else {
-                    _userData.value = UserLiveData(false, "El usuario no existe.")
+                    _userData.value = UserLiveData(false, R.string.user_not_exist)
                 }
             } else {
-                _userData.value = UserLiveData(false, "Credenciales vacias.")
+                _userData.value = UserLiveData(false, R.string.empty_credentials)
             }
         }
     }
-    fun registerUser(username: String, password: String, myPreferences: SharedPreferences) {
+    fun registerUser(username: String, password: String) {
         viewModelScope.launch {
             if (credentialsNotEmptyUseCase(username, password)) {
                 val user = getUserFirebaseUseCase(username)
                 if (user!!.name.isNullOrBlank()) {
                     createUserFirebaseUseCase(username, password)
                 } else {
-                    _userData.value = UserLiveData(false, "El usuario existe.")
+                    _userData.value = UserLiveData(false, R.string.user_not_exist)
                 }
             } else {
-                _userData.value = UserLiveData(false, "Credenciales vacias.")
+                _userData.value = UserLiveData(false, R.string.empty_credentials)
             }
         }
     }
