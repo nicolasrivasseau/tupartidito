@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import androidx.compose.runtime.livedata.observeAsState
-import com.unlam.tupartidito.data.model.club.Club
 import com.unlam.tupartidito.data.model.user.Rent
 import com.unlam.tupartidito.ui.detail_rent.ui.theme.TuPartiditoTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,7 +37,7 @@ class DetailRentActivity : ComponentActivity() {
     private lateinit var myPreferences: SharedPreferences
 
     private val viewModel: DetailRentActivityViewModel by viewModels()
-    private var locationLatLong: ArrayList<Double?>? = null
+    private var locationLatLong: HashMap<String,Double?>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         myPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
@@ -92,8 +91,8 @@ class DetailRentActivity : ComponentActivity() {
                 }
                 val club = (state.value as DetailRentActivityViewModel.State.Success).club
 
-                locationLatLong?.add(club?.latitude)
-                locationLatLong?.add(club?.longitude)
+                locationLatLong?.put("Latitude",club?.latitude)
+                locationLatLong?.put("Longitude",club?.longitude)
                 RotationPortrait(
                     datos = rent!!,
                     isVisible = isVisible,
@@ -109,7 +108,7 @@ class DetailRentActivity : ComponentActivity() {
     fun Datos(
         datos: Rent,
         isVisible: String?,
-        locationLatLong: ArrayList<Double?>?,
+        locationLatLong: HashMap<String, Double?>?,
         viewModel: DetailRentActivityViewModel,
         myPreferences: SharedPreferences
     ) {
@@ -167,7 +166,7 @@ class DetailRentActivity : ComponentActivity() {
     fun MyButton(
         datos: Rent,
         isVisible: String,
-        locationLatLong: ArrayList<Double?>?,
+        locationLatLong: HashMap<String, Double?>?,
         viewModel: DetailRentActivityViewModel,
         myPreferences: SharedPreferences,
         datosR: Rent
@@ -189,7 +188,7 @@ class DetailRentActivity : ComponentActivity() {
                             Intent(Intent.ACTION_SEND).apply {
                                 putExtra(
                                     Intent.EXTRA_TEXT,
-                                    "Esta es una invitacion a jugar un partidito en el club ${datos.id_rent} a las ${datos.slot}. Direccion: ${datos.location}"
+                                    "Esta es una invitacion a jugar un partidito en el club ${datos.id_club} a las ${datos.slot}. Direccion: ${datos.location}"
                                 )
                                 setType("text/plain")
                                 setPackage("com.whatsapp")
@@ -211,8 +210,8 @@ class DetailRentActivity : ComponentActivity() {
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onSecondary),
                     onClick = {
                         val intentUriNavigation = Uri.parse(
-                            "google.navigation:q=${locationLatLong?.get(0)},${
-                                locationLatLong?.get(1)
+                            "google.navigation:q=${locationLatLong?.get("Latitude")},${
+                                locationLatLong?.get("Longitude")
                             }"
                         )
                         Intent(Intent.ACTION_VIEW, intentUriNavigation).apply {
@@ -274,7 +273,7 @@ class DetailRentActivity : ComponentActivity() {
     fun RotationPortrait(
         datos: Rent,
         isVisible: String?,
-        locationLatLong: ArrayList<Double?>?,
+        locationLatLong: HashMap<String, Double?>?,
         viewModel: DetailRentActivityViewModel,
         myPreferences: SharedPreferences
     ) {
