@@ -179,6 +179,7 @@ class DetailRentActivity : ComponentActivity() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            val context = LocalContext.current
 
             Row() {
                 val context = LocalContext.current
@@ -248,7 +249,10 @@ class DetailRentActivity : ComponentActivity() {
             } else {
                 Button(
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onSecondary),
-                    onClick = { reservedRent() },
+                    onClick = {
+                        val user = myPreferences.getString("user", "")
+                        val resultadoo = viewModel.createRent(data.id_rent!!, data.id_club!!, user!!, data.location, data.price, data.slot, context)
+                    },
                     modifier = Modifier.padding(all = Dp(10F)),
                     enabled = true,
                     shape = MaterialTheme.shapes.medium,
