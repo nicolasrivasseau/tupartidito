@@ -37,7 +37,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class DetailRentActivity : ComponentActivity() {
     private lateinit var myPreferences: SharedPreferences
 
-    private val viewModel: DetailRentActivityViewModel by viewModels()
     private var locationLatLong: HashMap<String,Double?>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
