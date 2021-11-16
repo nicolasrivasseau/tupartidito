@@ -29,6 +29,7 @@ import com.unlam.tupartidito.data.model.club.Club
 import com.unlam.tupartidito.data.model.user.Rent
 import com.unlam.tupartidito.ui.detail_rent.ui.theme.TuPartiditoTheme
 import dagger.hilt.android.AndroidEntryPoint
+import com.unlam.tupartidito.common.toast
 
 
 @AndroidEntryPoint
@@ -58,10 +59,10 @@ class DetailRentActivity : ComponentActivity() {
     @Composable
     fun RentScreen(idRent: String, idClub: String, isReserved: Boolean) {
         val state = viewModel.state.observeAsState()
+        viewModel.isCanceled.observeAsState()
         val username = myPreferences.getString("user", "")
         viewModel.setIdClub(idClub)
         viewModel.setUsernameAndIdRent(username.toString(), idRent)
-
         when (state.value) {
             is DetailRentActivityViewModel.State.Loading -> LoadingScreen()
             is DetailRentActivityViewModel.State.Success -> RentDetail(
@@ -127,11 +128,13 @@ class DetailRentActivity : ComponentActivity() {
             if (reserved.value) {
                 ButtonRent(textContent = "CANCELAR RESERVA",colors = ButtonDefaults.buttonColors(backgroundColor =MaterialTheme.colors.error)){
                     viewModel.cancelRent(idRent = dataRent.id_rent!!, dataRent.id_club!!,username.toString())
+                    toast(viewModel.isCanceled.value!!, 1)
                     reserved.value = false
                 }
             } else {
                 ButtonRent(textContent = "RESERVAR"){
                     viewModel.createRent(idRent = dataRent.id_rent!!,idCLub = dataRent.id_club!!,idUser = username.toString(),location = dataRent.location,price = dataRent.price,slot = dataRent.slot)
+                    toast(viewModel.isCreated.value!!)
                     reserved.value = true
                 }
             }

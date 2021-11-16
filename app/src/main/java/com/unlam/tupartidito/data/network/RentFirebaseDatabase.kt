@@ -43,11 +43,13 @@ class RentFirebaseDatabase @Inject constructor() {
         dataSnapshot.exist("slot") { rent.slot = it as String }
     }
 
-    suspend fun cancelRent(idRent: String, idCLub: String, idUser: String){
-        clubFirebaseDatabase.cancelSchedule(idRent, idCLub)
+    suspend fun cancelRent(idRent: String, idCLub: String, idUser: String): Boolean{
+        var canceledClub = clubFirebaseDatabase.cancelSchedule(idRent, idCLub)
         //userFirebaseDatabase
-        userFirebaseDatabase.cancelRent(idRent, idUser)
+        var canceledUser = userFirebaseDatabase.cancelRent(idRent, idUser)
 
+        if (canceledClub && canceledUser) return true
+        return false
     }
 
     suspend fun createRent(

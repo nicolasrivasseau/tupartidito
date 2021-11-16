@@ -18,7 +18,7 @@ class ClubRepository @Inject constructor(
     suspend fun getRent(idRent:String,idClub: String): Rent {
         return clubFirebaseDatabase.getRent(idRent,idClub)
     }
-    fun submitRating(rate: Long, idClub: String){
-        clubFirebaseDatabase.updateRating(rate,idClub)
+    suspend fun submitRating(rate: Long, idClub: String): Boolean{
+        return clubFirebaseDatabase.updateRating(rate,idClub)
     }
 }

@@ -2,6 +2,7 @@ package com.unlam.tupartidito.adapter
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +18,6 @@ import kotlinx.android.synthetic.main.item_schedule.view.*
 
 class SchedulesAdapter(var fa: Fragment, var club: Club) : RecyclerView.Adapter<SchedulesAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
-
     private var dataList = listOf<Schedule>()
     private lateinit var dataRents: ArrayList<String>
     fun setDataSchedules(data: List<Schedule>, rents: ArrayList<String>) {

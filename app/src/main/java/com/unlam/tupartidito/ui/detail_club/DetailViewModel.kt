@@ -49,8 +49,8 @@ class DetailViewModel @Inject constructor(
 
     fun submitRating(rate: Long) {
         viewModelScope.launch {
-            ratingUseCase(rate, _clubData.value?.id!!)!!
-            result.value = true
+
+            result.value = ratingUseCase(rate, _clubData.value?.id!!)!!
         }
     }
 

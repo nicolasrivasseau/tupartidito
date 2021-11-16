@@ -31,6 +31,9 @@ class DetailRentActivityViewModel @Inject constructor(
     private val _isCreated = MutableLiveData<String>()
     val isCreated: LiveData<String> get() = _isCreated
 
+    private val _isCanceled= MutableLiveData<String>()
+    val isCanceled: LiveData<String> get() = _isCanceled
+
     fun setUsernameAndIdRent(username: String, idRent: String) {
         usernameMutable.value = username
         idRentMutable.value = idRent
@@ -55,7 +58,12 @@ class DetailRentActivityViewModel @Inject constructor(
 
     fun cancelRent(idRent: String, idCLub: String, idUser: String){
         viewModelScope.launch {
-            cancelRentUseCase(idRent, idCLub, idUser)!!
+
+            if(cancelRentUseCase(idRent, idCLub, idUser)!!){
+                _isCanceled.value = "Se cancelo la reserva"
+            }else{
+                _isCanceled.value = "Error al cancelar"
+            }
         }
     }
 

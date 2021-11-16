@@ -8,8 +8,8 @@ class CancelRentUseCase @Inject constructor(
     private val rentRepository: RentRepository
 ) {
     suspend operator fun invoke(idRent: String, idCLub: String, idUser: String): Boolean {
-        rentRepository.cancelRent(idRent, idCLub, idUser)
-        return true
+
+        return rentRepository.cancelRent(idRent, idCLub, idUser)
     }
 
 }

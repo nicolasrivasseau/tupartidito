@@ -43,15 +43,12 @@ class UserFirebaseDatabase @Inject constructor() {
     }
 
     suspend fun cancelRent(idRent: String, idUser: String): Boolean{
-        Log.d("cancelar", "user firebase database call cancelrent")
-        Log.d("cancelar", "user firebase database call cancelrent $idRent y $idUser")
-
-        //val cancelSchedule = FirebaseDatabase.getInstance().getReference("users")
-          //  .child("root").child("rents").child("prueba").removeValue()
-        val cancelSchedule = FirebaseDatabase.getInstance().getReference("users")
+        var cancelSchedule = FirebaseDatabase.getInstance().getReference("users")
           .child(idUser).child("rents").child(idRent).removeValue()
 
-        return true
+        cancelSchedule.await()
+
+        return cancelSchedule.isSuccessful
     }
 
     suspend fun createRent(
@@ -63,18 +60,19 @@ class UserFirebaseDatabase @Inject constructor() {
         idCLub: String
     ): Boolean{
         var clubSuccess = FirebaseDatabase.getInstance().getReference("users")
-            .child(idUser).child("rents").child(idRent).child("id_club").setValue(idCLub).isSuccessful
-
+            .child(idUser).child("rents").child(idRent).child("id_club").setValue(idCLub)
+        clubSuccess.await()
         var locationSuccess = FirebaseDatabase.getInstance().getReference("users")
-            .child(idUser).child("rents").child(idRent).child("location").setValue(location).isSuccessful
-
+            .child(idUser).child("rents").child(idRent).child("location").setValue(location)
+        locationSuccess.await()
         var priceSuccess = FirebaseDatabase.getInstance().getReference("users")
-            .child(idUser).child("rents").child(idRent).child("price").setValue(price).isSuccessful
-
+            .child(idUser).child("rents").child(idRent).child("price").setValue(price)
+        priceSuccess.await()
         var slotSuccess = FirebaseDatabase.getInstance().getReference("users")
-            .child(idUser).child("rents").child(idRent).child("slot").setValue(slot).isSuccessful
+            .child(idUser).child("rents").child(idRent).child("slot").setValue(slot)
+        slotSuccess.await()
 
-        if(clubSuccess && locationSuccess && priceSuccess && slotSuccess) return true
+        if(clubSuccess.isSuccessful && locationSuccess.isSuccessful && priceSuccess.isSuccessful && slotSuccess.isSuccessful) return true
 
         return false
     }

@@ -2,6 +2,7 @@ package com.unlam.tupartidito.adapter
 
 import android.app.Activity
 import android.content.Intent
+import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +15,6 @@ import kotlinx.android.synthetic.main.item_rent.view.*
 
 class RentsAdapter(var activity: Activity) : RecyclerView.Adapter<RentsAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
-
     private var _rents = listOf<Rent>()
 
     fun setRents(data: List<Rent>) {

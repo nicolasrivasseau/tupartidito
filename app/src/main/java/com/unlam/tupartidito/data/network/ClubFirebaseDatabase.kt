@@ -1,6 +1,7 @@
 package com.unlam.tupartidito.data.network
 
 import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.FirebaseDatabase
 import com.unlam.tupartidito.common.exist
@@ -8,6 +9,7 @@ import com.unlam.tupartidito.data.model.club.Club
 import com.unlam.tupartidito.data.model.club.Schedule
 import com.unlam.tupartidito.data.model.club.Service
 import com.unlam.tupartidito.data.model.user.Rent
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -80,23 +82,28 @@ class ClubFirebaseDatabase @Inject constructor() {
         }
     }
 
-    fun updateRating(rate: Long, idClub: String) {
-        FirebaseDatabase.getInstance().getReference("clubs")
+    suspend fun updateRating(rate: Long, idClub: String): Boolean {
+        var update = FirebaseDatabase.getInstance().getReference("clubs")
             .child(idClub).child("score").setValue(rate)
+        update.await()
+        return update.isSuccessful
     }
 
-    fun cancelSchedule(idRent: String, idCLub: String) {
-        FirebaseDatabase.getInstance().getReference("clubs")
+    suspend fun cancelSchedule(idRent: String, idCLub: String): Boolean {
+        var canceledSchedule = FirebaseDatabase.getInstance().getReference("clubs")
             .child(idCLub).child("schedules").child(idRent).child("reserved").setValue(false)
+        canceledSchedule.await()
+        return canceledSchedule.isSuccessful
     }
 
-    fun reserveSchedule(idRent: String, idCLub: String): Boolean {
+    suspend fun reserveSchedule(idRent: String, idCLub: String): Boolean {
         val reserveSchedule = FirebaseDatabase.getInstance().getReference("clubs")
-            .child(idCLub).child("schedules").child(idRent).child("reserved").setValue(true)
-        Log.d("reservar", "club firebase database call cancelrent")
+                .child(idCLub).child("schedules").child(idRent).child("reserved").setValue(true)
+
+            reserveSchedule.await()
 
 
-        return reserveSchedule.isSuccessful()
+        return reserveSchedule.isSuccessful
     }
 
     suspend fun getRent(idRent: String, idClub: String): Rent {

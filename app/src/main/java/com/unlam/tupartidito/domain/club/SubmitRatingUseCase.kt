@@ -5,7 +5,7 @@ import javax.inject.Inject
 
 class SubmitRatingUseCase @Inject constructor(private val repository: ClubRepository) {
 
-    operator fun invoke(rate: Long, idClub: String) {
-        repository.submitRating(rate, idClub)
+    suspend operator fun invoke(rate: Long, idClub: String): Boolean {
+        return repository.submitRating(rate, idClub)
     }
 }
