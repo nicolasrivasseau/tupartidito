@@ -28,6 +28,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.MutableLiveData
 import coil.compose.rememberImagePainter
 import com.unlam.tupartidito.common.Constants
 import com.unlam.tupartidito.data.model.club.Club
@@ -39,8 +40,8 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class DetailRentActivity : ComponentActivity() {
     private lateinit var myPreferences: SharedPreferences
-    private lateinit var isReserved: MutableState<Boolean>
     private val viewModel: DetailRentActivityViewModel by viewModels()
+    private var isReserved: Boolean = false
 
     private var locationLatLong: HashMap<String, Double?>? = null
 
@@ -49,7 +50,7 @@ class DetailRentActivity : ComponentActivity() {
         myPreferences = getSharedPreferences(Constants.MY_PREFERENCES, Context.MODE_PRIVATE)
         val idRent = intent.getStringExtra(Constants.DATA_ID_RENT)!!
         val idClub = intent.getStringExtra(Constants.DATA_ID_CLUB)!!
-        val isReserved = intent.getBooleanExtra(Constants.RENT_IS_RESERVED, false)
+        isReserved = intent.getBooleanExtra(Constants.RENT_IS_RESERVED, false)
 
         setContent {
             TuPartiditoTheme {
@@ -71,12 +72,18 @@ class DetailRentActivity : ComponentActivity() {
 
         when (state.value) {
             is DetailRentActivityViewModel.State.Loading -> LoadingScreen()
-            is DetailRentActivityViewModel.State.Success -> RentDetail(state as MutableState<DetailRentActivityViewModel.State.Success>)
+            is DetailRentActivityViewModel.State.Success -> RentDetail(
+                state as MutableState<DetailRentActivityViewModel.State.Success>,
+                isReserved
+            )
         }
     }
 
     @Composable
-    fun RentDetail(state: MutableState<DetailRentActivityViewModel.State.Success>) {
+    fun RentDetail(
+        state: MutableState<DetailRentActivityViewModel.State.Success>,
+        isReserved: Boolean
+    ) {
         val club = state.value.club
         val rent = state.value.rent
         rent!!.location = club!!.location
@@ -84,7 +91,8 @@ class DetailRentActivity : ComponentActivity() {
         locationLatLong?.put("Longitude", club?.longitude)
         DetailRent(
             dataRent = rent,
-            dataClub = club
+            dataClub = club,
+            isReserved
         )
     }
 
@@ -92,7 +100,10 @@ class DetailRentActivity : ComponentActivity() {
     fun DetailRent(
         dataRent: Rent,
         dataClub: Club,
+        isReserved: Boolean
     ) {
+        var reserved = MutableLiveData(isReserved)
+        var state = reserved.observeAsState()
         Column(
             modifier = Modifier
                 .size(520.dp, 500.dp)
@@ -110,7 +121,6 @@ class DetailRentActivity : ComponentActivity() {
             TextRent(message = "Ubicacion: ${dataClub?.location}")
             TextRent(message = "Precio: $${dataRent?.price}")
             TextRent(message = "Horario: ${dataRent?.slot}")
-
         }
         Column(
             modifier = Modifier
@@ -121,10 +131,15 @@ class DetailRentActivity : ComponentActivity() {
         ) {
             ButtonRent("COMO LLEGAR") { howToGet() }
             ButtonRent("COMPARTIR") { sharedWhatsapp(dataRent = dataRent) }
+            if (state.value == true) {
+                ButtonRent(textContent = "CANCELAR RESERVA", onClicked = { reserved.value = true })
+            } else {
+                ButtonRent(textContent = "RESERVAR", onClicked = { reserved.value = false })
+            }
         }
     }
 
-    private fun sharedWhatsapp(dataRent:Rent) {
+    private fun sharedWhatsapp(dataRent: Rent) {
         try {
             Intent(Intent.ACTION_SEND).apply {
                 putExtra(
@@ -140,7 +155,7 @@ class DetailRentActivity : ComponentActivity() {
         }
     }
 
-    private fun howToGet(){
+    private fun howToGet() {
         val intentUriNavigation = Uri.parse(
             "google.navigation:q=${locationLatLong?.get("Latitude")},${
                 locationLatLong?.get("Longitude")
