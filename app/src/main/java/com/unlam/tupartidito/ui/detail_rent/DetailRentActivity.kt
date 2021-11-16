@@ -25,11 +25,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.unlam.tupartidito.common.Constants
+import com.unlam.tupartidito.common.toast
 import com.unlam.tupartidito.data.model.club.Club
 import com.unlam.tupartidito.data.model.user.Rent
 import com.unlam.tupartidito.ui.detail_rent.ui.theme.TuPartiditoTheme
 import dagger.hilt.android.AndroidEntryPoint
-import com.unlam.tupartidito.common.toast
 
 
 @AndroidEntryPoint
@@ -59,15 +59,17 @@ class DetailRentActivity : ComponentActivity() {
     @Composable
     fun RentScreen(idRent: String, idClub: String, isReserved: Boolean) {
         val state = viewModel.state.observeAsState()
-        viewModel.isCanceled.observeAsState()
+        val isCreated = viewModel.isCreated.observeAsState("")
         val username = myPreferences.getString("user", "")
         viewModel.setIdClub(idClub)
         viewModel.setUsernameAndIdRent(username.toString(), idRent)
+
         when (state.value) {
             is DetailRentActivityViewModel.State.Loading -> LoadingScreen()
             is DetailRentActivityViewModel.State.Success -> RentDetail(
                 state as MutableState<DetailRentActivityViewModel.State.Success>,
-                isReserved
+                isReserved,
+                isCreated
             )
         }
     }
@@ -75,7 +77,8 @@ class DetailRentActivity : ComponentActivity() {
     @Composable
     fun RentDetail(
         state: MutableState<DetailRentActivityViewModel.State.Success>,
-        isReserved: Boolean
+        isReserved: Boolean,
+        isCreated: State<String>
     ) {
         val club = state.value.club
         val rent = state.value.rent
@@ -85,7 +88,9 @@ class DetailRentActivity : ComponentActivity() {
         DetailRent(
             dataRent = rent,
             dataClub = club,
-            isReserved
+            isReserved,
+            isCreated
+
         )
     }
 
@@ -93,7 +98,8 @@ class DetailRentActivity : ComponentActivity() {
     fun DetailRent(
         dataRent: Rent,
         dataClub: Club,
-        isReserved: Boolean
+        isReserved: Boolean,
+        isCreated: State<String>
     ) {
         val reserved = remember { mutableStateOf(isReserved) }
         val username = myPreferences.getString("user", "")
@@ -128,15 +134,18 @@ class DetailRentActivity : ComponentActivity() {
             if (reserved.value) {
                 ButtonRent(textContent = "CANCELAR RESERVA",colors = ButtonDefaults.buttonColors(backgroundColor =MaterialTheme.colors.error)){
                     viewModel.cancelRent(idRent = dataRent.id_rent!!, dataRent.id_club!!,username.toString())
-                    toast(viewModel.isCanceled.value!!, 1)
                     reserved.value = false
                 }
             } else {
                 ButtonRent(textContent = "RESERVAR"){
                     viewModel.createRent(idRent = dataRent.id_rent!!,idCLub = dataRent.id_club!!,idUser = username.toString(),location = dataRent.location,price = dataRent.price,slot = dataRent.slot)
-                    toast(viewModel.isCreated.value!!)
+                    if(isCreated.value != "") {
+                        toast(isCreated.value)
+                    }
                     reserved.value = true
                 }
+
+
             }
         }
     }
