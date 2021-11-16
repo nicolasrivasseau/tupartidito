@@ -71,9 +71,9 @@ class DetailRentActivityViewModel @Inject constructor(
         location: String?,
         price: String?,
         slot: String?
-    ){
+    ) {
         viewModelScope.launch {
-            if(createRentUseCase(idRent, idCLub, idUser, location, price, slot)!!){
+            if(createRentUseCase(idRent, idCLub, idUser, location, price, slot)){
                 _isCreated.value = "Se reservo tu cancha"
             }else{
                 _isCreated.value = "Error al generar cancha"
