@@ -11,7 +11,8 @@ class Constants {
         const val MY_PREFERENCES="my_preferences"
         const val RENTS_LIST = "rentsList"
         const val KEY_ID_CLUB = "idClub"
-        const val RENT_DATA = "RENT_DATA"
+        const val DATA_ID_RENT = "DATA_ID_RENT"
+        const val DATA_ID_CLUB = "DATA_ID_CLUB"
         const val RENT_IS_RESERVED = "RENT_IS_RESERVED"
     }
 }

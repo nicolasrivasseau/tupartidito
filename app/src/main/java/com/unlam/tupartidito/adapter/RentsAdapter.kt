@@ -5,7 +5,6 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.ui.unit.Constraints
 import androidx.recyclerview.widget.RecyclerView
 import com.unlam.tupartidito.R
 import com.unlam.tupartidito.common.Constants
@@ -35,21 +34,24 @@ class RentsAdapter(var activity: Activity) : RecyclerView.Adapter<RentsAdapter.V
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val rent = _rents[position]
-        with(holder.itemView){
+        with(holder.itemView) {
             txtClubName.text = rent.id_club
             txtDay.text = rent.slot
             txtLocation.text = rent.location
             txtPrice.text = "$${rent.price}"
             txtDuration.text = "(60min)"
             this.setOnClickListener {
-                val data = rent.id_rent
-                clickCard(data)
+                val idRent = rent.id_rent
+                val idClub = rent.id_club
+                clickCard(idRent, idClub)
             }
         }
     }
-    private fun clickCard(data: String?) {
+
+    private fun clickCard(idRent: String?, idClub: String?) {
         val intent = Intent(activity, DetailRentActivity::class.java)
-        intent.putExtra(Constants.RENT_DATA, data)
+        intent.putExtra(Constants.DATA_ID_RENT, idRent)
+        intent.putExtra(Constants.DATA_ID_CLUB,idClub)
         intent.putExtra(Constants.RENT_IS_RESERVED, true)
         activity.startActivity(intent)
     }

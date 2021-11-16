@@ -2,11 +2,11 @@ package com.unlam.tupartidito.data
 
 import android.util.Log
 import com.unlam.tupartidito.data.model.user.Rent
-import com.unlam.tupartidito.data.network.RentService
+import com.unlam.tupartidito.data.network.RentFirebaseDatabase
 import javax.inject.Inject
 
 class RentRepository @Inject constructor(
-    private val rentService:RentService
+    private val rentService:RentFirebaseDatabase
 ){
     suspend fun getRent(username: String, rentId: String): Rent? {
         return rentService.getRent(username,rentId)

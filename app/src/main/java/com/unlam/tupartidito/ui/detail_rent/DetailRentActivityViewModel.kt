@@ -1,18 +1,18 @@
 package com.unlam.tupartidito.ui.detail_rent
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.*
 import com.unlam.tupartidito.data.model.club.Club
 import com.unlam.tupartidito.data.model.user.Rent
+import com.unlam.tupartidito.domain.club.GetClubUseCase
 import com.unlam.tupartidito.domain.rent.CancelRentUseCase
+import com.unlam.tupartidito.domain.rent.CreateRentUseCase
+import com.unlam.tupartidito.domain.rent.GetRentByClubUseCase
+import com.unlam.tupartidito.domain.rent.GetRentUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import com.unlam.tupartidito.domain.club.GetClubUseCase
-import com.unlam.tupartidito.domain.rent.CreateRentUseCase
-import com.unlam.tupartidito.domain.rent.GetRentUseCase
 
 
 @HiltViewModel
@@ -20,12 +20,17 @@ class DetailRentActivityViewModel @Inject constructor(
     private val getClubUseCase: GetClubUseCase,
     private val cancelRentUseCase: CancelRentUseCase,
     private val getRentUseCase: GetRentUseCase,
+    private val getRentByClubUseCase: GetRentByClubUseCase,
     private val createRentUseCase: CreateRentUseCase
 ) :
     ViewModel() {
 
     var usernameMutable = MutableLiveData<String>()
     var idRentMutable = MutableLiveData<String>()
+
+    private val _isCreated = MutableLiveData<String>()
+    val isCreated: LiveData<String> get() = _isCreated
+
     fun setUsernameAndIdRent(username: String, idRent: String) {
         usernameMutable.value = username
         idRentMutable.value = idRent
@@ -37,8 +42,10 @@ class DetailRentActivityViewModel @Inject constructor(
 
     val state = liveData {
         emit(State.Loading)
-        emit(State.Success(getRentUseCase(usernameMutable.value.toString(),idRentMutable.value.toString()),getClubUseCase(idClub.value.toString())))
+        emit(State.Success(getRentByClubUseCase(idRent = idRentMutable.value.toString(),idClub = idClub.value.toString()),getClubUseCase(idClub.value.toString())))
     }
+
+    val messageError = MutableLiveData<String>()
 
     sealed class State {
         object Loading : State()
@@ -63,16 +70,13 @@ class DetailRentActivityViewModel @Inject constructor(
         idUser: String,
         location: String?,
         price: String?,
-        slot: String?,
-        context: Context?
+        slot: String?
     ){
         viewModelScope.launch {
-            val resultado =  createRentUseCase(idRent, idCLub, idUser, location, price, slot)!!
-
-            if (resultado){
-                Toast.makeText(context, "Reservado exitosamente", Toast.LENGTH_LONG).show()
-            } else{
-                Toast.makeText(context, "Reserva fallida", Toast.LENGTH_LONG).show()
+            if(createRentUseCase(idRent, idCLub, idUser, location, price, slot)!!){
+                _isCreated.value = "Se reservo tu cancha"
+            }else{
+                _isCreated.value = "Error al generar cancha"
             }
         }
     }

@@ -18,6 +18,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,8 +27,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
-import androidx.compose.runtime.livedata.observeAsState
 import com.unlam.tupartidito.common.Constants
+import com.unlam.tupartidito.common.toast
 import com.unlam.tupartidito.data.model.user.Rent
 import com.unlam.tupartidito.ui.detail_rent.ui.theme.TuPartiditoTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,7 +38,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class DetailRentActivity : ComponentActivity() {
     private lateinit var myPreferences: SharedPreferences
 
-    private var locationLatLong: HashMap<String,Double?>? = null
+    private var locationLatLong: HashMap<String, Double?>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         myPreferences = getSharedPreferences(Constants.MY_PREFERENCES, Context.MODE_PRIVATE)
@@ -75,10 +76,13 @@ class DetailRentActivity : ComponentActivity() {
 
         val viewModel = viewModels<DetailRentActivityViewModel>().value
         val state = viewModel.state.observeAsState()
-        val idRent = intent.getStringExtra(Constants.RENT_DATA)!!
-        val isVisible = intent.getBooleanExtra(Constants.RENT_IS_RESERVED,false)
-        val username = myPreferences.getString("user","")
-        viewModel.setUsernameAndIdRent(username!!,idRent)
+        val isCreated = viewModel.isCreated.observeAsState("")
+        val idRent = intent.getStringExtra(Constants.DATA_ID_RENT)!!
+        val idClub = intent.getStringExtra(Constants.DATA_ID_CLUB)!!
+        val isVisible = intent.getBooleanExtra(Constants.RENT_IS_RESERVED, false)
+        val username = myPreferences.getString("user", "")
+        viewModel.setUsernameAndIdRent(username!!, idRent)
+        viewModel.setIdClub(idClub)
 
         when (state.value) {
             is DetailRentActivityViewModel.State.Loading -> LoadingScreen()
@@ -90,15 +94,25 @@ class DetailRentActivity : ComponentActivity() {
                 }
                 val club = (state.value as DetailRentActivityViewModel.State.Success).club
 
-                locationLatLong?.put("Latitude",club?.latitude)
-                locationLatLong?.put("Longitude",club?.longitude)
+                locationLatLong?.put("Latitude", club?.latitude)
+                locationLatLong?.put("Longitude", club?.longitude)
                 RotationPortrait(
                     data = rent!!,
                     isReserved = isVisible,
                     locationLatLong = locationLatLong,
                     viewModel = viewModel,
                     myPreferences = myPreferences,
-                    reservedRent = { viewModel.reservedRent(username,rent.id_club,rent.id_rent)}
+                    reservedRent = {
+                        viewModel.createRent(
+                            idRent = rent.id_rent!!,
+                            idCLub = idClub,
+                            idUser = username,
+                            location = rent.location,
+                            price = rent.price,
+                            slot = rent.slot
+                        )
+                    },
+                    isCreated = isCreated.value
                 )
             }
         }
@@ -111,7 +125,8 @@ class DetailRentActivity : ComponentActivity() {
         locationLatLong: HashMap<String, Double?>?,
         viewModel: DetailRentActivityViewModel,
         myPreferences: SharedPreferences,
-        reservedRent: () -> Unit
+        reservedRent: () -> Unit,
+        isCreated: String?
     ) {
         Column() {
             Column(
@@ -158,8 +173,18 @@ class DetailRentActivity : ComponentActivity() {
             }
             Column() {
                 //val isVisible = isVisible.toBoolean()
-                ButtonsContent(data, isReserved!!, locationLatLong, viewModel, myPreferences,reservedRent)
+                ButtonsContent(
+                    data,
+                    isReserved!!,
+                    locationLatLong,
+                    viewModel,
+                    myPreferences,
+                    reservedRent
+                )
             }
+        }
+        if (isCreated != "") {
+            toast(isCreated.toString())
         }
     }
 
@@ -237,7 +262,8 @@ class DetailRentActivity : ComponentActivity() {
 
                         val user = myPreferences.getString("user", "")
                         Log.d("cancelar", "DetailRentActivity call cancelrent $user")
-                        val resultadoo = viewModel.cancelRent(data.id_rent!!, data.id_club!!, user!!)
+                        val resultadoo =
+                            viewModel.cancelRent(data.id_rent!!, data.id_club!!, user!!)
                     },
                     modifier = Modifier.padding(all = Dp(10F)),
                     enabled = true,
@@ -250,8 +276,7 @@ class DetailRentActivity : ComponentActivity() {
                 Button(
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onSecondary),
                     onClick = {
-                        val user = myPreferences.getString("user", "")
-                        val resultadoo = viewModel.createRent(data.id_rent!!, data.id_club!!, user!!, data.location, data.price, data.slot, context)
+                        reservedRent()
                     },
                     modifier = Modifier.padding(all = Dp(10F)),
                     enabled = true,
@@ -273,15 +298,32 @@ class DetailRentActivity : ComponentActivity() {
         locationLatLong: HashMap<String, Double?>?,
         viewModel: DetailRentActivityViewModel,
         myPreferences: SharedPreferences,
-        reservedRent: () -> Unit
+        reservedRent: () -> Unit,
+        isCreated: String?
     ) {
         val configuration = LocalConfiguration.current
         when (configuration.orientation) {
             Configuration.ORIENTATION_LANDSCAPE -> {
-                ClubContent(data, isReserved, locationLatLong, viewModel, myPreferences,reservedRent)
+                ClubContent(
+                    data,
+                    isReserved,
+                    locationLatLong,
+                    viewModel,
+                    myPreferences,
+                    reservedRent,
+                    isCreated
+                )
             }
             else -> {
-                ClubContent(data, isReserved, locationLatLong, viewModel, myPreferences,reservedRent)
+                ClubContent(
+                    data,
+                    isReserved,
+                    locationLatLong,
+                    viewModel,
+                    myPreferences,
+                    reservedRent,
+                    isCreated
+                )
             }
         }
     }

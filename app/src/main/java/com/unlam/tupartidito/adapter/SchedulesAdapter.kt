@@ -44,13 +44,14 @@ class SchedulesAdapter(var fa: Fragment, var club: Club) : RecyclerView.Adapter<
             if (schedule.reserved) card_info.setCardBackgroundColor(Color.RED)
             if(schedule.reserved) reserved = true
             card_info.setOnClickListener {
-                goToDetailtRent(schedule.id!!, schedule.reserved)
+                goToDetailtRent(schedule.id!!,club.id, schedule.reserved)
             }
         }
     }
-    fun goToDetailtRent(idRent:String, reserved:Boolean){
+    fun goToDetailtRent(idRent:String,idClub:String?, reserved:Boolean){
         val intent = Intent(fa.context, DetailRentActivity::class.java)
-        intent.putExtra(Constants.RENT_DATA,idRent)
+        intent.putExtra(Constants.DATA_ID_RENT,idRent)
+        intent.putExtra(Constants.DATA_ID_CLUB,idClub)
         intent.putExtra(Constants.RENT_IS_RESERVED,reserved)
         fa.activity?.startActivity(intent)
     }

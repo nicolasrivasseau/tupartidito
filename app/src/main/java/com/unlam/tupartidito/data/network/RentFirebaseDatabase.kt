@@ -13,7 +13,7 @@ import javax.inject.Inject
     En esta clase trabajariamos la logica que nos devuelve un tercero, ya se api , webservice o saas.
  */
 
-class RentService @Inject constructor() {
+class RentFirebaseDatabase @Inject constructor() {
 
     private val clubFirebaseDatabase = ClubFirebaseDatabase()
     private val userFirebaseDatabase = UserFirebaseDatabase()

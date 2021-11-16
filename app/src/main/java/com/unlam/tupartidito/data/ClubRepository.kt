@@ -1,6 +1,7 @@
 package com.unlam.tupartidito.data
 
 import com.unlam.tupartidito.data.model.club.Club
+import com.unlam.tupartidito.data.model.user.Rent
 import com.unlam.tupartidito.data.network.ClubFirebaseDatabase
 import javax.inject.Inject
 
@@ -14,8 +15,10 @@ class ClubRepository @Inject constructor(
     suspend fun getClubsByRate() : List<Club>{
         return clubFirebaseDatabase.getClubsByRate()
     }
+    suspend fun getRent(idRent:String,idClub: String): Rent {
+        return clubFirebaseDatabase.getRent(idRent,idClub)
+    }
     fun submitRating(rate: Long, idClub: String){
         clubFirebaseDatabase.updateRating(rate,idClub)
     }
-
 }

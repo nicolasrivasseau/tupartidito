@@ -7,6 +7,7 @@ import com.unlam.tupartidito.common.exist
 import com.unlam.tupartidito.data.model.club.Club
 import com.unlam.tupartidito.data.model.club.Schedule
 import com.unlam.tupartidito.data.model.club.Service
+import com.unlam.tupartidito.data.model.user.Rent
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -35,9 +36,9 @@ class ClubFirebaseDatabase @Inject constructor() {
             listClub.add(club)
         }
         var tmp: Club
-        for(x in 0 until listClub.size){
-            for(y in 0 until listClub.size){
-                if(listClub[x].score!!.toFloat() > listClub[y].score!!.toFloat()){
+        for (x in 0 until listClub.size) {
+            for (y in 0 until listClub.size) {
+                if (listClub[x].score!!.toFloat() > listClub[y].score!!.toFloat()) {
                     tmp = listClub[y]
 
                     listClub[y] = listClub[x]
@@ -79,22 +80,38 @@ class ClubFirebaseDatabase @Inject constructor() {
         }
     }
 
-     fun updateRating(rate: Long, idClub: String){
-         FirebaseDatabase.getInstance().getReference("clubs")
-             .child(idClub).child("score").setValue(rate)
+    fun updateRating(rate: Long, idClub: String) {
+        FirebaseDatabase.getInstance().getReference("clubs")
+            .child(idClub).child("score").setValue(rate)
     }
 
-    fun cancelSchedule(idRent: String, idCLub: String){
+    fun cancelSchedule(idRent: String, idCLub: String) {
         FirebaseDatabase.getInstance().getReference("clubs")
             .child(idCLub).child("schedules").child(idRent).child("reserved").setValue(false)
     }
 
-    suspend fun reserveSchedule(idRent: String, idCLub: String): Boolean{
+    fun reserveSchedule(idRent: String, idCLub: String): Boolean {
         val reserveSchedule = FirebaseDatabase.getInstance().getReference("clubs")
             .child(idCLub).child("schedules").child(idRent).child("reserved").setValue(true)
         Log.d("reservar", "club firebase database call cancelrent")
 
 
         return reserveSchedule.isSuccessful()
+    }
+
+    suspend fun getRent(idRent: String, idClub: String): Rent {
+        var rent = Rent()
+        val clubsRef = FirebaseDatabase.getInstance().getReference("clubs")
+        val dsRent = clubsRef.child(idClub).child("schedules").get().await().child(idRent)
+        generateRent(dsRent, rent)
+        return rent
+    }
+
+    private fun generateRent(dataSnapshot: DataSnapshot, rent: Rent) {
+        rent.id_rent = dataSnapshot.key
+
+        dataSnapshot.exist("location") { rent.location = it as String }
+        dataSnapshot.exist("price") { rent.price = it as String }
+        dataSnapshot.exist("slot") { rent.slot = it as String }
     }
 }

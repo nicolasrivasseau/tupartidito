@@ -15,9 +15,6 @@ class CreateRentUseCase @Inject constructor(
         price: String?,
         slot: String?
     ): Boolean {
-        Log.d("cancelar", "cancel rent use case call cancelrent")
-
-
         return rentRepository.createRent(idRent, idCLub, idUser, location, price, slot)
     }
 
