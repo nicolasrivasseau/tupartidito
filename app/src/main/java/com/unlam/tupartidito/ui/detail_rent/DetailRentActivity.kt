@@ -49,7 +49,6 @@ class DetailRentActivity : ComponentActivity() {
         setContent {
             TuPartiditoTheme {
                 Surface(color = MaterialTheme.colors.background) {
-                    //RentsScreenContent()
                     RentScreen(idRent, idClub, isReserved)
                 }
             }
