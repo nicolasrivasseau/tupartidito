@@ -96,6 +96,8 @@ class DetailRentActivity : ComponentActivity() {
 
                 locationLatLong?.put("Latitude", club?.latitude)
                 locationLatLong?.put("Longitude", club?.longitude)
+                rent?.id_club = club?.id
+                rent?.location = club?.location
                 RotationPortrait(
                     data = rent!!,
                     isReserved = isVisible,
