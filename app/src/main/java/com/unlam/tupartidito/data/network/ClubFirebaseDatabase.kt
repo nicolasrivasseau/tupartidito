@@ -103,6 +103,7 @@ class ClubFirebaseDatabase @Inject constructor() {
         var rent = Rent()
         val clubsRef = FirebaseDatabase.getInstance().getReference("clubs")
         val dsRent = clubsRef.child(idClub).child("schedules").get().await().child(idRent)
+        rent.id_club = idClub
         generateRent(dsRent, rent)
         return rent
     }
