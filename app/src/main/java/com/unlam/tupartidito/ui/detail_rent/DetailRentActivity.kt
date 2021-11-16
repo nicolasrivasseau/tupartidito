@@ -34,7 +34,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class DetailRentActivity : ComponentActivity() {
-    private lateinit var myPreferences: SharedPreferences
+    //private lateinit var myPreferences: SharedPreferences
     private val viewModel: DetailRentActivityViewModel by viewModels()
     private var isReserved: Boolean = false
     private var isCanceled: Boolean = false
@@ -43,7 +43,7 @@ class DetailRentActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        myPreferences = getSharedPreferences(Constants.MY_PREFERENCES, Context.MODE_PRIVATE)
+        //myPreferences = getSharedPreferences(Constants.MY_PREFERENCES, Context.MODE_PRIVATE)
         val idRent = intent.getStringExtra(Constants.DATA_ID_RENT)!!
         val idClub = intent.getStringExtra(Constants.DATA_ID_CLUB)!!
         isReserved = intent.getBooleanExtra(Constants.RENT_IS_RESERVED, false)
@@ -71,9 +71,10 @@ class DetailRentActivity : ComponentActivity() {
                 toast(it,1)
             }
         })
-        val username = myPreferences.getString("user", "")
+        //val username = myPreferences.getString("user", "")
+        viewModel.setUsername(this)
         viewModel.setIdClub(idClub)
-        viewModel.setUsernameAndIdRent(username.toString(), idRent)
+        viewModel.setUsernameAndIdRent(idRent)
 
         when (state.value) {
             is DetailRentActivityViewModel.State.Loading -> LoadingScreen()
@@ -108,7 +109,7 @@ class DetailRentActivity : ComponentActivity() {
         isReserved: Boolean
     ) {
         val reserved = remember { mutableStateOf(isReserved) }
-        val username = myPreferences.getString("user", "")
+        val username = viewModel.username
             Column(
                 modifier = Modifier
                     .size(520.dp, 500.dp)
@@ -138,13 +139,13 @@ class DetailRentActivity : ComponentActivity() {
                 ButtonRent(textContent = "COMPARTIR") { sharedWhatsapp(dataRent = dataRent) }
                 if (reserved.value) {
                     ButtonRent(textContent = "CANCELAR RESERVA",colors = ButtonDefaults.buttonColors(backgroundColor =MaterialTheme.colors.error)){
-                        viewModel.cancelRent(idRent = dataRent.id_rent!!, dataRent.id_club!!,username.toString())
+                        viewModel.cancelRent(idRent = dataRent.id_rent!!, dataRent.id_club!!,username)
 
                         reserved.value = false
                     }
                 } else {
                     ButtonRent(textContent = "RESERVAR"){
-                        viewModel.createRent(idRent = dataRent.id_rent!!,idCLub = dataRent.id_club!!,idUser = username.toString(),location = dataRent.location,price = dataRent.price,slot = dataRent.slot)
+                        viewModel.createRent(idRent = dataRent.id_rent!!,idCLub = dataRent.id_club!!,idUser = username,location = dataRent.location,price = dataRent.price,slot = dataRent.slot)
                         reserved.value = true
                     }
                 }

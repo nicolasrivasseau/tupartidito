@@ -50,8 +50,9 @@ class LoginViewModel @Inject constructor(
                 val user = getUserFirebaseUseCase(username)
                 if (user!!.name.isNullOrBlank()) {
                     createUserFirebaseUseCase(username, password)
+                    _userData.value = UserLiveData(false, R.string.user_create)
                 } else {
-                    _userData.value = UserLiveData(false, R.string.user_not_exist)
+                    _userData.value = UserLiveData(false, R.string.user_exist)
                 }
             } else {
                 _userData.value = UserLiveData(false, R.string.empty_credentials)

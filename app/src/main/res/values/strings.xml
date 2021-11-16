@@ -16,6 +16,8 @@
     <string name="title_activity_rent">RentActivity</string>
     <string name="invalid_credentials">Credenciales invalidas.</string>
     <string name="user_not_exist">El usuario no existe.</string>
+    <string name="user_exist">El usuario ya existe.</string>
+    <string name="user_create">El usuario ha sido creado.</string>
     <string name="empty_credentials">Credenciales vacias.</string>
     <string name="rents_error">Error al obtener rentas</string>
     <string name="success_score">Calificación enviada</string>
