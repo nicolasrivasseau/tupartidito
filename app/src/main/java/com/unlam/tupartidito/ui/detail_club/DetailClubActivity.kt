@@ -91,6 +91,12 @@ class DetailClubActivity : AppCompatActivity() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        validateIntents()
+    }
+
+
     private fun setTab(idClub : String) {
         with(binding){
             tabLayout.tabGravity = TabLayout.GRAVITY_FILL
