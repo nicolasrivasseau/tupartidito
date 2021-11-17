@@ -11,7 +11,7 @@ import com.unlam.tupartidito.domain.club.GetClubUseCase
 import com.unlam.tupartidito.domain.rent.CancelRentUseCase
 import com.unlam.tupartidito.domain.rent.CreateRentUseCase
 import com.unlam.tupartidito.domain.rent.GetRentByClubUseCase
-import com.unlam.tupartidito.domain.rent.GetRentUseCase
+import com.unlam.tupartidito.domain.rent.CheckIfRentExistsInUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,42 +21,27 @@ import javax.inject.Inject
 class DetailRentActivityViewModel @Inject constructor(
     private val getClubUseCase: GetClubUseCase,
     private val cancelRentUseCase: CancelRentUseCase,
-    private val getRentUseCase: GetRentUseCase,
+    private val checkIfRentExistsInUserUseCase: CheckIfRentExistsInUserUseCase,
     private val getRentByClubUseCase: GetRentByClubUseCase,
     private val createRentUseCase: CreateRentUseCase
 ) :
     ViewModel() {
-    private lateinit var myPreferences: SharedPreferences
-    var username = ""
     var usernameMutable = MutableLiveData<String>()
     var idRentMutable = MutableLiveData<String>()
 
-    private val _isCreated = MutableLiveData<String>()
-    val isCreated: LiveData<String> get() = _isCreated
 
-    private val _isCanceled= MutableLiveData<String>()
-    val isCanceled: LiveData<String> get() = _isCanceled
+    private val _reservedByUser= MutableLiveData<Boolean>()
+    val reservedByUser: LiveData<Boolean> get() = _reservedByUser
 
-    private val _isMine= MutableLiveData<Boolean>()
-    val isMine: LiveData<Boolean> get() = _isMine
 
-    fun setUsername(activity: Activity){
-        myPreferences = activity.getSharedPreferences(Constants.MY_PREFERENCES, Context.MODE_PRIVATE)
-        username = myPreferences.getString("user", "")!!
-    }
-
-    fun getRentUser(idRent: String){
+    fun getRentUser(){
         viewModelScope.launch {
-            val renta = getRentUseCase(username, idRent)
-            if(renta!!.location.isNullOrBlank()){
-                _isMine.value = false
-            } else{
-                _isMine.value = true
-            }
+            val isReservedForUser = checkIfRentExistsInUserUseCase(usernameMutable.value.toString(), idRentMutable.value.toString())
+            _reservedByUser.value = isReservedForUser
         }
     }
 
-    fun setUsernameAndIdRent(idRent: String) {
+    fun setUsernameAndIdRent(username: String,idRent: String) {
         usernameMutable.value = username
         idRentMutable.value = idRent
     }
@@ -78,11 +63,7 @@ class DetailRentActivityViewModel @Inject constructor(
 
     fun cancelRent(idRent: String, idCLub: String, idUser: String){
         viewModelScope.launch {
-            if(cancelRentUseCase(idRent, idCLub, idUser)){
-                _isCanceled.value = "Se cancelo la reserva"
-            }else{
-                _isCanceled.value = "Error al cancelar"
-            }
+            cancelRentUseCase(idRent, idCLub, idUser)
         }
     }
 
@@ -96,9 +77,7 @@ class DetailRentActivityViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             if(createRentUseCase(idRent, idCLub, idUser, location, price, slot)){
-                _isCreated.value = "Se reservo tu cancha"
-            }else{
-                _isCreated.value = "Error al generar cancha"
+                _reservedByUser.value = true
             }
         }
     }

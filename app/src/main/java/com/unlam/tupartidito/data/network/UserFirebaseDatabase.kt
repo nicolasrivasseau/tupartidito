@@ -46,9 +46,9 @@ class UserFirebaseDatabase @Inject constructor() {
         var cancelSchedule = FirebaseDatabase.getInstance().getReference("users")
           .child(idUser).child("rents").child(idRent).removeValue()
 
-        cancelSchedule.await()
+        cancelSchedule.await().also {return cancelSchedule.isSuccessful  }
 
-        return cancelSchedule.isSuccessful
+
     }
 
     suspend fun createRent(

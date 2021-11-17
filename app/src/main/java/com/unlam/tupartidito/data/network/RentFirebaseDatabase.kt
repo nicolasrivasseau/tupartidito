@@ -21,7 +21,9 @@ class RentFirebaseDatabase @Inject constructor() {
         try{
             rentRef.child(username).child("rents").child(rentId).get().await().also { ds ->
                 rent = Rent()
-                generateRent(ds, rent!!)
+                if(ds.value != null) {
+                    generateRent(ds, rent!!)
+                }
             }
         }catch (ex: Exception) {
             rent = null
@@ -53,8 +55,8 @@ class RentFirebaseDatabase @Inject constructor() {
         price: String?,
         slot: String?
     ): Boolean{
-        var reserved = clubFirebaseDatabase.reserveSchedule(idRent, idCLub)
-        var rentAdded =  userFirebaseDatabase.createRent(idRent, idUser, location, price, slot, idCLub)
+        val reserved = clubFirebaseDatabase.reserveSchedule(idRent, idCLub)
+        val rentAdded =  userFirebaseDatabase.createRent(idRent, idUser, location, price, slot, idCLub)
 
         if (reserved && rentAdded) return true
         return false
