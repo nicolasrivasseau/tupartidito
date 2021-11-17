@@ -1,9 +1,7 @@
 package com.unlam.tupartidito.ui.detail_rent
 
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
@@ -36,8 +34,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class DetailRentActivity : ComponentActivity() {
     private val viewModel: DetailRentActivityViewModel by viewModels()
     private var isReserved: Boolean = false
-    //private var itsMine: Boolean = false
-
     private var locationLatLong: HashMap<String, Double?>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,8 +41,6 @@ class DetailRentActivity : ComponentActivity() {
         val idRent = intent.getStringExtra(Constants.DATA_ID_RENT)!!
         val idClub = intent.getStringExtra(Constants.DATA_ID_CLUB)!!
         isReserved = intent.getBooleanExtra(Constants.RENT_IS_RESERVED, false)
-        //itsMine = intent.getBooleanExtra(Constants.RENT_IS_MINE, false)
-
         setContent {
             TuPartiditoTheme {
                 Surface(color = MaterialTheme.colors.background) {
@@ -58,17 +52,9 @@ class DetailRentActivity : ComponentActivity() {
 
     @Composable
     fun RentScreen(idRent: String, idClub: String) {
+        val isCreated = viewModel.isCreated.observeAsState("")
+        val isCanceled = viewModel.isCanceled.observeAsState("")
         val state = viewModel.state.observeAsState()
-        viewModel.isCanceled.observe(this,{
-            if(it != "") {
-                toast(it)
-            }
-        })
-        viewModel.isCreated.observe(this,{
-            if(it != "") {
-                toast(it)
-            }
-        })
 
         viewModel.setUsername(this)
         viewModel.setIdClub(idClub)
@@ -78,14 +64,18 @@ class DetailRentActivity : ComponentActivity() {
         when (state.value) {
             is DetailRentActivityViewModel.State.Loading -> LoadingScreen()
             is DetailRentActivityViewModel.State.Success -> RentDetail(
-                state as MutableState<DetailRentActivityViewModel.State.Success>
+                state as MutableState<DetailRentActivityViewModel.State.Success>,
+                isCreated,
+                isCanceled
             )
         }
     }
 
     @Composable
     fun RentDetail(
-        state: MutableState<DetailRentActivityViewModel.State.Success>
+        state: MutableState<DetailRentActivityViewModel.State.Success>,
+        isCreated: State<String>,
+        isCanceled: State<String>
     ) {
         val club = state.value.club
         val rent = state.value.rent
@@ -94,14 +84,18 @@ class DetailRentActivity : ComponentActivity() {
         locationLatLong?.put("Longitude", club?.longitude)
         DetailRent(
             dataRent = rent,
-            dataClub = club
+            dataClub = club,
+            isCreated,
+            isCanceled
         )
     }
 
     @Composable
     fun DetailRent(
         dataRent: Rent,
-        dataClub: Club
+        dataClub: Club,
+        isCreated: State<String>,
+        isCanceled: State<String>
     ) {
         val reserved = remember { mutableStateOf(isReserved) }
         val username = viewModel.username
@@ -126,7 +120,8 @@ class DetailRentActivity : ComponentActivity() {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight().padding(0.dp, 0.dp, 5.dp,50.dp),
+                    .fillMaxHeight()
+                    .padding(0.dp, 0.dp, 5.dp, 50.dp),
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -136,12 +131,18 @@ class DetailRentActivity : ComponentActivity() {
                     if(viewModel.isMine.value!!){
                         ButtonRent(textContent = "CANCELAR RESERVA",colors = ButtonDefaults.buttonColors(backgroundColor =MaterialTheme.colors.error)){
                             viewModel.cancelRent(idRent = dataRent.id_rent!!, dataRent.id_club!!,username)
+                            if(isCanceled.value != ""){
+                                toast(isCanceled.value)
+                            }
                             reserved.value = false
                         }
                     }
                 } else {
                     ButtonRent(textContent = "RESERVAR"){
                         viewModel.createRent(idRent = dataRent.id_rent!!,idCLub = dataRent.id_club!!,idUser = username,location = dataRent.location,price = dataRent.price,slot = dataRent.slot)
+                        if(isCreated.value != ""){
+                            toast(isCreated.value)
+                        }
                         reserved.value = true
                     }
                 }

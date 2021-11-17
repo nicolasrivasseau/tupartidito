@@ -78,8 +78,7 @@ class DetailRentActivityViewModel @Inject constructor(
 
     fun cancelRent(idRent: String, idCLub: String, idUser: String){
         viewModelScope.launch {
-
-            if(cancelRentUseCase(idRent, idCLub, idUser)!!){
+            if(cancelRentUseCase(idRent, idCLub, idUser)){
                 _isCanceled.value = "Se cancelo la reserva"
             }else{
                 _isCanceled.value = "Error al cancelar"

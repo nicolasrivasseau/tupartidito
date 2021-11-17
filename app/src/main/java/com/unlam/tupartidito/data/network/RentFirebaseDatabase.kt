@@ -41,7 +41,6 @@ class RentFirebaseDatabase @Inject constructor() {
     suspend fun cancelRent(idRent: String, idCLub: String, idUser: String): Boolean{
         var canceledClub = clubFirebaseDatabase.cancelSchedule(idRent, idCLub)
         var canceledUser = userFirebaseDatabase.cancelRent(idRent, idUser)
-
         if (canceledClub && canceledUser) return true
         return false
     }
