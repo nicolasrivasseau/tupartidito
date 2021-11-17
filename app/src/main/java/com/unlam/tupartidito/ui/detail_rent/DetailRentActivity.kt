@@ -69,9 +69,7 @@ class DetailRentActivity : ComponentActivity() {
                 toast(it)
             }
         })
-        viewModel.isMine.observe(this,{
-            //itsMine = it
-        })
+
         viewModel.setUsername(this)
         viewModel.setIdClub(idClub)
         viewModel.setUsernameAndIdRent(idRent)
