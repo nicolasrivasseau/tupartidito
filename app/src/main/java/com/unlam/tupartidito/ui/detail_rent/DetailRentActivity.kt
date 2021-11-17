@@ -50,23 +50,23 @@ class DetailRentActivity : ComponentActivity() {
         setContent {
             TuPartiditoTheme {
                 Surface(color = MaterialTheme.colors.background) {
-                    RentScreen(idRent, idClub, isReserved)
+                    RentScreen(idRent, idClub)
                 }
             }
         }
     }
 
     @Composable
-    fun RentScreen(idRent: String, idClub: String, isReserved: Boolean) {
+    fun RentScreen(idRent: String, idClub: String) {
         val state = viewModel.state.observeAsState()
         viewModel.isCanceled.observe(this,{
             if(it != "") {
-                toast(it, 1)
+                toast(it)
             }
         })
         viewModel.isCreated.observe(this,{
             if(it != "") {
-                toast(it,1)
+                toast(it)
             }
         })
         viewModel.isMine.observe(this,{
