@@ -3,7 +3,6 @@ package com.unlam.tupartidito.ui.detail_rent
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
-import android.widget.Toast
 import androidx.lifecycle.*
 import com.unlam.tupartidito.common.Constants
 import com.unlam.tupartidito.data.model.club.Club
@@ -38,9 +37,23 @@ class DetailRentActivityViewModel @Inject constructor(
     private val _isCanceled= MutableLiveData<String>()
     val isCanceled: LiveData<String> get() = _isCanceled
 
+    private val _isMine= MutableLiveData<Boolean>()
+    val isMine: LiveData<Boolean> get() = _isMine
+
     fun setUsername(activity: Activity){
         myPreferences = activity.getSharedPreferences(Constants.MY_PREFERENCES, Context.MODE_PRIVATE)
         username = myPreferences.getString("user", "")!!
+    }
+
+    fun getRentUser(idRent: String){
+        viewModelScope.launch {
+            val renta = getRentUseCase(username, idRent)
+            if(renta!!.location.isNullOrBlank()){
+                _isMine.value = false
+            } else{
+                _isMine.value = true
+            }
+        }
     }
 
     fun setUsernameAndIdRent(idRent: String) {
@@ -76,11 +89,6 @@ class DetailRentActivityViewModel @Inject constructor(
         }
     }
 
-    fun reservedRent(username: String, idClub: String?, idRent: String?) {
-        viewModelScope.launch {
-
-        }
-    }
     fun createRent(
         idRent: String,
         idCLub: String,

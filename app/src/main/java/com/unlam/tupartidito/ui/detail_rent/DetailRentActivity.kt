@@ -34,32 +34,32 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class DetailRentActivity : ComponentActivity() {
-    //private lateinit var myPreferences: SharedPreferences
     private val viewModel: DetailRentActivityViewModel by viewModels()
     private var isReserved: Boolean = false
     private var isCanceled: Boolean = false
+    private var itsMine: Boolean = false
 
     private var locationLatLong: HashMap<String, Double?>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //myPreferences = getSharedPreferences(Constants.MY_PREFERENCES, Context.MODE_PRIVATE)
         val idRent = intent.getStringExtra(Constants.DATA_ID_RENT)!!
         val idClub = intent.getStringExtra(Constants.DATA_ID_CLUB)!!
         isReserved = intent.getBooleanExtra(Constants.RENT_IS_RESERVED, false)
         isCanceled = intent.getBooleanExtra(Constants.RENT_IS_CANCELED, false)
+        itsMine = intent.getBooleanExtra(Constants.RENT_IS_MINE, false)
 
         setContent {
             TuPartiditoTheme {
                 Surface(color = MaterialTheme.colors.background) {
-                    RentScreen(idRent, idClub, isReserved, isCanceled)
+                    RentScreen(idRent, idClub, isReserved, isCanceled, itsMine)
                 }
             }
         }
     }
 
     @Composable
-    fun RentScreen(idRent: String, idClub: String, isReserved: Boolean, isCanceled: Boolean) {
+    fun RentScreen(idRent: String, idClub: String, isReserved: Boolean, isCanceled: Boolean, isMine: Boolean) {
         val state = viewModel.state.observeAsState()
         viewModel.isCanceled.observe(this,{
             if(it != "") {
@@ -71,16 +71,20 @@ class DetailRentActivity : ComponentActivity() {
                 toast(it,1)
             }
         })
-        //val username = myPreferences.getString("user", "")
+        viewModel.isMine.observe(this,{
+            itsMine = it
+        })
         viewModel.setUsername(this)
         viewModel.setIdClub(idClub)
         viewModel.setUsernameAndIdRent(idRent)
+        viewModel.getRentUser(idRent)
 
         when (state.value) {
             is DetailRentActivityViewModel.State.Loading -> LoadingScreen()
             is DetailRentActivityViewModel.State.Success -> RentDetail(
                 state as MutableState<DetailRentActivityViewModel.State.Success>,
-                isReserved
+                isReserved,
+                itsMine
             )
         }
     }
@@ -88,7 +92,8 @@ class DetailRentActivity : ComponentActivity() {
     @Composable
     fun RentDetail(
         state: MutableState<DetailRentActivityViewModel.State.Success>,
-        isReserved: Boolean
+        isReserved: Boolean,
+        itsMine: Boolean
     ) {
         val club = state.value.club
         val rent = state.value.rent
@@ -98,7 +103,8 @@ class DetailRentActivity : ComponentActivity() {
         DetailRent(
             dataRent = rent,
             dataClub = club,
-            isReserved
+            isReserved,
+            itsMine
         )
     }
 
@@ -106,7 +112,8 @@ class DetailRentActivity : ComponentActivity() {
     fun DetailRent(
         dataRent: Rent,
         dataClub: Club,
-        isReserved: Boolean
+        isReserved: Boolean,
+        itsMine: Boolean
     ) {
         val reserved = remember { mutableStateOf(isReserved) }
         val username = viewModel.username
@@ -137,11 +144,12 @@ class DetailRentActivity : ComponentActivity() {
             ) {
                 ButtonRent(textContent = "COMO LLEGAR") { howToGet() }
                 ButtonRent(textContent = "COMPARTIR") { sharedWhatsapp(dataRent = dataRent) }
-                if (reserved.value) {
-                    ButtonRent(textContent = "CANCELAR RESERVA",colors = ButtonDefaults.buttonColors(backgroundColor =MaterialTheme.colors.error)){
-                        viewModel.cancelRent(idRent = dataRent.id_rent!!, dataRent.id_club!!,username)
-
-                        reserved.value = false
+                if (reserved.value ) {
+                    if(viewModel.isMine.value!!){
+                        ButtonRent(textContent = "CANCELAR RESERVA",colors = ButtonDefaults.buttonColors(backgroundColor =MaterialTheme.colors.error)){
+                            viewModel.cancelRent(idRent = dataRent.id_rent!!, dataRent.id_club!!,username)
+                            reserved.value = false
+                        }
                     }
                 } else {
                     ButtonRent(textContent = "RESERVAR"){

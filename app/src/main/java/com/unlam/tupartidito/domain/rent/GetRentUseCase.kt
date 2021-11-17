@@ -1,13 +1,9 @@
 package com.unlam.tupartidito.domain.rent
 
+import android.util.Log
 import com.unlam.tupartidito.data.RentRepository
 import com.unlam.tupartidito.data.model.user.Rent
 import javax.inject.Inject
-
-/*
-Realizamos casos de uso para poder dividir la logica de negocio, esto nos va a permitir aplicar
-facilmente inyeccion de dependencias y testeos entre beneficios
- */
 
 class GetRentUseCase @Inject constructor(
     private val repository : RentRepository

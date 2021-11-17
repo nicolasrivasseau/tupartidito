@@ -53,6 +53,7 @@ class SchedulesAdapter(var fa: Fragment, var club: Club) : RecyclerView.Adapter<
         intent.putExtra(Constants.DATA_ID_RENT,idRent)
         intent.putExtra(Constants.DATA_ID_CLUB,idClub)
         intent.putExtra(Constants.RENT_IS_RESERVED,reserved)
+        intent.putExtra(Constants.RENT_IS_MINE, false)
         fa.activity?.startActivity(intent)
     }
     override fun getItemCount(): Int {

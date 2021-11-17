@@ -15,5 +15,7 @@ class Constants {
         const val DATA_ID_CLUB = "DATA_ID_CLUB"
         const val RENT_IS_RESERVED = "RENT_IS_RESERVED"
         const val RENT_IS_CANCELED = "RENT_IS_CANCELED"
+        const val RENT_IS_MINE = "RENT_IS_MINE"
+
     }
 }

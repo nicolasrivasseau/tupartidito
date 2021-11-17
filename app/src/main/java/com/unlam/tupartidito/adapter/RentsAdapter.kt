@@ -53,6 +53,7 @@ class RentsAdapter(var activity: Activity) : RecyclerView.Adapter<RentsAdapter.V
         intent.putExtra(Constants.DATA_ID_RENT, idRent)
         intent.putExtra(Constants.DATA_ID_CLUB,idClub)
         intent.putExtra(Constants.RENT_IS_RESERVED, true)
+        intent.putExtra(Constants.RENT_IS_MINE, true)
         activity.startActivity(intent)
     }
 

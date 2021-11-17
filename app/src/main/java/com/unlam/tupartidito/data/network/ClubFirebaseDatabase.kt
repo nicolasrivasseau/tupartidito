@@ -30,8 +30,8 @@ class ClubFirebaseDatabase @Inject constructor() {
     suspend fun getClubsByRate(): List<Club> {
 
         val listClub: ArrayList<Club> = ArrayList()
-        val usersRef = FirebaseDatabase.getInstance().getReference("clubs")
-        val dsClubs = usersRef.get().await().children
+        val clubRef = FirebaseDatabase.getInstance().getReference("clubs")
+        val dsClubs = clubRef.get().await().children
         for (dsClub in dsClubs) {
             val club = Club()
             generateClub(dsClub, club)

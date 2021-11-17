@@ -9,9 +9,6 @@ import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 import javax.inject.Inject
 
-/*
-    En esta clase trabajariamos la logica que nos devuelve un tercero, ya se api , webservice o saas.
- */
 
 class RentFirebaseDatabase @Inject constructor() {
 
@@ -19,7 +16,6 @@ class RentFirebaseDatabase @Inject constructor() {
     private val userFirebaseDatabase = UserFirebaseDatabase()
 
     suspend fun getRent(username: String, rentId: String) : Rent?{
-        //tendriamos que llamar a una clase donde se conecte con firebase y devuelva los datos.
         val rentRef = FirebaseDatabase.getInstance().getReference("users")
         var rent : Rent?
         try{
@@ -30,7 +26,6 @@ class RentFirebaseDatabase @Inject constructor() {
         }catch (ex: Exception) {
             rent = null
         }
-
         return rent
     }
 
@@ -45,7 +40,6 @@ class RentFirebaseDatabase @Inject constructor() {
 
     suspend fun cancelRent(idRent: String, idCLub: String, idUser: String): Boolean{
         var canceledClub = clubFirebaseDatabase.cancelSchedule(idRent, idCLub)
-        //userFirebaseDatabase
         var canceledUser = userFirebaseDatabase.cancelRent(idRent, idUser)
 
         if (canceledClub && canceledUser) return true
