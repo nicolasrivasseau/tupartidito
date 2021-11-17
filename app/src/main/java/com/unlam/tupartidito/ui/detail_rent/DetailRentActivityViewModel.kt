@@ -70,8 +70,6 @@ class DetailRentActivityViewModel @Inject constructor(
         emit(State.Success(getRentByClubUseCase(idRent = idRentMutable.value.toString(),idClub = idClub.value.toString()),getClubUseCase(idClub.value.toString())))
     }
 
-    val messageError = MutableLiveData<String>()
-
     sealed class State {
         object Loading : State()
         class Success(val rent: Rent?,val club: Club?) : State()

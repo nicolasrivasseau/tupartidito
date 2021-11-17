@@ -36,7 +36,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class DetailRentActivity : ComponentActivity() {
     private val viewModel: DetailRentActivityViewModel by viewModels()
     private var isReserved: Boolean = false
-    private var isCanceled: Boolean = false
     private var itsMine: Boolean = false
 
     private var locationLatLong: HashMap<String, Double?>? = null
@@ -46,7 +45,6 @@ class DetailRentActivity : ComponentActivity() {
         val idRent = intent.getStringExtra(Constants.DATA_ID_RENT)!!
         val idClub = intent.getStringExtra(Constants.DATA_ID_CLUB)!!
         isReserved = intent.getBooleanExtra(Constants.RENT_IS_RESERVED, false)
-        isCanceled = intent.getBooleanExtra(Constants.RENT_IS_CANCELED, false)
         itsMine = intent.getBooleanExtra(Constants.RENT_IS_MINE, false)
 
         setContent {
