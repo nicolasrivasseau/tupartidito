@@ -36,7 +36,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class DetailRentActivity : ComponentActivity() {
     private val viewModel: DetailRentActivityViewModel by viewModels()
     private var isReserved: Boolean = false
-    private var itsMine: Boolean = false
+    //private var itsMine: Boolean = false
 
     private var locationLatLong: HashMap<String, Double?>? = null
 
@@ -45,7 +45,7 @@ class DetailRentActivity : ComponentActivity() {
         val idRent = intent.getStringExtra(Constants.DATA_ID_RENT)!!
         val idClub = intent.getStringExtra(Constants.DATA_ID_CLUB)!!
         isReserved = intent.getBooleanExtra(Constants.RENT_IS_RESERVED, false)
-        itsMine = intent.getBooleanExtra(Constants.RENT_IS_MINE, false)
+        //itsMine = intent.getBooleanExtra(Constants.RENT_IS_MINE, false)
 
         setContent {
             TuPartiditoTheme {
@@ -70,7 +70,7 @@ class DetailRentActivity : ComponentActivity() {
             }
         })
         viewModel.isMine.observe(this,{
-            itsMine = it
+            //itsMine = it
         })
         viewModel.setUsername(this)
         viewModel.setIdClub(idClub)
