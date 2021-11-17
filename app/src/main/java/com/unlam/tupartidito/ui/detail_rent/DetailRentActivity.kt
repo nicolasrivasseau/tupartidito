@@ -52,14 +52,14 @@ class DetailRentActivity : ComponentActivity() {
         setContent {
             TuPartiditoTheme {
                 Surface(color = MaterialTheme.colors.background) {
-                    RentScreen(idRent, idClub, isReserved, isCanceled, itsMine)
+                    RentScreen(idRent, idClub, isReserved)
                 }
             }
         }
     }
 
     @Composable
-    fun RentScreen(idRent: String, idClub: String, isReserved: Boolean, isCanceled: Boolean, isMine: Boolean) {
+    fun RentScreen(idRent: String, idClub: String, isReserved: Boolean) {
         val state = viewModel.state.observeAsState()
         viewModel.isCanceled.observe(this,{
             if(it != "") {
@@ -82,18 +82,14 @@ class DetailRentActivity : ComponentActivity() {
         when (state.value) {
             is DetailRentActivityViewModel.State.Loading -> LoadingScreen()
             is DetailRentActivityViewModel.State.Success -> RentDetail(
-                state as MutableState<DetailRentActivityViewModel.State.Success>,
-                isReserved,
-                itsMine
+                state as MutableState<DetailRentActivityViewModel.State.Success>
             )
         }
     }
 
     @Composable
     fun RentDetail(
-        state: MutableState<DetailRentActivityViewModel.State.Success>,
-        isReserved: Boolean,
-        itsMine: Boolean
+        state: MutableState<DetailRentActivityViewModel.State.Success>
     ) {
         val club = state.value.club
         val rent = state.value.rent
@@ -102,18 +98,14 @@ class DetailRentActivity : ComponentActivity() {
         locationLatLong?.put("Longitude", club?.longitude)
         DetailRent(
             dataRent = rent,
-            dataClub = club,
-            isReserved,
-            itsMine
+            dataClub = club
         )
     }
 
     @Composable
     fun DetailRent(
         dataRent: Rent,
-        dataClub: Club,
-        isReserved: Boolean,
-        itsMine: Boolean
+        dataClub: Club
     ) {
         val reserved = remember { mutableStateOf(isReserved) }
         val username = viewModel.username
