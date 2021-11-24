@@ -8,6 +8,7 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
+import android.widget.Button
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -58,7 +59,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         setPermissions()
         validateIntents()
         setEvents()
-
         createFragment()
     }
 

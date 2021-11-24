@@ -22,7 +22,7 @@ class GetUserFirebaseUseCaseTest  {
 
 
     @MockK
-    lateinit var repository:UserRepository
+    lateinit var repository: UserRepository
     lateinit var instanceUseCase: GetUserFirebaseUseCase
 
 

@@ -2,6 +2,7 @@ package com.unlam.tupartidito
 
 import android.content.SharedPreferences
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.unlam.tupartidito.data.UserRepository
 import com.unlam.tupartidito.data.model.user.User
 import com.unlam.tupartidito.domain.user.*
 import com.unlam.tupartidito.ui.login.LoginViewModel
@@ -35,22 +36,24 @@ class LoginViewModelTest {
 
     @MockK
     lateinit var getUserFirebaseUseCase: GetUserFirebaseUseCase
+    private lateinit var repository: UserRepository
     private lateinit var instanceLoginViewModel: LoginViewModel
     private lateinit var preferences: SharedPreferences
 
     @Before
-    fun setUp() {
+     fun setUp() {
         MockKAnnotations.init(this, relaxUnitFun = true)
         Dispatchers.setMain(testDispatcher)
         preferences = mockk()
+        repository = mockk()
         instanceLoginViewModel = LoginViewModel(
             getUserFirebaseUseCase,
             CredentialsNotEmptyUseCase(),
             ValidUserUseCase(),
             ValidCredentialsUseCase(),
             RememberUserUseCase(),
+            CreateUserFirebaseUseCase(repository)
         )
-
     }
 
 
@@ -64,7 +67,9 @@ class LoginViewModelTest {
             "1234",
             ArrayList()
         )
+
         every { preferences.getBoolean("active", false) } returns true
+        coEvery { repository.createUser("nico","1234") } returns userExpected
 
 
         instanceLoginViewModel.loginSession("nico", "1234", preferences)

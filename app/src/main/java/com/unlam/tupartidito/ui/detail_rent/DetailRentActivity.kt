@@ -37,7 +37,7 @@ class DetailRentActivity : ComponentActivity() {
     private val viewModel: DetailRentActivityViewModel by viewModels()
     private lateinit var myPreferences: SharedPreferences
     private var isReserved: Boolean = false
-    private var locationLatLong: HashMap<String, Double?>? = null
+    private var locationLatLong: HashMap<String, Double?>? = HashMap()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
